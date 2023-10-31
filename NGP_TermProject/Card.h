@@ -1,23 +1,12 @@
 #pragma once
 
-//struct POINT;
-struct RECT;
-
-enum CardName;
-
-//class CImage;
-class HDC;
-class string;
-
-typedef wchar_t TCHAR;
-
 class Card {
 public:
 	Card(CImage* manaImg);
 	~Card();
 private:
 	POINT m_pPoint;
-	RECT* m_rRect;
+	RECT m_rRect[4];
 	CardName m_eCardname;
 
 	CImage m_cImg[4];			//카드, 트포3개
@@ -37,7 +26,7 @@ private:
 
 	//Render
 public:
-	virtual void Draw(HDC& memdc) override;
+	//virtual void Draw(HDC& memdc) override;
 	void handDraw(HDC& memdc);
 	void closeDraw(HDC& memdc);
 	void dragDraw(HDC& memdc);
@@ -47,7 +36,7 @@ public:
 public:
 	POINT GetPoint()			{ return m_pPoint; }
 	RECT* GetRect()				{ return m_rRect; }
-	string* GetCardname();	// enum을 한글로 바꿔서 출력하기 위함
+	//string* GetCardname();	// enum을 한글로 바꿔서 출력하기 위함
 
 	int GetDamage()				{ return m_iDamage; }
 	int GetMana()				{ return m_iMana; }

@@ -127,6 +127,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Card.h" />
     <ClInclude Include="EventType.h" />
     <ClInclude Include="GameFramework.h" />
     <ClInclude Include="Packet.h" />
@@ -136,6 +137,7 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Card.cpp" />
     <ClCompile Include="GameFramework.cpp" />
     <ClCompile Include="NGP_TermProject.cpp" />
     <ClCompile Include="Packet.cpp" />
