@@ -58,7 +58,8 @@ public:
 	void Insert_Hitlist(_Object* hitpointer);
 	void Delete_Hitlist();
 protected:
-	int damage, named_damage, seed_damage, destruction, neutralization, delay, base_delay, frame_max, frame_now, speed_x, speed_y, dir, attack_nums;
+	int damage, named_damage, seed_damage, destruction, neutralization, 
+		delay, base_delay, frame_max, frame_now, speed_x, speed_y, dir, attack_nums;
 	ObjectType type;
 	Oder frame_oder[20];
 	_Object_Node* hit_list;
