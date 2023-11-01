@@ -29,6 +29,10 @@ Card::~Card()
 		m_cEffect.Destroy();
 }
 
+void Card::Draw(HDC& memdc)
+{
+}
+
 void Card::handDraw(HDC& memdc)
 {
 	HBRUSH hBrush, oldBrush;

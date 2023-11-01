@@ -1,6 +1,8 @@
 #pragma once
+#include "Object.h"
 
-class Card {
+class Card : public Object
+{
 public:
 	Card(CImage* manaImg);
 	~Card();
@@ -26,7 +28,7 @@ private:
 
 	//Render
 public:
-	//virtual void Draw(HDC& memdc) override;
+	virtual void Draw(HDC& memdc) override;
 	void handDraw(HDC& memdc);
 	void closeDraw(HDC& memdc);
 	void dragDraw(HDC& memdc);
