@@ -14,15 +14,17 @@ public:
 	virtual void Draw(HDC& memdc) = 0;
 	//Gettor, Settor
 public:
-	CImage GetImg() const { return m_cImg; }
+	CImage* GetImg() const { return m_cImg; }
 	RECT GetRect() const { return m_rRect; }
 
-private:
-	// TODO: 이미지 포인터로 받아서 공유할건지
+protected:
 	// 메인 이미지
-	CImage m_cImg;
+	CImage* m_cImg;
 
 	//충돌 처리 사각형
 	RECT m_rRect;
+
+	// 위치 크기
+	POINT m_pPoint, m_pOffset;
 };
 

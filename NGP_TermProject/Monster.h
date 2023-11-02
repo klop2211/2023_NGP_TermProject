@@ -27,9 +27,18 @@ public:
 	int  GetMaxHp()			{ return m_iMaxHp; }
 	int  GetSpeed()			{ return m_iSpeed; }
 
-private:
+protected:
 	bool m_bCanDie;
 	int m_iDamage, m_iExperi; // , m_iMoney;
 	int m_iCurrentHp, m_iMaxHp, m_iSpeed;
+
+	int m_iCount;
+	float m_fWait;
+
+	// 상태이상
+	StatusEffect m_eSE;
 };
 
+
+enum class MonsterStatus { Move, Dead, Attack, Hit, Die };
+enum class StatusEffect { Ice_s = 1, Fire_s, NULL_S };
