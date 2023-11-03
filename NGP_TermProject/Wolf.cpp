@@ -13,6 +13,7 @@ Wolf::Wolf(CImage* wolfImg)
 	m_iCurrentHp = 20;
 	m_iMaxHp = 20;
 	m_iDamage = 20, m_iExperi = 20, m_iCount = 0, m_fWait = 0;
+	m_bCanDie = false;
 }
 
 void Wolf::Draw(HDC& memdc)

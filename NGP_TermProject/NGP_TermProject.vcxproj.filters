@@ -57,6 +57,9 @@
     <ClInclude Include="Wolf.h">
       <Filter>2019180016\Header</Filter>
     </ClInclude>
+    <ClInclude Include="Bat.h">
+      <Filter>2019180016\Header</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="NGP_TermProject.cpp">
@@ -81,6 +84,9 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Wolf.cpp">
+      <Filter>2019180016\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Bat.cpp">
       <Filter>2019180016\Source</Filter>
     </ClCompile>
   </ItemGroup>

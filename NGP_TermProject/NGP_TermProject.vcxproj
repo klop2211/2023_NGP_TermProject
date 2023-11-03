@@ -127,6 +127,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Bat.h" />
     <ClInclude Include="Card.h" />
     <ClInclude Include="EventType.h" />
     <ClInclude Include="GameFramework.h" />
@@ -140,6 +141,7 @@
     <ClInclude Include="Wolf.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Bat.cpp" />
     <ClCompile Include="Card.cpp" />
     <ClCompile Include="GameFramework.cpp" />
     <ClCompile Include="Monster.cpp" />
