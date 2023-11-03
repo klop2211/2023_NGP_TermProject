@@ -60,6 +60,12 @@
     <ClInclude Include="Bat.h">
       <Filter>2019180016\Header</Filter>
     </ClInclude>
+    <ClInclude Include="Papyrus.h">
+      <Filter>2019180016\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="CommonMonster.h">
+      <Filter>2019180016\Header</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="NGP_TermProject.cpp">
@@ -87,6 +93,12 @@
       <Filter>2019180016\Source</Filter>
     </ClCompile>
     <ClCompile Include="Bat.cpp">
+      <Filter>2019180016\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Papyrus.cpp">
+      <Filter>2019180016\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="CommonMonster.cpp">
       <Filter>2019180016\Source</Filter>
     </ClCompile>
   </ItemGroup>

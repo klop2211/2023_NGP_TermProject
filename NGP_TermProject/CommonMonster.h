@@ -1,11 +1,11 @@
 #pragma once
-#include "CommonMonster.h"
+#include "Monster.h"
 
-class Bat : public CommonMonster
+class CommonMonster : public Monster
 {
 public:
-	Bat();
-	~Bat() {}
+	CommonMonster() {}
+	~CommonMonster() {}
 
 	virtual void Update(float elapsed) override;
 	virtual bool Hit(int damage);
@@ -15,12 +15,12 @@ public:
 	virtual void Draw(HDC& memdc);
 	virtual void ImgDraw(HDC& memdc);
 	virtual void HpDraw(HDC& memdc);
-	//virtual CImage GetImg() const { return m_cImg; };
 
 	//Gettor, Settor
 public:
+	virtual CImage GetImg() const = 0;
 
-private:
-	static CImage m_cImg;
+protected:
+	MonsterStatus status;
 };
 

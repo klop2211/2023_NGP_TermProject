@@ -128,6 +128,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Bat.h" />
+    <ClInclude Include="CommonMonster.h" />
+    <ClInclude Include="Papyrus.h" />
     <ClInclude Include="Card.h" />
     <ClInclude Include="EventType.h" />
     <ClInclude Include="GameFramework.h" />
@@ -142,6 +144,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Bat.cpp" />
+    <ClCompile Include="CommonMonster.cpp" />
+    <ClCompile Include="Papyrus.cpp" />
     <ClCompile Include="Card.cpp" />
     <ClCompile Include="GameFramework.cpp" />
     <ClCompile Include="Monster.cpp" />

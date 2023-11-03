@@ -1,10 +1,10 @@
 #pragma once
-#include "Monster.h"
+#include "CommonMonster.h"
 
-class Wolf : public Monster
+class Wolf : public CommonMonster
 {
 public:
-	Wolf(CImage* WolfImg) {}
+	Wolf();
 	~Wolf() {}
 
 	virtual void Update(float elapsed) override;
@@ -20,7 +20,6 @@ public:
 public:
 
 private:
-	MonsterStatus status;
-	//Status st;
+	static CImage m_cImg;
 };
 

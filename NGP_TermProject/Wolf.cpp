@@ -1,13 +1,17 @@
 #include "stdafx.h"
 #include "Wolf.h"
 
-Wolf::Wolf(CImage* wolfImg)
+Wolf::Wolf()
 {
+	if (m_cImg.IsNull())
+	{
+		m_cImg.Load(TEXT(""));
+	}
 	//start = {0,1}
 	m_pPoint = { 86 * 2, 58 * 2 };
 	m_pOffset = { 86, 58 };
 	m_rRect = { WINWIDTH - 200, 634 - m_pPoint.y, WINWIDTH + m_pPoint.x - 200, 634 };
-	m_cImg = wolfImg;
+
 	status = MonsterStatus::Move;
 	m_iSpeed = 6;
 	m_iCurrentHp = 20;

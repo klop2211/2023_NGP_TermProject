@@ -1,12 +1,16 @@
 #include "stdafx.h"
 #include "Bat.h"
 
-Bat::Bat(CImage* BatImg)
+Bat::Bat()
 {
+	if (m_cImg.IsNull())
+	{
+		m_cImg.Load(TEXT(""));
+	}
 	m_pPoint = { 67 * 2,49 * 2 };
 	m_pOffset = { 67,49 };
 	m_rRect = { WINWIDTH - 200, 400 - m_pPoint.y, WINWIDTH - 200 + m_pPoint.x, 400 };
-	m_cImg = BatImg;
+	//m_cImg = BatImg;
 	status = MonsterStatus::Move;
 	m_iMaxHp = 10;
 	m_iCurrentHp = 10;
@@ -27,10 +31,10 @@ void Bat::ImgDraw(HDC& memdc)
 	int frame = 6;
 
 	if (status != MonsterStatus::Die)
-		m_cImg->Draw(memdc, m_rRect.left, m_rRect.top, m_pPoint.x, m_pPoint.y,
+		m_cImg.Draw(memdc, m_rRect.left, m_rRect.top, m_pPoint.x, m_pPoint.y,
 			0 + m_pOffset.x * (m_iCount % frame), 0 + m_pOffset.y * (int)status, m_pOffset.x - 2, m_pOffset.y - 2);
 	else
-		m_cImg->AlphaBlend(memdc, m_rRect.left, m_rRect.top, m_pPoint.x, m_pPoint.y,
+		m_cImg.AlphaBlend(memdc, m_rRect.left, m_rRect.top, m_pPoint.x, m_pPoint.y,
 			0 + m_pOffset.x * 5, 0 + m_pOffset.y * 1, m_pOffset.x - 2, m_pOffset.y - 2, 255 - m_iCount, AC_SRC_OVER);
 }
 

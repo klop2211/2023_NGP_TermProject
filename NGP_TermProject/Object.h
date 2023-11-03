@@ -14,12 +14,12 @@ public:
 	virtual void Draw(HDC& memdc) = 0;
 	//Gettor, Settor
 public:
-	CImage* GetImg() const { return m_cImg; }
+	virtual CImage GetImg() const = 0;
 	RECT GetRect() const { return m_rRect; }
 
 protected:
 	// 메인 이미지
-	CImage* m_cImg;
+	// CImage* m_cImg;
 
 	//충돌 처리 사각형
 	RECT m_rRect;
