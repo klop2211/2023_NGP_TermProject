@@ -66,6 +66,9 @@
     <ClInclude Include="CommonMonster.h">
       <Filter>2019180016\Header</Filter>
     </ClInclude>
+    <ClInclude Include="Bone.h">
+      <Filter>2019180016\Header</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="NGP_TermProject.cpp">
@@ -99,6 +102,9 @@
       <Filter>2019180016\Source</Filter>
     </ClCompile>
     <ClCompile Include="CommonMonster.cpp">
+      <Filter>2019180016\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Bone.cpp">
       <Filter>2019180016\Source</Filter>
     </ClCompile>
   </ItemGroup>

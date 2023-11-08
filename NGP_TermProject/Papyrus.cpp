@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "Papyrus.h"
+#include "Bone.h"
 
 Papyrus::Papyrus()
 {
@@ -50,7 +51,7 @@ void Papyrus::Update(float elapsed)
 			{
 				RECT temp, check = { m_rRect.left - 100,m_rRect.top,m_rRect.right - 100,m_rRect.bottom };
 				if (IntersectRect(&temp, &check, player->GetRect(1))) {
-					if (getRand(50) < 1)
+					if (GetRand(50) < 1)
 						status = PapyrusStatus::UP_Pattern;
 				}
 				if (m_fWait % 3 == 0) {
@@ -66,7 +67,7 @@ void Papyrus::Update(float elapsed)
 					for (int i = 0; i < 2; i++)
 					{
 						if (bone[i] == nullptr) {
-							bone[i] = new Bone(0, m_rRect.left, m_rRect.bottom, img);
+							bone[i] = new Bone(0, m_rRect.left, m_rRect.bottom, m_cBoneImg);
 							break;
 						}
 					}
@@ -81,13 +82,13 @@ void Papyrus::Update(float elapsed)
 			{
 				RECT temp, check = { m_rRect.left - 100,m_rRect.top,m_rRect.right - 100,m_rRect.bottom };
 				if (IntersectRect(&temp, &check, player->GetRect(1))) {
-					if (getRand(50) < 3) {
+					if (GetRand(50) < 3) {
 						status = PapyrusStatus::P_Pattern1;
 						m_fWait = 0, m_iCount = 0;
 					}
 				}
 				if (m_fWait % 2 == 0) {
-					int randInt = getRand(50);
+					int randInt = GetRand(50);
 					if (randInt < 3) {
 						status = PapyrusStatus::P_Pattern2;
 						m_fWait = 0, m_iCount = 0;

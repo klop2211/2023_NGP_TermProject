@@ -9,13 +9,13 @@ public:
 	~Monster() {}
 
 	virtual void Update(float elapsed) override = 0;
-	virtual bool Hit(int damage) = 0;
+	virtual bool Hit(int damage) {};
 
 	//Render
 public:
-	virtual void Draw(HDC& memdc) override = 0;
-	virtual void ImgDraw(HDC& memdc) = 0;
-	virtual void HpDraw(HDC& memdc) = 0;
+	virtual void Draw(HDC& memdc) = 0;
+	virtual void ImgDraw(HDC& memdc) {};
+	virtual void HpDraw(HDC& memdc) {};
 
 	//Gettor, Settor
 public:
