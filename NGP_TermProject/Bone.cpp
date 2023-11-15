@@ -3,7 +3,7 @@
 #include "Bone.h"
 #include <windef.h>
 
-Bone::Bone(int m_iNum, int x, int y, CImage* boneImg)
+Bone::Bone(int m_iNum, int x, int y)
 {
 	if (m_cImg.IsNull())
 	{

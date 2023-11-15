@@ -8,7 +8,7 @@ public:
 	bool m_bCanDown;
 
 	Bone() {}
-	Bone(int num, int x, int y, CImage* boneImg);
+	Bone(int num, int x, int y);
 
 	void Draw(HDC& memdc);
 	void Update(float elapsed);

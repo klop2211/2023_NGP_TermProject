@@ -8,7 +8,12 @@ public:
 	~Papyrus() {}
 
 	virtual void Update(float elapsed) override;
-	virtual bool Hit(int damage);
+	virtual void BreakingUpdate(float elapsed);
+	virtual void UnBreakingUpdate(float elapsed);
+
+	virtual bool Hit(int att, int ammorBreak, int knockDown);
+
+	void SyncLocationAtRect();
 
 	//Render
 public:
@@ -25,15 +30,19 @@ private:
 	bool m_bBreaked, m_bCanDown;
 	int m_iBreakCount, m_iKnockDown;
 
+	float m_fBreakTimer;
+	float m_fAttackTimer;
+
 	PapyrusStatus status;
 
 	TCHAR m_sName[9], m_sHpStr[10];
 	RECT m_rNameRect;
 	RECT m_rHpRect;
+	POINT m_pSize;
 
-	class Player* player;
-	class Bone* bone[2] = { nullptr, };
-	Bone* miniBone[15] = { nullptr, };
+	class Player* m_pPlayer;
+	class Bone* m_pBone[2] = { nullptr, };
+	Bone* m_pMiniBone[15] = { nullptr, };
 };
 
 

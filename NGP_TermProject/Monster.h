@@ -27,7 +27,7 @@ public:
 	int  GetMaxHp()			{ return m_iMaxHp; }
 	int  GetSpeed()			{ return m_iSpeed; }
 
-	virtual CImage GetImg() const = 0;
+	virtual CImage GetImg() const {};
 
 protected:
 	bool m_bCanDie;

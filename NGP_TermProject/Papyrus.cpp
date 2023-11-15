@@ -12,8 +12,9 @@ Papyrus::Papyrus()
 
 	//start 1,1
 	m_pPoint = { 49, 54 };
-	m_pPoint = { m_pPoint.x * 5, m_pPoint.y * 5 };
-	m_rRect = { WINWIDTH - 300, 634 - m_pPoint.y, WINWIDTH + m_pPoint.x - 300, 634 };
+	m_pSize = { m_pPoint.x * 5, m_pPoint.y * 5 };
+	m_Location = { float(WINWIDTH - 300), float(634 - m_pSize.y) };
+	m_rRect = { WINWIDTH - 300, 634 - m_pSize.y, WINWIDTH + m_pSize.x - 300, 634 };
 	//img = papyrusImg;
 	//this->m_cBossHpBar = m_cBossHpBar;
 	m_iCount = 0, m_fWait = 0, m_iSpeed = 10;
@@ -23,6 +24,7 @@ Papyrus::Papyrus()
 	m_iMaxHp = 60;
 	m_iBreakCount = 10, m_bBreaked = false;
 	m_iKnockDown = 100, m_bCanDown = true;
+	m_fBreakTimer = 0.f;
 
 	lstrcpy(m_sName, L"파피루스");
 	m_rNameRect = { 350 + 134, 0, 1250, 50 + 50 };
@@ -33,130 +35,154 @@ Papyrus::Papyrus()
 
 void Papyrus::Update(float elapsed)
 {
-	if (++m_fWait % 5 == 0) {
-		if (!m_bBreaked)
-			switch (status)
+	static float Timer = .0f;
+	Timer += elapsed;
+	m_fAttackTimer += elapsed;
+	if (Timer > 0.166 * 5)
+	{
+		m_iCount++;
+		Timer = 0.f;
+	}
+
+	if (m_bBreaked)
+	{
+		BreakingUpdate(elapsed);
+	}
+	else
+	{
+		UnBreakingUpdate(elapsed);
+	}
+}
+
+void Papyrus::BreakingUpdate(float elapsed)
+{
+	switch (status) {
+	case PapyrusStatus::P_Move:
+	{
+		RECT temp, check = { m_rRect.left - 100,m_rRect.top,m_rRect.right - 100,m_rRect.bottom };
+		if (IntersectRect(&temp, &check, m_pPlayer->GetRect(1)))
+		{
+			if (m_fAttackTimer > 7.5f)
 			{
-			case PapyrusStatus::UP_Breaking:
-				if (m_fWait % 4) {
-					m_iCount++;
-					if (m_iCount == 7) {
-						status = PapyrusStatus::P_Move;
-						m_fWait = m_iCount = 0;
-						m_bBreaked = true;
-					}
-				}
-				break;
-			case PapyrusStatus::UP_Move:
-			{
-				RECT temp, check = { m_rRect.left - 100,m_rRect.top,m_rRect.right - 100,m_rRect.bottom };
-				if (IntersectRect(&temp, &check, player->GetRect(1))) {
-					if (GetRand(50) < 1)
-						status = PapyrusStatus::UP_Pattern;
-				}
-				if (m_fWait % 3 == 0) {
-					m_rRect.left -= 10;
-					m_rRect.right -= 10;
-					m_iCount++;
-					hit(0, 1, 0);
-				}
+				status = PapyrusStatus::P_Pattern1;
+				m_fAttackTimer = 0;
+				//m_fWait = 0, m_iCount = 0;
 			}
-			break;
-			case PapyrusStatus::UP_Pattern:
-				if (++m_iCount % 20 == 0) {
-					for (int i = 0; i < 2; i++)
-					{
-						if (bone[i] == nullptr) {
-							bone[i] = new Bone(0, m_rRect.left, m_rRect.bottom, m_cBoneImg);
-							break;
-						}
-					}
-				}
-				break;
-			default:
-				break;
-			}
+		}
 		else
-			switch (status) {
-			case PapyrusStatus::P_Move:
+		{
+			int randInt = GetRand(100);
+			if (randInt < 3)
 			{
-				RECT temp, check = { m_rRect.left - 100,m_rRect.top,m_rRect.right - 100,m_rRect.bottom };
-				if (IntersectRect(&temp, &check, player->GetRect(1))) {
-					if (GetRand(50) < 3) {
-						status = PapyrusStatus::P_Pattern1;
-						m_fWait = 0, m_iCount = 0;
-					}
-				}
-				if (m_fWait % 2 == 0) {
-					int randInt = GetRand(50);
-					if (randInt < 3) {
-						status = PapyrusStatus::P_Pattern2;
-						m_fWait = 0, m_iCount = 0;
-					}
-					m_rRect.left -= 10;
-					m_rRect.right -= 10;
-					m_iCount++;
-					//hit(0, 0, 60);
-				}
+				status = PapyrusStatus::P_Pattern2;
+				m_fWait = 0, m_iCount = 0;
 			}
-			break;
-			case PapyrusStatus::P_Down:
-				if (m_bCanDown) {
-					if (++m_iCount == 11) {
-						--m_iCount;
-						if (m_fWait > 90) {
-							m_bCanDown = false;
-							m_fWait = 0;
-						}
-						if (m_iCurrentHp <= 0) {
-							status = PapyrusStatus::P_Die;
-							m_fWait = m_iCount = 0;
-						}
-					}
+			m_Location.x -= m_iSpeed * 20 * elapsed;
+			SyncLocationAtRect();
+		}
+	}
+	break;
+	case PapyrusStatus::P_Down:
+		if (m_bCanDown) {
+			if (++m_iCount == 11) {
+				--m_iCount;
+				if (m_fWait > 90) {
+					m_bCanDown = false;
+					m_fWait = 0;
 				}
-				else {
-					if (--m_iCount < 0) {
-						status = PapyrusStatus::P_Move;
-						m_iKnockDown = 100;
-						m_fWait = m_iCount = 0;
-					}
-				}
-				break;
-			case PapyrusStatus::P_Pattern1:
-				m_iCount++;
-				if (m_fWait == 5) {
-					for (int i = 0; i < 2; i++)
-					{
-						if (bone[i] == nullptr) {
-							bone[i] = new Bone(1, m_rRect.left, m_rRect.top, img);
-							break;
-						}
-					}
-				}
-				break;
-			case PapyrusStatus::P_Pattern2:
-				m_iCount++;
-				if (m_iCount % 5 == 4) {
-					for (int i = 0; i < 15; i++)
-					{
-						if (miniBone[i] == nullptr) {
-							miniBone[i] = new Bone(2, m_rRect.left + 25 * 5, m_rRect.top + 20 * 5, img);
-							break;
-						}
-					}
-				}
-				if (m_iCount == 75) {
-					status = PapyrusStatus::P_Move;
+				if (m_iCurrentHp <= 0) {
+					status = PapyrusStatus::P_Die;
 					m_fWait = m_iCount = 0;
 				}
-				break;
-			case PapyrusStatus::P_Die:
-				if (m_iCount < 245)
-					m_iCount += 10;
-				break;
-			default:
+			}
+		}
+		else {
+			if (--m_iCount < 0) {
+				status = PapyrusStatus::P_Move;
+				m_iKnockDown = 100;
+				m_fWait = m_iCount = 0;
+			}
+		}
+		break;
+	case PapyrusStatus::P_Pattern1:
+		m_iCount++;
+		if (m_fWait == 5) {
+			for (int i = 0; i < 2; i++)
+			{
+				if (m_pBone[i] == nullptr) {
+					m_pBone[i] = new Bone(1, m_rRect.left, m_rRect.top);
+					break;
+				}
+			}
+		}
+		break;
+	case PapyrusStatus::P_Pattern2:
+		m_iCount++;
+		if (m_iCount % 5 == 4) {
+			for (int i = 0; i < 15; i++)
+			{
+				if (m_pMiniBone[i] == nullptr) {
+					m_pMiniBone[i] = new Bone(2, m_rRect.left + 25 * 5, m_rRect.top + 20 * 5);
+					break;
+				}
+			}
+		}
+		if (m_iCount == 75) {
+			status = PapyrusStatus::P_Move;
+			m_fWait = m_iCount = 0;
+		}
+		break;
+	case PapyrusStatus::P_Die:
+		if (m_iCount < 245)
+			m_iCount += 10;
+		break;
+	default:
+		break;
+	}
+}
+
+void Papyrus::UnBreakingUpdate(float elapsed)
+{
+	switch (status)
+	{
+	case PapyrusStatus::UP_Breaking:
+	{
+		if (m_iCount >= 7)
+		{
+			status = PapyrusStatus::P_Move;
+			m_fWait = m_iCount = 0;
+			m_bBreaked = true;
+		}
+	}
+	break;
+	case PapyrusStatus::UP_Move:
+	{
+		RECT temp, check = { m_rRect.left - 100,m_rRect.top,m_rRect.right - 100,m_rRect.bottom };
+		if (IntersectRect(&temp, &check, m_pPlayer->GetRect(1)))
+		{
+			if (m_fAttackTimer > 7.5f)
+			{
+				status = PapyrusStatus::UP_Pattern;
+				m_fAttackTimer = 0;
+			}
+		}
+		m_Location.x -= m_iSpeed * 20 * elapsed;
+		SyncLocationAtRect();
+	}
+	break;
+	case PapyrusStatus::UP_Pattern:
+	{			
+		for (int i = 0; i < 2; i++)
+		{
+			if (m_pBone[i] == nullptr) {
+				m_pBone[i] = new Bone(0, m_rRect.left, m_rRect.bottom);
 				break;
 			}
+		}		
+	}
+	break;
+	default:
+		break;
 	}
 }
 
@@ -206,7 +232,7 @@ void Papyrus::ImgDraw(HDC& memdc)
 		}
 	if (!m_bBreaked)
 		m_cImg.Draw(memdc, m_rRect.left, m_rRect.top, m_pPoint.x, m_pPoint.y,
-			1 + m_pPoint.x * (m_iCount % frame), 1 + m_pPoint.y * status, m_pPoint.x - 1, m_pPoint.y - 1);
+			1 + m_pPoint.x * (m_iCount % frame), 1 + m_pPoint.y * (int)status, m_pPoint.x - 1, m_pPoint.y - 1);
 	else {
 		if (status == PapyrusStatus::P_Die) {
 			m_cImg.AlphaBlend(memdc, m_rRect.left, m_rRect.top, m_pPoint.x, m_pPoint.y,
@@ -214,7 +240,7 @@ void Papyrus::ImgDraw(HDC& memdc)
 		}
 		else {
 			m_cImg.Draw(memdc, m_rRect.left, m_rRect.top, m_pPoint.x, m_pPoint.y,
-				1 + m_pPoint.x * (m_iCount % frame), 163 + m_pPoint.y * status, m_pPoint.x - 1, m_pPoint.y - 1);
+				1 + m_pPoint.x * (m_iCount % frame), 163 + m_pPoint.y * (int)status, m_pPoint.x - 1, m_pPoint.y - 1);
 		}
 	}
 }
@@ -258,4 +284,56 @@ void Papyrus::HpDraw(HDC& memdc)
 		oldBrush = (HBRUSH)SelectObject(memdc, hBrush);
 		Rectangle(memdc, m_rNameRect.left + 5, m_rHpRect.bottom, m_rNameRect.left + 5 + ((m_rNameRect.right - m_rNameRect.left + 5 - 40) * m_iKnockDown / 100), m_rHpRect.bottom + 5);
 	}
+}
+
+bool Papyrus::Hit(int Att, int AmmorBreak, int KnockDown)
+{
+	if (!m_bBreaked) {
+		int temp = Att * 0.6;
+		if (temp == 0)
+		{
+			temp = 1;
+		}
+
+		m_iCurrentHp -= Att * 0.6;
+		if (m_iCurrentHp <= 0)
+		{
+			m_iCurrentHp = 0;
+			status = PapyrusStatus::P_Down;
+			m_bBreaked = true;
+			m_fWait = m_iCount = 0;
+		}
+
+		m_iBreakCount -= AmmorBreak;
+		if (m_iBreakCount <= 0) {
+			status = PapyrusStatus::UP_Breaking;
+			m_fWait = m_iCount = 0;
+		}
+
+	}
+	else
+	{
+		m_iCurrentHp -= Att;
+		if (m_iCurrentHp <= 0)
+		{
+			m_iCurrentHp = 0;
+			status = PapyrusStatus::P_Down;
+			m_fWait = m_iCount = 0;
+		}
+
+		this->m_iKnockDown -= KnockDown;
+		if (this->m_iKnockDown <= 0)
+		{
+			status = PapyrusStatus::P_Down;
+			m_fWait = m_iCount = 0;
+		}
+	}
+}
+
+void Papyrus::SyncLocationAtRect()
+{
+	m_rRect.left = int(m_Location.x);
+	m_rRect.top = int(m_Location.y);
+	m_rRect.right = m_rRect.left + m_pSize.x;
+	m_rRect.bottom = m_rRect.top + m_pSize.y;
 }
