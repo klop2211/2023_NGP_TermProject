@@ -2,6 +2,7 @@
 
 
 #define SERVERPORT 9000
+#define MAX_CLIENTS 2
 
 // 클라이언트를 처리하는 쓰레드
 DWORD WINAPI ProcessClient1(LPVOID arg) 
@@ -49,6 +50,7 @@ int main(int argc, char* argv[])
 	struct sockaddr_in clientaddr;
 	int addrlen;
 	HANDLE hThread;
+	int ClientNum = 0;
 
 	while (1) {
 		// accept()
@@ -58,6 +60,7 @@ int main(int argc, char* argv[])
 			err_display("accept()");
 			break;
 		}
+		ClientNum++;
 
 		// 클라랑 잘 연결 되었는지 출력 
 		char addr[INET_ADDRSTRLEN];
@@ -66,7 +69,13 @@ int main(int argc, char* argv[])
 			addr, ntohs(clientaddr.sin_port));
 
 		// 클라이언트 처리 담당 스레드 생성
-		hThread = CreateThread(NULL, 0, ProcessClient1, (LPVOID)client_sock, 0, NULL);
+		if (ClientNum == 1) {
+			hThread = CreateThread(NULL, 0, ProcessClient1, (LPVOID)client_sock, 0, NULL);
+		}
+		else if (ClientNum == MAX_CLIENTS) {
+			hThread = CreateThread(NULL, 0, ProcessClient2, (LPVOID)client_sock, 0, NULL);
+		}
+		
 		if (hThread == NULL) { 
 			closesocket(client_sock); 
 		}
@@ -76,6 +85,12 @@ int main(int argc, char* argv[])
 
 		// 대기중인 인원이 2명인가?
 		// no->반복, yes -> 방 처리 스레드 생성
+		if (ClientNum == MAX_CLIENTS) {
+			hThread = CreateThread(NULL, 0, ProcessClient1, NULL, 0, NULL);
+
+			// 더이상 접속 받지 않음
+			break;
+		}
 	}
 
 	// 윈속 종료
