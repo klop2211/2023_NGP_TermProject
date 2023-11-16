@@ -1,5 +1,5 @@
 #include "Common.h"
-
+#include "GameRoom.h"
 
 #define SERVERPORT 9000
 #define MAX_CLIENTS 2
@@ -11,11 +11,6 @@ DWORD WINAPI ProcessClient1(LPVOID arg)
 }
 
 DWORD WINAPI ProcessClient2(LPVOID arg)
-{
-
-}
-
-DWORD WINAPI ProcessRoom(LPVOID arg)
 {
 
 }
