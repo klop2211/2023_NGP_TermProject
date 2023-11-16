@@ -1,8 +1,11 @@
 #include "Common.h"
-
+#include "GameRoom.h"
 
 #define SERVERPORT 9000
 #define MAX_CLIENTS 2
+#define MAX_ROOMS 20
+
+using std::array;
 
 HANDLE hClient1Event;
 HANDLE hClient2Event;
@@ -81,7 +84,11 @@ int main(int argc, char* argv[])
 	int addrlen;
 	HANDLE hThread;
 	int ClientNum = 0;
+	int RoomNum = 0;
 	SOCKET client_sockets[MAX_CLIENTS];
+
+	HANDLE hClientArrToMakeRoom[2];
+	array<HANDLE, MAX_ROOMS> hRoomArr;
 
 	while (1) {
 
@@ -89,6 +96,9 @@ int main(int argc, char* argv[])
 		hClient1Event = CreateEvent(NULL, FALSE, FALSE, NULL);
 		hClient2Event = CreateEvent(NULL, FALSE, FALSE, NULL);
 		hRoomEvent = CreateEvent(NULL, FALSE, FALSE, NULL);
+
+		//TODO: 방이 다 찼을 때 아예 안 받게 할건지 받고나서 안내를 할건지
+		
 
 		// accept()
 		addrlen = sizeof(clientaddr);
@@ -108,11 +118,12 @@ int main(int argc, char* argv[])
 			addr, ntohs(clientaddr.sin_port));
 
 		// 클라이언트 처리 담당 스레드 생성
-		if (ClientNum == 1) {
+		if (ClientNum < MAX_CLIENTS) {
 			hThread = CreateThread(NULL, 0, ProcessClient1, (LPVOID)client_sock, 0, NULL);
 		}
 		else if (ClientNum == MAX_CLIENTS) {
 			hThread = CreateThread(NULL, 0, ProcessClient2, (LPVOID)client_sock, 0, NULL);
+
 		}
 		
 		if (hThread == NULL) { 
@@ -121,6 +132,8 @@ int main(int argc, char* argv[])
 		else { 
 			CloseHandle(hThread); 
 		}
+
+		hClientArrToMakeRoom[ClientNum - 1] = hThread;
 
 		// 대기중인 인원이 2명인가?
 		// no->반복, yes -> 방 처리 스레드 생성
@@ -139,6 +152,10 @@ int main(int argc, char* argv[])
 
 			// 더이상 접속 받지 않음
 			break;
+		}
+		else
+		{
+
 		}
 	}
 
