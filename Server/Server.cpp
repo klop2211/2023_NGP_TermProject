@@ -4,20 +4,50 @@
 #define SERVERPORT 9000
 #define MAX_CLIENTS 2
 
+HANDLE hClient1Event;
+HANDLE hClient2Event;
+HANDLE hRoomEvent;
+
 // 클라이언트를 처리하는 쓰레드
 DWORD WINAPI ProcessClient1(LPVOID arg) 
 {
+	SOCKET client_sock = (SOCKET)arg;
+	DWORD retval;
+	retval = WaitForSingleObject(hClient1Event, INFINITE);
 
+	// 클라이언트 처리 로직
+
+
+
+
+	SetEvent(hClient2Event);
 }
 
 DWORD WINAPI ProcessClient2(LPVOID arg)
 {
+	SOCKET client_sock = (SOCKET)arg;
+	DWORD retval;
+	retval = WaitForSingleObject(hClient2Event, INFINITE);
 
+	// 클라이언트 처리 로직
+
+
+
+
+	SetEvent(hRoomEvent);
 }
 
 DWORD WINAPI ProcessRoom(LPVOID arg)
 {
+	DWORD retval;
+	retval = WaitForSingleObject(hRoomEvent, INFINITE);
 
+	// 룸쓰레드 처리 로직
+
+
+
+
+	SetEvent(hClient1Event);
 }
 
 int main(int argc, char* argv[])
@@ -51,8 +81,15 @@ int main(int argc, char* argv[])
 	int addrlen;
 	HANDLE hThread;
 	int ClientNum = 0;
+	SOCKET client_sockets[MAX_CLIENTS];
 
 	while (1) {
+
+		// 쓰레드 제어를 위한 이벤트
+		hClient1Event = CreateEvent(NULL, FALSE, FALSE, NULL);
+		hClient2Event = CreateEvent(NULL, FALSE, FALSE, NULL);
+		hRoomEvent = CreateEvent(NULL, FALSE, FALSE, NULL);
+
 		// accept()
 		addrlen = sizeof(clientaddr);
 		client_sock = accept(listen_sock, (struct sockaddr*)&clientaddr, &addrlen);
@@ -60,7 +97,9 @@ int main(int argc, char* argv[])
 			err_display("accept()");
 			break;
 		}
-		ClientNum++;
+
+
+		client_sockets [ClientNum++] = client_sock;
 
 		// 클라랑 잘 연결 되었는지 출력 
 		char addr[INET_ADDRSTRLEN];
@@ -88,10 +127,24 @@ int main(int argc, char* argv[])
 		if (ClientNum == MAX_CLIENTS) {
 			hThread = CreateThread(NULL, 0, ProcessClient1, NULL, 0, NULL);
 
+			// 준비 완료 메시지 보내기
+			for (int i = 0; i < MAX_CLIENTS; ++i) {
+				char buffer[100];
+				sprintf(buffer, "Game is ready for Client %d.", ClientNum);
+				send(client_sockets[i], buffer, strlen(buffer), 0);
+			}
+
+			// 클라1 신호 on
+			SetEvent(hClient1Event);
+
 			// 더이상 접속 받지 않음
 			break;
 		}
 	}
+
+	CloseHandle(hClient1Event);
+	CloseHandle(hClient2Event);
+	CloseHandle(hRoomEvent);
 
 	// 윈속 종료
 	WSACleanup();
