@@ -6,30 +6,38 @@ array<Events, MAX_ROOMS> events;
 // 클라이언트를 처리하는 쓰레드
 DWORD WINAPI ProcessClient1(LPVOID arg) 
 {
-	SOCKET client_sock = (SOCKET)arg;
+	ClientArg* Arg = (ClientArg*)arg;
+	SOCKET client_sock = Arg->sock;
+	int RoomNum = Arg->RoomNumber;
+
 	DWORD retval;
-	retval = WaitForSingleObject(hClient1Event, INFINITE);
+	retval = WaitForSingleObject(events[RoomNum].hClient1Event, INFINITE);
 
 	// 클라이언트 처리 로직
 
 
 
 
-	SetEvent(hClient2Event);
+	SetEvent(events[RoomNum].hClient2Event);
+	return NULL;
 }
 
 DWORD WINAPI ProcessClient2(LPVOID arg)
 {
-	SOCKET client_sock = (SOCKET)arg;
+	ClientArg* Arg = (ClientArg*)arg;
+	SOCKET client_sock = Arg->sock;
+	int RoomNum = Arg->RoomNumber;
+
 	DWORD retval;
-	retval = WaitForSingleObject(hClient2Event, INFINITE);
+	retval = WaitForSingleObject(events[RoomNum].hClient2Event, INFINITE);
 
 	// 클라이언트 처리 로직
 
 
 
 
-	SetEvent(hRoomEvent);
+	SetEvent(events[RoomNum].hRoomEvent);
+	return NULL;
 }
 
 DWORD WINAPI ProcessRoom(LPVOID arg)
@@ -44,6 +52,7 @@ DWORD WINAPI ProcessRoom(LPVOID arg)
 
 	}
 	SetEvent(events[Arg->RoomNumber].hClient1Event);
+	return NULL;
 }
 
 int main(int argc, char* argv[])
@@ -75,7 +84,7 @@ int main(int argc, char* argv[])
 	SOCKET client_sock;
 	struct sockaddr_in clientaddr;
 	int addrlen;
-	HANDLE hThread;
+	HANDLE hThread = nullptr;
 	int ClientNum = 0;
 	int RoomNum = 0;
 	SOCKET client_sockets[MAX_CLIENTS];
@@ -96,7 +105,7 @@ int main(int argc, char* argv[])
 		}
 
 
-		client_sockets [ClientNum++] = client_sock;
+		client_sockets [ClientNum] = client_sock;
 
 		// 클라랑 잘 연결 되었는지 출력 
 		char addr[INET_ADDRSTRLEN];
@@ -105,11 +114,14 @@ int main(int argc, char* argv[])
 			addr, ntohs(clientaddr.sin_port));
 
 		// 클라이언트 처리 담당 스레드 생성
+		ClientArg clientarg;
+		clientarg.RoomNumber = RoomNum;
+		clientarg.sock = client_sock;
 		if (ClientNum < MAX_CLIENTS) {
-			hThread = CreateThread(NULL, 0, ProcessClient1, (LPVOID)client_sock, 0, NULL);
+			hThread = CreateThread(NULL, 0, ProcessClient1, (LPVOID)&clientarg, 0, NULL);
 		}
 		else if (ClientNum == MAX_CLIENTS) {
-			hThread = CreateThread(NULL, 0, ProcessClient2, (LPVOID)client_sock, 0, NULL);
+			hThread = CreateThread(NULL, 0, ProcessClient2, (LPVOID)&clientarg, 0, NULL);
 
 		}
 		
@@ -120,19 +132,19 @@ int main(int argc, char* argv[])
 			CloseHandle(hThread); 
 		}
 
-		hClientArrToMakeRoom[ClientNum - 1] = hThread;
+		hClientArrToMakeRoom[ClientNum++] = hThread;
 
 		// 대기중인 인원이 2명인가?
 		// no->반복, yes -> 방 처리 스레드 생성
 		if (ClientNum == MAX_CLIENTS) {
-			RoomArg* arg;
+			RoomArg arg;
 
 			for (int i = 0; i < MAX_CLIENTS; i++)
 			{
-				arg->Client[i] = hClientArrToMakeRoom[i];
+				arg.Client[i] = hClientArrToMakeRoom[i];
 			}
-			arg->RoomNumber = RoomNum++;
-			hThread = CreateThread(NULL, 0, ProcessRoom, arg, 0, NULL);
+			arg.RoomNumber = RoomNum;
+			hThread = CreateThread(NULL, 0, ProcessRoom, &arg, 0, NULL);
 
 			// 준비 완료 메시지 보내기
 			for (int i = 0; i < MAX_CLIENTS; ++i) {
@@ -142,7 +154,7 @@ int main(int argc, char* argv[])
 			}
 
 			// 클라1 신호 on
-			SetEvent(hClient1Event);
+			SetEvent(events[RoomNum++].hClient1Event);
 
 			// 더이상 접속 받지 않음
 			break;
@@ -153,9 +165,12 @@ int main(int argc, char* argv[])
 		}
 	}
 
-	CloseHandle(hClient1Event);
-	CloseHandle(hClient2Event);
-	CloseHandle(hRoomEvent);
+	for (auto& handle : events)
+	{
+		CloseHandle(handle.hClient1Event);
+		CloseHandle(handle.hClient2Event);
+		CloseHandle(handle.hRoomEvent);
+	}
 
 	// 윈속 종료
 	WSACleanup();
