@@ -138,7 +138,7 @@ int main(int argc, char* argv[])
 		// 대기중인 인원이 2명인가?
 		// no->반복, yes -> 방 처리 스레드 생성
 		if (ClientNum == MAX_CLIENTS) {
-			hThread = CreateThread(NULL, 0, ProcessClient1, NULL, 0, NULL);
+			hThread = CreateThread(NULL, 0, ProcessClient1, hClientArrToMakeRoom, 0, NULL);
 
 			// 준비 완료 메시지 보내기
 			for (int i = 0; i < MAX_CLIENTS; ++i) {
