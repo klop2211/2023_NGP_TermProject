@@ -6,8 +6,8 @@ Papyrus::Papyrus()
 {
 	if (m_cImg.IsNull())
 	{
-		m_cImg.Load(TEXT(""));
-		m_cBossHpBar.Load(TEXT(""));
+		m_cImg.Load(TEXT("적관련\\파피루스.png"));
+		m_cBossHpBar.Load(TEXT("윈플 텀프 이미지\\보스체력바빈통.png"));
 	}
 
 	//start 1,1

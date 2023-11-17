@@ -1,15 +1,7 @@
 #include "Common.h"
 #include "GameRoom.h"
 
-#define SERVERPORT 9000
-#define MAX_CLIENTS 2
-#define MAX_ROOMS 20
-
-using std::array;
-
-HANDLE hClient1Event;
-HANDLE hClient2Event;
-HANDLE hRoomEvent;
+array<Events, MAX_ROOMS> events;
 
 // 클라이언트를 처리하는 쓰레드
 DWORD WINAPI ProcessClient1(LPVOID arg) 
@@ -43,14 +35,15 @@ DWORD WINAPI ProcessClient2(LPVOID arg)
 DWORD WINAPI ProcessRoom(LPVOID arg)
 {
 	DWORD retval;
-	retval = WaitForSingleObject(hRoomEvent, INFINITE);
+	RoomArg* Arg = (RoomArg*)arg;
+	retval = WaitForSingleObject(events[Arg->RoomNumber].hRoomEvent, INFINITE);
 
-	// 룸쓰레드 처리 로직
+	// Main Game Room 로직
+	while (true)
+	{
 
-
-
-
-	SetEvent(hClient1Event);
+	}
+	SetEvent(events[Arg->RoomNumber].hClient1Event);
 }
 
 int main(int argc, char* argv[])
@@ -87,16 +80,10 @@ int main(int argc, char* argv[])
 	int RoomNum = 0;
 	SOCKET client_sockets[MAX_CLIENTS];
 
-	HANDLE hClientArrToMakeRoom[2];
+	array<HANDLE, MAX_ROOMS> hClientArrToMakeRoom;
 	array<HANDLE, MAX_ROOMS> hRoomArr;
 
 	while (1) {
-
-		// 쓰레드 제어를 위한 이벤트
-		hClient1Event = CreateEvent(NULL, FALSE, FALSE, NULL);
-		hClient2Event = CreateEvent(NULL, FALSE, FALSE, NULL);
-		hRoomEvent = CreateEvent(NULL, FALSE, FALSE, NULL);
-
 		//TODO: 방이 다 찼을 때 아예 안 받게 할건지 받고나서 안내를 할건지
 		
 
@@ -138,7 +125,14 @@ int main(int argc, char* argv[])
 		// 대기중인 인원이 2명인가?
 		// no->반복, yes -> 방 처리 스레드 생성
 		if (ClientNum == MAX_CLIENTS) {
-			hThread = CreateThread(NULL, 0, ProcessClient1, hClientArrToMakeRoom, 0, NULL);
+			RoomArg* arg;
+
+			for (int i = 0; i < MAX_CLIENTS; i++)
+			{
+				arg->Client[i] = hClientArrToMakeRoom[i];
+			}
+			arg->RoomNumber = RoomNum++;
+			hThread = CreateThread(NULL, 0, ProcessRoom, arg, 0, NULL);
 
 			// 준비 완료 메시지 보내기
 			for (int i = 0; i < MAX_CLIENTS; ++i) {

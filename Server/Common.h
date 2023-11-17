@@ -13,6 +13,34 @@
 
 #pragma comment(lib, "ws2_32") // ws2_32.lib 링크
 
+#define SERVERPORT 9000
+#define MAX_CLIENTS 2
+#define MAX_ROOMS 20
+
+using std::array;
+
+struct RoomArg
+{
+	array<HANDLE, MAX_ROOMS> Client;
+	BYTE RoomNumber;
+};
+
+class Events
+{
+public:
+	Events()
+	{
+		// 쓰레드 제어를 위한 이벤트
+		hClient1Event = CreateEvent(NULL, FALSE, FALSE, NULL);
+		hClient2Event = CreateEvent(NULL, FALSE, FALSE, NULL);
+		hRoomEvent = CreateEvent(NULL, FALSE, FALSE, NULL);
+	}
+
+	HANDLE hRoomEvent;
+	HANDLE hClient1Event;
+	HANDLE hClient2Event;
+};
+
 // 소켓 함수 오류 출력 후 종료
 void err_quit(const char *msg)
 {
