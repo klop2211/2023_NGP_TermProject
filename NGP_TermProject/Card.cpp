@@ -4,7 +4,7 @@
 
 #include "Card.h"
 
-Card::Card(CImage* manaImg)
+Card::Card()
 {
 	//m_rRect = new RECT[4];
 	m_rRect[(int)CardRect::R_main] = { 30,160,277,245 };
@@ -13,7 +13,10 @@ Card::Card(CImage* manaImg)
 	m_rRect[(int)CardRect::R_tier3] = { 60,440,300,480 };//240/40
 	m_bIsValid = true, m_bCheep = false;
 
-	m_cManaImg = manaImg;
+	if (m_cManaImg.IsNull())
+	{
+		m_cManaImg.Load(TEXT(""));
+	}
 }
 
 Card::~Card()

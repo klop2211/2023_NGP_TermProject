@@ -130,6 +130,7 @@
     <ClInclude Include="Bat.h" />
     <ClInclude Include="Bone.h" />
     <ClInclude Include="CommonMonster.h" />
+    <ClInclude Include="OtherCard.h" />
     <ClInclude Include="Papyrus.h" />
     <ClInclude Include="Card.h" />
     <ClInclude Include="EventType.h" />
@@ -147,6 +148,7 @@
     <ClCompile Include="Bat.cpp" />
     <ClCompile Include="Bone.cpp" />
     <ClCompile Include="CommonMonster.cpp" />
+    <ClCompile Include="OtherCard.cpp" />
     <ClCompile Include="Papyrus.cpp" />
     <ClCompile Include="Card.cpp" />
     <ClCompile Include="GameFramework.cpp" />

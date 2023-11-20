@@ -1,12 +1,16 @@
 #pragma once
 #include "Object.h"
 
+enum CardName { N_rhlddufvk, N_sktjsckd, N_dbtjdrkdcjs, N_wjrfydvh, N_aodfyddufvk, N_qksdnjftja, N_dusghkstja, N_cjdfydwls, N_cjdfydcnftn, N_ghltjsckd, N_dmsgkdbtjdxks };
+enum CardRect { R_main, R_tier1, R_tier2, R_tier3 };
+enum TriIndex { I_Tier1, I_Tier2, I_Tier3, I_selected };
+
 class Card : public Object
 {
 public:
-	Card(CImage* manaImg);
+	Card();
 	~Card();
-private:
+protected:
 	POINT m_pPoint;
 	RECT m_rRect[4];
 	CardName m_eCardname;
@@ -14,7 +18,7 @@ private:
 	CImage m_cImg[4];			//카드, 트포3개
 	CImage m_cEffect;
 	CImage m_cSkill;
-	CImage* m_cManaImg;
+	static CImage m_cManaImg;
 
 	TCHAR m_tNameStr[11];
 	TCHAR m_tStr[4][100];
@@ -22,6 +26,9 @@ private:
 	//피해수치 마나 부파수치 무력화수치
 	int m_iDamage, m_iMana, m_iDestruction, m_iNeutralization;
 	bool m_bIsValid, m_bCheep;
+
+	//카드의 트라이포드 확인
+	int** m_iTripord = nullptr;
 
 	virtual void __init__() { }
 	//virtual bool getOnce() { return NULL; }
