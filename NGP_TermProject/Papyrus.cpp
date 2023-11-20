@@ -11,10 +11,10 @@ Papyrus::Papyrus()
 	}
 
 	//start 1,1
-	m_pPoint = { 49, 54 };
-	m_pSize = { m_pPoint.x * 5, m_pPoint.y * 5 };
-	m_Location = { float(WINWIDTH - 300), float(634 - m_pSize.y) };
-	m_rRect = { WINWIDTH - 300, 634 - m_pSize.y, WINWIDTH + m_pSize.x - 300, 634 };
+	m_pPoint = m_pOffset = { 49, 54 };
+	m_iSize = 5;
+	m_Location = { float(WINWIDTH - 300), float(634 - m_iSize * 5) };
+	m_rRect = { WINWIDTH - 300, 634 - m_iSize * 5, WINWIDTH + m_iSize * 5 - 300, 634 };
 	//img = papyrusImg;
 	//this->m_cBossHpBar = m_cBossHpBar;
 	m_iCount = 0, m_fWait = 0, m_iSpeed = 10;
@@ -77,8 +77,7 @@ void Papyrus::BreakingUpdate(float elapsed)
 				status = PapyrusStatus::P_Pattern2;
 				m_fWait = 0, m_iCount = 0;
 			}
-			m_Location.x -= m_iSpeed * 20 * elapsed;
-			SyncLocationAtRect();
+			MoveXY(-m_iSpeed, 0, elapsed);
 		}
 	}
 	break;
@@ -328,12 +327,4 @@ bool Papyrus::Hit(int Att, int AmmorBreak, int KnockDown)
 			m_fWait = m_iCount = 0;
 		}
 	}
-}
-
-void Papyrus::SyncLocationAtRect()
-{
-	m_rRect.left = int(m_Location.x);
-	m_rRect.top = int(m_Location.y);
-	m_rRect.right = m_rRect.left + m_pSize.x;
-	m_rRect.bottom = m_rRect.top + m_pSize.y;
 }

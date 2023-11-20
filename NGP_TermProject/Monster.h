@@ -5,11 +5,14 @@
 class Monster : public Object
 {
 public:
-	Monster() {}
+	Monster() : m_iSize(1) {}
 	~Monster() {}
 
 	virtual void Update(float elapsed) override = 0;
 	virtual bool Hit(int damage) {};
+
+	void SyncLocationAtRect();
+	void MoveXY(float x, float y, float elapsed);
 
 	//Render
 public:
@@ -36,6 +39,8 @@ protected:
 
 	int m_iCount;
 	float m_fWait;
+
+	int m_iSize;
 
 	// 상태이상
 	StatusEffect m_eSE;

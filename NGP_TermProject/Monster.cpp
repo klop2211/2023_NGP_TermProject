@@ -2,6 +2,20 @@
 
 #include "Monster.h"
 
+void Monster::SyncLocationAtRect()
+{
+	m_rRect.left = int(m_Location.x);
+	m_rRect.top = int(m_Location.y);
+	m_rRect.right = m_rRect.left + m_pOffset.x * m_iSize;
+	m_rRect.bottom = m_rRect.top + m_pOffset.y * m_iSize;
+}
+
+void Monster::MoveXY(float x, float y, float elapsed)
+{
+	m_Location.x += x * 20 * elapsed;
+	m_Location.y += y * 20 * elapsed;
+	SyncLocationAtRect();
+}
 //void Monster::Update(float elapsed)
 //{
 //}

@@ -5,7 +5,7 @@ Bat::Bat()
 {
 	if (m_cImg.IsNull())
 	{
-		m_cImg.Load(TEXT(""));
+		m_cImg.Load(TEXT("적관련\\박쥐.png"));
 	}
 	m_pPoint = { 67 * 2,49 * 2 };
 	m_pOffset = { 67,49 };
@@ -60,16 +60,14 @@ void Bat::Update(float elapsed)
 		{
 		case MonsterStatus::Move:
 			//hit(1);
-			m_rRect.left -= m_iSpeed;
-			m_rRect.right -= m_iSpeed;
+			MoveXY(-m_iSpeed, 0, elapsed);
 			if (m_rRect.left < CASTLEXPOINT - 50) {
 				status = MonsterStatus::Attack;
 				m_iCount = 0, m_fWait = 0;
 			}
 			break;
 		case MonsterStatus::Dead:
-			m_rRect.top += 15;
-			m_rRect.bottom += 15;
+			MoveXY(0, 15, elapsed);
 			if (m_iCount == 5)
 				--m_iCount;
 			if (m_rRect.bottom > GROUNDYPOINT) {

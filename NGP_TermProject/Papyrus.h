@@ -13,8 +13,6 @@ public:
 
 	virtual bool Hit(int att, int ammorBreak, int knockDown);
 
-	void SyncLocationAtRect();
-
 	//Render
 public:
 	virtual void Draw(HDC& memdc) override;
@@ -38,7 +36,6 @@ private:
 	TCHAR m_sName[9], m_sHpStr[10];
 	RECT m_rNameRect;
 	RECT m_rHpRect;
-	POINT m_pSize;
 
 	class Player* m_pPlayer;
 	class Bone* m_pBone[2] = { nullptr, };

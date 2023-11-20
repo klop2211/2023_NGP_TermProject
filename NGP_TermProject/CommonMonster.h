@@ -7,14 +7,14 @@ public:
 	CommonMonster() {}
 	~CommonMonster() {}
 
-	virtual void Update(float elapsed) override;
-	virtual bool Hit(int damage);
+	virtual void Update(float elapsed) override {};
+	virtual bool Hit(int damage) {};
 
 	//Render
 public:
-	virtual void Draw(HDC& memdc);
-	virtual void ImgDraw(HDC& memdc);
-	virtual void HpDraw(HDC& memdc);
+	virtual void Draw(HDC& memdc) {};
+	virtual void ImgDraw(HDC& memdc) {};
+	virtual void HpDraw(HDC& memdc) {};
 
 	//Gettor, Settor
 public:
