@@ -3,7 +3,10 @@
 
 #include "stdafx.h"
 #include "NGP_TermProject.h"
+#include "Common.h"
 
+char* SERVERIP = (char*)"127.0.0.1";
+#define SERVERPORT 9000
 #define MAX_LOADSTRING 100
 
 // 전역 변수:
@@ -180,4 +183,52 @@ INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
         break;
     }
     return (INT_PTR)FALSE;
+}
+DWORD WINAPI ClientToServer(LPVOID arg)
+{
+    int retval;
+
+    // 윈속 초기화
+    WSADATA wsa;
+    if (WSAStartup(MAKEWORD(2, 2), &wsa) != 0)
+        return 1;
+
+    // 소켓 생성
+    SOCKET sock = socket(AF_INET, SOCK_STREAM, 0);
+    if (sock == INVALID_SOCKET) err_quit("socket()");
+
+    // connect()
+    struct sockaddr_in serveraddr;
+    memset(&serveraddr, 0, sizeof(serveraddr));
+    serveraddr.sin_family = AF_INET;
+    inet_pton(AF_INET, SERVERIP, &serveraddr.sin_addr);
+    serveraddr.sin_port = htons(SERVERPORT);
+    retval = connect(sock, (struct sockaddr*)&serveraddr, sizeof(serveraddr));
+    if (retval == SOCKET_ERROR) err_quit("connect()");
+
+    // Game is ready for Client num 메시지 수신 후 게임 시작
+    while (1){
+        // 메시지 수신
+        char buffer[100];
+        retval = recv(sock, buffer, sizeof(buffer), 0);
+        if (retval == SOCKET_ERROR) {
+            err_quit("recv()");
+        }
+        else if (retval > 0) {
+            buffer[retval] = '\0'; // 문자열 끝에 널 종료 문자 추가
+            std::string receivedMsg = buffer;
+            std::string readyMsg = "Game is ready for Client";
+
+            // 수신한 메시지가 "Game is ready for Client"인 경우 게임 시작
+            if (receivedMsg.find(readyMsg)) {
+                // 게임 시작 동작
+                // 예: gameStart 함수 호출
+            }
+        }
+
+        // 소켓 종료
+        closesocket(sock);
+
+        return 0;
+    }
 }
