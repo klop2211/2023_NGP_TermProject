@@ -1,6 +1,11 @@
 #pragma once
 #include "Monster.h"
 
+enum PapyrusStatus {
+	UP_Breaking = 0, UP_Move, UP_Pattern,
+	P_Move = 0, P_Down, P_Pattern1, P_Pattern2, P_Die
+};
+
 class Papyrus : public Monster
 {
 public:
@@ -40,10 +45,4 @@ private:
 	class Player* m_pPlayer;
 	class Bone* m_pBone[2] = { nullptr, };
 	Bone* m_pMiniBone[15] = { nullptr, };
-};
-
-
-enum class PapyrusStatus {
-	UP_Breaking = 0, UP_Move, UP_Pattern,
-	P_Move = 0, P_Down, P_Pattern1, P_Pattern2, P_Die
 };

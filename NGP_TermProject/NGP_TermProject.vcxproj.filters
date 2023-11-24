@@ -72,6 +72,9 @@
     <ClInclude Include="OtherCard.h">
       <Filter>2019180016\Header</Filter>
     </ClInclude>
+    <ClInclude Include="Random.h">
+      <Filter>2019180016\Header</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="NGP_TermProject.cpp">
@@ -111,6 +114,9 @@
       <Filter>2019180016\Source</Filter>
     </ClCompile>
     <ClCompile Include="OtherCard.cpp">
+      <Filter>2019180016\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Random.cpp">
       <Filter>2019180016\Source</Filter>
     </ClCompile>
   </ItemGroup>

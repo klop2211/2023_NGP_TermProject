@@ -899,8 +899,8 @@ void Cjdfydcnftn::__init__() {
 	swprintf_s(m_tStr[(int)CardRect::R_main], 100, L"전방으로 전진한 후 창을 빠르게 휘둘러 %d의 피해를 준다.\n무력화 : 중\0", m_iDamage);
 }
 
-Ghltjsckd::Ghltjsckd(int** m_iTripord, bool a = false) {
-	once = a;
+Ghltjsckd::Ghltjsckd(int** m_iTripord, bool BOnce) {
+	once = BOnce;
 	__init__();
 	this->m_iTripord = m_iTripord;
 }

@@ -3,12 +3,16 @@
 #include "Bone.h"
 #include <windef.h>
 
+#include "Random.h"
+
+CImage Bone::m_cImg;
+
 Bone::Bone(int m_iNum, int x, int y)
 {
-	if (m_cImg.IsNull())
-	{
-		m_cImg.Load(TEXT(""));
-	}
+	//if (m_cImg.IsNull())
+	//{
+	//	m_cImg.Load(TEXT(""));
+	//}
 
 	this->m_iNum = m_iNum;
 	if (m_iNum == 0) {
@@ -22,7 +26,7 @@ Bone::Bone(int m_iNum, int x, int y)
 	else if (m_iNum == 1) {
 		m_pPoint = { 33, 8 };
 		m_pStart = { 246, 371 };
-		m_iRandValue = GetRand(5) + 5;
+		m_iRandValue = RandomGen::GetRand(5) + 5;
 		m_pOffset = { 1, m_pPoint.y * m_iRandValue };
 		m_rRect = { x - m_pOffset.x, y - m_pOffset.y - 100, x , y - 100 };
 		m_iSpeed = 40;
@@ -118,8 +122,8 @@ void Bone::Update(float elapsed)
 			else {
 				MoveXY(0, 70, elapsed);
 				if (m_rRect.bottom < 0) {
-					int temp = GetRand(m_rRect.left - 100) + 100;
-					m_iCount = GetRand(4);
+					int temp = RandomGen::GetRand(m_rRect.left - 100) + 100;
+					m_iCount = RandomGen::GetRand(4);
 					m_rRect = { temp,-m_pOffset.y,temp + m_pOffset.x,0 };
 					m_bCanDown = true;
 					m_fWait = 0;

@@ -2,6 +2,9 @@
 
 #include "Object.h"
 
+enum class MonsterStatus { Move, Dead, Attack, Hit, Die };
+enum class StatusEffect { Ice_s = 1, Fire_s, NULL_S };
+
 class Monster : public Object
 {
 public:
@@ -45,7 +48,3 @@ protected:
 	// 상태이상
 	StatusEffect m_eSE;
 };
-
-
-enum class MonsterStatus { Move, Dead, Attack, Hit, Die };
-enum class StatusEffect { Ice_s = 1, Fire_s, NULL_S };

@@ -18,9 +18,10 @@ public:
 	//Render
 public:
 	virtual void Draw(HDC& memdc) {};
+
 	//Gettor, Settor
 public:
-	virtual CImage GetImg() const {};
+	virtual CImage GetImg() const = 0;
 	RECT GetRect() const { return m_rRect; }
 
 protected:
@@ -30,8 +31,13 @@ protected:
 	//충돌 처리 사각형
 	RECT m_rRect;
 
-	// 텍스쳐 위치 오프셋
-	POINT m_pPoint, m_pOffset;
+	// 텍스쳐 위치
+	POINT m_pPoint;
+
+	// 텍스쳐 오프셋
+	POINT m_pOffset;
+
+	// 오브젝트 위치
 	FPOINT m_Location;
 };
 

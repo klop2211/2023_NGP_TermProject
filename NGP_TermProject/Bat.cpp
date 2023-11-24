@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "Bat.h"
 
+CImage Bat::m_cImg;
+
 Bat::Bat()
 {
 	if (m_cImg.IsNull())
@@ -79,7 +81,7 @@ void Bat::Update(float elapsed)
 			break;
 		case MonsterStatus::Attack:
 			if (m_iCount % 6 == 3) {
-				hitCastle(m_iDamage);
+				//hitCastle(m_iDamage);
 			}
 			break;
 		case MonsterStatus::Hit:

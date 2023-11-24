@@ -4,6 +4,8 @@
 
 #include "Card.h"
 
+CImage Card::m_cManaImg[2];
+
 Card::Card()
 {
 	//m_rRect = new RECT[4];

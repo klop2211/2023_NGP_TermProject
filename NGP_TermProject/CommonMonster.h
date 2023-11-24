@@ -8,7 +8,7 @@ public:
 	~CommonMonster() {}
 
 	virtual void Update(float elapsed) override {};
-	virtual bool Hit(int damage) {};
+	virtual bool Hit(int damage) { return 0; };
 
 	//Render
 public:
@@ -18,7 +18,7 @@ public:
 
 	//Gettor, Settor
 public:
-	virtual CImage GetImg() const {};
+	virtual CImage GetImg() const = 0;
 
 protected:
 	MonsterStatus status;

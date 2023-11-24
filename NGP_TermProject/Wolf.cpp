@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "Wolf.h"
 
+CImage Wolf::m_cImg;
+
 Wolf::Wolf()
 {
 	if (m_cImg.IsNull())
@@ -120,7 +122,7 @@ void Wolf::Update(float elapsed)
 		case MonsterStatus::Attack:
 			if (m_iCount % 10 == 6) {
 				// TODO: 소켓 보내기?
-				hitCastle(m_iDamage);
+				//hitCastle(m_iDamage);
 			}
 			break;
 		case MonsterStatus::Hit:

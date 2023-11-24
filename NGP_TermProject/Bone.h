@@ -13,6 +13,8 @@ public:
 	void Draw(HDC& memdc);
 	void Update(float elapsed);
 
+	virtual CImage GetImg() const { return m_cImg; }
+
 public:
 	static CImage m_cImg;
 };

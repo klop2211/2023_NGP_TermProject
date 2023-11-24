@@ -1,6 +1,11 @@
 #include "stdafx.h"
 #include "Papyrus.h"
 #include "Bone.h"
+#include "Random.h"
+
+CImage Papyrus::m_cImg;
+CImage Papyrus::m_cBossHpBar;
+CImage Papyrus::m_cBoneImg;
 
 Papyrus::Papyrus()
 {
@@ -18,7 +23,7 @@ Papyrus::Papyrus()
 	//img = papyrusImg;
 	//this->m_cBossHpBar = m_cBossHpBar;
 	m_iCount = 0, m_fWait = 0, m_iSpeed = 10;
-	m_Status = PapyrusStatus::UP_Move;
+	m_Status = UP_Move;
 
 	m_iCurrentHp = 60;
 	m_iMaxHp = 60;
@@ -57,31 +62,32 @@ void Papyrus::Update(float elapsed)
 void Papyrus::BreakingUpdate(float elapsed)
 {
 	switch (m_Status) {
-	case PapyrusStatus::P_Move:
+	case P_Move:
 	{
 		RECT temp, check = { m_rRect.left - 100,m_rRect.top,m_rRect.right - 100,m_rRect.bottom };
-		if (IntersectRect(&temp, &check, m_pPlayer->GetRect(1)))
+		// TODO: 플레이어 생기면 수정
+		if (false/*IntersectRect(&temp, &check, m_pPlayer->GetRect(1))*/)
 		{
 			if (m_fAttackTimer > 7.5f)
 			{
-				m_Status = PapyrusStatus::P_Pattern1;
+				m_Status = P_Pattern1;
 				m_fAttackTimer = 0;
 				//m_fWait = 0, m_iCount = 0;
 			}
 		}
 		else
 		{
-			int randInt = GetRand(100);
+			int randInt = RandomGen::GetRand(100);
 			if (randInt < 3)
 			{
-				m_Status = PapyrusStatus::P_Pattern2;
+				m_Status = P_Pattern2;
 				m_fWait = 0, m_iCount = 0;
 			}
 			MoveXY(-m_iSpeed, 0, elapsed);
 		}
 	}
 	break;
-	case PapyrusStatus::P_Down:
+	case P_Down:
 		if (m_bCanDown) {
 			if (++m_iCount == 11) {
 				--m_iCount;
@@ -90,20 +96,20 @@ void Papyrus::BreakingUpdate(float elapsed)
 					m_fWait = 0;
 				}
 				if (m_iCurrentHp <= 0) {
-					m_Status = PapyrusStatus::P_Die;
+					m_Status = P_Die;
 					m_fWait = m_iCount = 0;
 				}
 			}
 		}
 		else {
 			if (--m_iCount < 0) {
-				m_Status = PapyrusStatus::P_Move;
+				m_Status = P_Move;
 				m_iKnockDown = 100;
 				m_fWait = m_iCount = 0;
 			}
 		}
 		break;
-	case PapyrusStatus::P_Pattern1:
+	case P_Pattern1:
 		m_iCount++;
 		if (m_fWait == 5) {
 			for (int i = 0; i < 2; i++)
@@ -115,7 +121,7 @@ void Papyrus::BreakingUpdate(float elapsed)
 			}
 		}
 		break;
-	case PapyrusStatus::P_Pattern2:
+	case P_Pattern2:
 		m_iCount++;
 		if (m_iCount % 5 == 4) {
 			for (int i = 0; i < 15; i++)
@@ -127,11 +133,11 @@ void Papyrus::BreakingUpdate(float elapsed)
 			}
 		}
 		if (m_iCount == 75) {
-			m_Status = PapyrusStatus::P_Move;
+			m_Status = P_Move;
 			m_fWait = m_iCount = 0;
 		}
 		break;
-	case PapyrusStatus::P_Die:
+	case P_Die:
 		if (m_iCount < 245)
 			m_iCount += 10;
 		break;
@@ -144,32 +150,33 @@ void Papyrus::UnBreakingUpdate(float elapsed)
 {
 	switch (m_Status)
 	{
-	case PapyrusStatus::UP_Breaking:
+	case UP_Breaking:
 	{
 		if (m_iCount >= 7)
 		{
-			m_Status = PapyrusStatus::P_Move;
+			m_Status = P_Move;
 			m_fWait = m_iCount = 0;
 			m_bBreaked = true;
 		}
+		break;
 	}
-	break;
-	case PapyrusStatus::UP_Move:
+	case UP_Move:
 	{
 		RECT temp, check = { m_rRect.left - 100,m_rRect.top,m_rRect.right - 100,m_rRect.bottom };
-		if (IntersectRect(&temp, &check, m_pPlayer->GetRect(1)))
+		// TODO: 플레이어 생기면 수정
+		if (false/*IntersectRect(&temp, &check, m_pPlayer->GetRect(1))*/)
 		{
 			if (m_fAttackTimer > 7.5f)
 			{
-				m_Status = PapyrusStatus::UP_Pattern;
+				m_Status = UP_Pattern;
 				m_fAttackTimer = 0;
 			}
 		}
 		m_Location.x -= m_iSpeed * 20 * elapsed;
 		SyncLocationAtRect();
+		break;
 	}
-	break;
-	case PapyrusStatus::UP_Pattern:
+	case UP_Pattern:
 	{			
 		for (int i = 0; i < 2; i++)
 		{
@@ -177,9 +184,9 @@ void Papyrus::UnBreakingUpdate(float elapsed)
 				m_pBone[i] = new Bone(0, m_rRect.left, m_rRect.bottom);
 				break;
 			}
-		}		
+		}
+		break;
 	}
-	break;
 	default:
 		break;
 	}
@@ -196,44 +203,50 @@ void Papyrus::ImgDraw(HDC& memdc)
 	int frame = 1;
 
 	if (!m_bBreaked)
+	{
 		switch (m_Status)
 		{
-		case PapyrusStatus::UP_Breaking:
+		case UP_Breaking:
 			frame = 8;
 			break;
-		case PapyrusStatus::UP_Move:
+		case UP_Move:
 			frame = 4;
 			break;
-		case PapyrusStatus::UP_Pattern:
+		case UP_Pattern:
 			frame = 2;
 			break;
 		}
+	}
 	else
-		switch (m_Status) {
-		case PapyrusStatus::P_Move:
+	{
+
+		switch (m_Status)
+		{
+		case P_Move:
 			frame = 4;
 			break;
-		case PapyrusStatus::P_Down:
+		case P_Down:
 			frame = 11;
 			break;
-		case PapyrusStatus::P_Pattern1:
+		case P_Pattern1:
 			frame = 5;
 			break;
-		case PapyrusStatus::P_Pattern2:
+		case P_Pattern2:
 			frame = 5;
 			break;
-		case PapyrusStatus::P_Die:
+		case P_Die:
 			frame = 1;
 			break;
 		default:
 			frame = 1;
 			break;
 		}
+	}
 	if (!m_bBreaked)
 		m_cImg.Draw(memdc, m_rRect.left, m_rRect.top, m_pPoint.x, m_pPoint.y,
 			1 + m_pPoint.x * (m_iCount % frame), 1 + m_pPoint.y * (int)m_Status, m_pPoint.x - 1, m_pPoint.y - 1);
 	else {
-		if (m_Status == PapyrusStatus::P_Die) {
+		if (m_Status == P_Die) {
 			m_cImg.AlphaBlend(memdc, m_rRect.left, m_rRect.top, m_pPoint.x, m_pPoint.y,
 				1 + m_pPoint.x * 10, 163 + m_pPoint.y * 1, m_pPoint.x - 1, m_pPoint.y - 1, 255 - m_iCount, AC_SRC_OVER);
 		}
@@ -298,14 +311,14 @@ bool Papyrus::Hit(int Att, int AmmorBreak, int KnockDown)
 		if (m_iCurrentHp <= 0)
 		{
 			m_iCurrentHp = 0;
-			m_Status = PapyrusStatus::P_Down;
+			m_Status = P_Down;
 			m_bBreaked = true;
 			m_fWait = m_iCount = 0;
 		}
 
 		m_iBreakCount -= AmmorBreak;
 		if (m_iBreakCount <= 0) {
-			m_Status = PapyrusStatus::UP_Breaking;
+			m_Status = UP_Breaking;
 			m_fWait = m_iCount = 0;
 		}
 
@@ -316,15 +329,17 @@ bool Papyrus::Hit(int Att, int AmmorBreak, int KnockDown)
 		if (m_iCurrentHp <= 0)
 		{
 			m_iCurrentHp = 0;
-			m_Status = PapyrusStatus::P_Down;
+			m_Status = P_Down;
 			m_fWait = m_iCount = 0;
+			return true;
 		}
 
 		this->m_iKnockDown -= KnockDown;
 		if (this->m_iKnockDown <= 0)
 		{
-			m_Status = PapyrusStatus::P_Down;
+			m_Status = P_Down;
 			m_fWait = m_iCount = 0;
 		}
 	}
+	return false;
 }
