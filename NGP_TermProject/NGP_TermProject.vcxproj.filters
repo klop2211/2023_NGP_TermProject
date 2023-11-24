@@ -72,8 +72,25 @@
     <ClInclude Include="OtherCard.h">
       <Filter>2019180016\Header</Filter>
     </ClInclude>
+<<<<<<< Updated upstream
     <ClInclude Include="Random.h">
       <Filter>2019180016\Header</Filter>
+=======
+    <ClInclude Include="Player.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="State.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="StateMachine.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerOwnedStates.h">
+      <Filter>헤더 파일</Filter>
+>>>>>>> Stashed changes
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -116,8 +133,19 @@
     <ClCompile Include="OtherCard.cpp">
       <Filter>2019180016\Source</Filter>
     </ClCompile>
+<<<<<<< Updated upstream
     <ClCompile Include="Random.cpp">
       <Filter>2019180016\Source</Filter>
+=======
+    <ClCompile Include="Player.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerOwnedStates.cpp">
+      <Filter>소스 파일</Filter>
+>>>>>>> Stashed changes
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

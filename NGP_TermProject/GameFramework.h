@@ -1,12 +1,22 @@
 #pragma once
-#include "Packet.h"
+#include <chrono>
 
 class GameFramework
 {
 public:
-	virtual bool Init() = 0;
+	GameFramework();
+	~GameFramework();
+
+	void Init(HWND hWnd);
+	void Update();
+	void Draw();
+	void FrameAdvance();
+	void SetElapsedTime();
 
 private:
-	Packet m_Packet;
+	HWND m_hWnd;
+	Scene* m_pScene;
+	float m_fElapsedTime;
+	std::chrono::time_point<std::chrono::system_clock> m_tPreviousTime;
 };
 

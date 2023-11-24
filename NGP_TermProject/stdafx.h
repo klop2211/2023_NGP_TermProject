@@ -19,6 +19,7 @@
 #include <atlimage.h>
 #include <time.h>
 #include <random>
+#include <list>
 
 #define WINWIDTH 1600		//윈도우 가로
 #define WINHEIGHT 900		//윈도우 세로
