@@ -1,10 +1,6 @@
 #pragma once
 #include "Object.h"
 
-enum CardName { N_rhlddufvk, N_sktjsckd, N_dbtjdrkdcjs, N_wjrfydvh, N_aodfyddufvk, N_qksdnjftja, N_dusghkstja, N_cjdfydwls, N_cjdfydcnftn, N_ghltjsckd, N_dmsgkdbtjdxks };
-enum CardRect { R_main, R_tier1, R_tier2, R_tier3 };
-enum TriIndex { I_Tier1, I_Tier2, I_Tier3, I_selected };
-
 class Card : public Object
 {
 public:
@@ -18,7 +14,7 @@ protected:
 	CImage m_cImg[4];			//카드, 트포3개
 	CImage m_cEffect;
 	CImage m_cSkill;
-	static CImage m_cManaImg;
+	static CImage m_cManaImg[2];
 
 	TCHAR m_tNameStr[11];
 	TCHAR m_tStr[4][100];
@@ -45,6 +41,7 @@ public:
 public:
 	POINT GetPoint()			{ return m_pPoint; }
 	RECT* GetRect()				{ return m_rRect; }
+	CardName GetCardName()		{ return m_eCardname; }
 	//string* GetCardname();	// enum을 한글로 바꿔서 출력하기 위함
 
 	int GetDamage()				{ return m_iDamage; }
@@ -52,6 +49,9 @@ public:
 	int GetDestruction()		{ return m_iDestruction; }
 	int GetNeutralization()		{ return m_iNeutralization; }
 
-	bool GetIsValid()			{ return m_bIsValid; }
+	bool GetIsValid()			{ return GetIsValid(); }
 	bool GetCheep()				{ return m_bCheep; }
+
+	void SetIsValid(bool Valid) { m_bIsValid = Valid; }
+	void SetPoint(int x, int y) { m_pPoint.x = x; m_pPoint.y = y; }
 };

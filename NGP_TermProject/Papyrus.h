@@ -31,7 +31,7 @@ private:
 	float m_fBreakTimer;
 	float m_fAttackTimer;
 
-	PapyrusStatus status;
+	PapyrusStatus m_Status;
 
 	TCHAR m_sName[9], m_sHpStr[10];
 	RECT m_rNameRect;

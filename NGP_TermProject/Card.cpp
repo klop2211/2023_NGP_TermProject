@@ -13,9 +13,10 @@ Card::Card()
 	m_rRect[(int)CardRect::R_tier3] = { 60,440,300,480 };//240/40
 	m_bIsValid = true, m_bCheep = false;
 
-	if (m_cManaImg.IsNull())
+	if (m_cManaImg[0].IsNull())
 	{
-		m_cManaImg.Load(TEXT(""));
+		m_cManaImg[0].Load(TEXT(""));
+		m_cManaImg[1].Load(TEXT(""));
 	}
 }
 

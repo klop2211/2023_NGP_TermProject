@@ -13,14 +13,14 @@ public:
 	Object() {}
 	~Object() {}
 
-	virtual void Update(float elapsed) = 0;
+	virtual void Update(float elapsed) {};
 
 	//Render
 public:
-	virtual void Draw(HDC& memdc) = 0;
+	virtual void Draw(HDC& memdc) {};
 	//Gettor, Settor
 public:
-	virtual CImage GetImg() const = 0;
+	virtual CImage GetImg() const {};
 	RECT GetRect() const { return m_rRect; }
 
 protected:

@@ -16,6 +16,7 @@ Bone::Bone(int m_iNum, int x, int y)
 		m_pStart = POINT{ 99, 109 };
 		m_pOffset = { m_pPoint.x * 4, m_pPoint.y * 4 };
 		m_rRect = { x - m_pOffset.x, y - m_pOffset.y, x , y };
+		m_iSpeed = 16;
 		m_bCanDown = false;
 	}
 	else if (m_iNum == 1) {
@@ -24,6 +25,7 @@ Bone::Bone(int m_iNum, int x, int y)
 		m_iRandValue = GetRand(5) + 5;
 		m_pOffset = { 1, m_pPoint.y * m_iRandValue };
 		m_rRect = { x - m_pOffset.x, y - m_pOffset.y - 100, x , y - 100 };
+		m_iSpeed = 40;
 		m_bCanDown = false;
 	}
 	else if (m_iNum == 2) {
@@ -31,6 +33,7 @@ Bone::Bone(int m_iNum, int x, int y)
 		m_pStart = { 246, 325 };
 		m_pOffset = { m_pPoint.x * 3, m_pPoint.y * 3 };
 		m_rRect = { x , y , x + m_pOffset.x , y + m_pOffset.y };
+		m_iSpeed = 40;
 		m_bCanDown = false;
 	}
 
@@ -64,23 +67,25 @@ void Bone::Draw(HDC& memdc)
 
 void Bone::Update(float elapsed)
 {
+	m_fWait += elapsed;
 	switch (m_iNum)
 	{
 	case 0:
-		if (++m_fWait % 2 == 0) {
-			if (m_fWait == 50)
+		if (m_fWait > MAX_FRAMERATE * 2) {
+			++m_iCount;
+			if (m_iCount == 50)
 				m_bCanDie = true;
-			else {
-				m_rRect.left -= 16;
-				m_rRect.right -= 16;
+			else
+			{
+				MoveXY(-m_iSpeed, 0, elapsed);
 			}
+			m_fWait = 0.f;
 		}
 		break;
 	case 1:
-		if (++m_fWait % 5 == 0) {
+		if (m_fWait > MAX_FRAMERATE * 5) {
 			if (m_bCanDown) {
-				m_rRect.top += 40;
-				m_rRect.bottom += 40;
+				MoveXY(0, m_iSpeed, elapsed);
 				if (m_rRect.bottom > GROUNDYPOINT) {
 					m_bCanDie = true;
 				}
@@ -95,11 +100,11 @@ void Bone::Update(float elapsed)
 		}
 		break;
 	case 2:
-		if (++m_fWait % 5 == 0) {
+		if (m_fWait > MAX_FRAMERATE * 5) {
+			m_fWait = 0.f;
 			++m_iCount;
 			if (m_bCanDown) {
-				m_rRect.top += 40;
-				m_rRect.bottom += 40;
+				MoveXY(0, m_iSpeed, elapsed);
 				if (m_rRect.bottom > GROUNDYPOINT) {
 					m_rRect.bottom = GROUNDYPOINT;
 					m_rRect.top = GROUNDYPOINT - m_pOffset.x;
@@ -111,8 +116,7 @@ void Bone::Update(float elapsed)
 				}
 			}
 			else {
-				m_rRect.top -= 70;
-				m_rRect.bottom -= 70;
+				MoveXY(0, 70, elapsed);
 				if (m_rRect.bottom < 0) {
 					int temp = GetRand(m_rRect.left - 100) + 100;
 					m_iCount = GetRand(4);

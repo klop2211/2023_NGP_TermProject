@@ -48,6 +48,9 @@
 #define IDC_BUTTON_BUY3 10003
 #define IDC_BUTTON_BUY4 10004
 
+// 1 / 60
+#define MAX_FRAMERATE 0.016
+
 enum class CardName : int8_t { N_rhlddufvk, N_sktjsckd, N_dbtjdrkdcjs, N_wjrfydvh, N_aodfyddufvk, N_qksdnjftja, N_dusghkstja, N_cjdfydwls, N_cjdfydcnftn, N_ghltjsckd, N_dmsgkdbtjdxks };
 enum class CardRect : int8_t { R_main, R_tier1, R_tier2, R_tier3 };
 enum class TriIndex : int8_t { I_Tier1, I_Tier2, I_Tier3, I_selected };

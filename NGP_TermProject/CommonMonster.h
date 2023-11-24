@@ -18,7 +18,7 @@ public:
 
 	//Gettor, Settor
 public:
-	virtual CImage GetImg() const = 0;
+	virtual CImage GetImg() const {};
 
 protected:
 	MonsterStatus status;

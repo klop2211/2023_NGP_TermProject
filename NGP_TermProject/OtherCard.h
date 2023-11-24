@@ -111,7 +111,7 @@ public:
 
 class Dmsgkdbtjdxks : public Card {
 public:
-	Dmsgkdbtjdxks(CImage* manaImg);
+	Dmsgkdbtjdxks();
 };
 
 Card* card[30] = { nullptr };
@@ -123,54 +123,54 @@ int deadCardCount = 0;
 int handCardCount = 0;
 
 
-void makeCard(int randomValue, CImage* namaImg, int** tripord) {
+void makeCard(int randomValue, CImage namaImg, int** tripord) {
 	Card* temp = nullptr;
 	Card* temp1 = nullptr;
 	switch (randomValue)
 	{
-	case N_rhlddufvk:
-		temp = new Rhlddufvk(namaImg, tripord);
-		temp1 = new Rhlddufvk(namaImg, tripord);
+	case (int)CardName::N_rhlddufvk:
+		temp = new Rhlddufvk(tripord);
+		temp1 = new Rhlddufvk(tripord);
 		break;
-	case N_sktjsckd:
-		temp = new Sktjsckd(namaImg, tripord);
-		temp1 = new Sktjsckd(namaImg, tripord);
+	case (int)CardName::N_sktjsckd:
+		temp = new Sktjsckd(tripord);
+		temp1 = new Sktjsckd(tripord);
 		break;
-	case N_dbtjdrkdcjs:
-		temp = new Dbtjdrkdcjs(namaImg, tripord);
-		temp1 = new Dbtjdrkdcjs(namaImg, tripord);
+	case (int)CardName::N_dbtjdrkdcjs:
+		temp = new Dbtjdrkdcjs(tripord);
+		temp1 = new Dbtjdrkdcjs(tripord);
 		break;
-	case N_wjrfydvh:
-		temp = new Wjrfydvh(namaImg, tripord);
-		temp1 = new Wjrfydvh(namaImg, tripord);
+	case (int)CardName::N_wjrfydvh:
+		temp = new Wjrfydvh(tripord);
+		temp1 = new Wjrfydvh(tripord);
 		break;
-	case N_aodfyddufvk:
-		temp = new Aodfyddufvk(namaImg, tripord);
-		temp1 = new Aodfyddufvk(namaImg, tripord);
+	case (int)CardName::N_aodfyddufvk:
+		temp = new Aodfyddufvk(tripord);
+		temp1 = new Aodfyddufvk(tripord);
 		break;
-	case N_qksdnjftja:
-		temp = new Qksdnjftja(namaImg, tripord);
-		temp1 = new Qksdnjftja(namaImg, tripord);
+	case (int)CardName::N_qksdnjftja:
+		temp = new Qksdnjftja(tripord);
+		temp1 = new Qksdnjftja(tripord);
 		break;
-	case N_dusghkstja:
-		temp = new Dusghkstja(namaImg, tripord);
-		temp1 = new Dusghkstja(namaImg, tripord);
+	case (int)CardName::N_dusghkstja:
+		temp = new Dusghkstja(tripord);
+		temp1 = new Dusghkstja(tripord);
 		break;
-	case N_cjdfydwls:
-		temp = new Cjdfydwls(namaImg, tripord);
-		temp1 = new Cjdfydwls(namaImg, tripord);
+	case (int)CardName::N_cjdfydwls:
+		temp = new Cjdfydwls(tripord);
+		temp1 = new Cjdfydwls(tripord);
 		break;
-	case N_cjdfydcnftn:
-		temp = new Cjdfydcnftn(namaImg, tripord);
-		temp1 = new Cjdfydcnftn(namaImg, tripord);
+	case (int)CardName::N_cjdfydcnftn:
+		temp = new Cjdfydcnftn(tripord);
+		temp1 = new Cjdfydcnftn(tripord);
 		break;
-	case N_ghltjsckd:
-		temp = new Ghltjsckd(namaImg, tripord);
-		temp1 = new Ghltjsckd(namaImg, tripord);
+	case (int)CardName::N_ghltjsckd:
+		temp = new Ghltjsckd(tripord);
+		temp1 = new Ghltjsckd(tripord);
 		break;
-	case N_dmsgkdbtjdxks:
-		temp = new Dmsgkdbtjdxks(namaImg);
-		temp1 = new Dmsgkdbtjdxks(namaImg);
+	case (int)CardName::N_dmsgkdbtjdxks:
+		temp = new Dmsgkdbtjdxks();
+		temp1 = new Dmsgkdbtjdxks();
 		break;
 	default:
 		temp = nullptr;
@@ -188,12 +188,12 @@ void drawCard() {
 	if (cardCount - (handCardCount + deadCardCount) != 0)
 		while (keepIn) {
 			//cardCount 이내의 숫자 하나를 받아옴
-			randNum = getRand(cardCount);
+			randNum = GetRand(cardCount);
 
 			//true면 뽑을 수 있다.
-			if (card[randNum]->isValid == true) {
+			if (card[randNum]->GetIsValid() == true) {
 				handCard[handCardCount++] = card[randNum];
-				card[randNum]->isValid = false;
+				card[randNum]->SetIsValid(false);
 				keepIn = false;
 			}
 		}
@@ -205,30 +205,30 @@ void drawCard(bool attention) {
 		int j = 0, index;
 		for (int i = 0; i < cardCount; i++)
 		{
-			if (card[i]->cardname <= 3 && card[i]->isValid == true) {
+			if ((int)card[i]->GetCardName() <= 3 && card[i]->GetIsValid() == true) {
 				cardIndex[j] = i;
 				j++;
 			}
 		}
 		if (j != 0) {
-			index = cardIndex[getRand(j)];
+			index = cardIndex[GetRand(j)];
 			handCard[handCardCount++] = card[index];
-			card[index]->isValid = false;
+			card[index]->SetIsValid(false);
 		}
 	}
 	else {		//난무카드뽑을거
 		int j = 0, index;
 		for (int i = 0; i < cardCount; i++)
 		{
-			if (card[i]->cardname >= 4 && card[i]->isValid == true) {
+			if ((int)card[i]->GetCardName() >= 4 && card[i]->GetIsValid() == true) {
 				cardIndex[j] = i;
 				j++;
 			}
 		}
 		if (j != 0) {
-			index = cardIndex[getRand(j)];
+			index = cardIndex[GetRand(j)];
 			handCard[handCardCount++] = card[index];
-			card[index]->isValid = false;
+			card[index]->SetIsValid(false);
 		}
 	}
 }
@@ -238,8 +238,7 @@ void setCardPoint() {
 		int cardTerm = 900 / handCardCount;
 		for (int i = 0; i < handCardCount; i++)
 		{
-			handCard[i]->point.x = 300 + (cardTerm * i);
-			handCard[i]->point.y = 800;
+			handCard[i]->SetPoint(300 + (cardTerm * i), 800);
 		}
 	}
 	else {
@@ -247,15 +246,13 @@ void setCardPoint() {
 		if (handCardCount % 2 == 0) {
 			for (int i = 0; i < handCardCount; i++)
 			{
-				handCard[i]->point.x = 800 + (187 * (i - temp));
-				handCard[i]->point.y = 800;
+				handCard[i]->SetPoint(800 + (187 * (i - temp)), 800);
 			}
 		}
 		else {
 			for (int i = 0; i < handCardCount; i++)
 			{
-				handCard[i]->point.x = 800 - 187 / 2 + (187 * (i - temp));
-				handCard[i]->point.y = 800;
+				handCard[i]->SetPoint(800 - 187 / 2 + (187 * (i - temp)), 800);
 			}
 		}
 	}
