@@ -12,7 +12,7 @@ public:
 	~Monster() {}
 
 	virtual void Update(float elapsed) override = 0;
-	virtual bool Hit(int damage) {};
+	virtual bool Hit(int damage) { return 0; };
 
 	void SyncLocationAtRect();
 	void MoveXY(float x, float y, float elapsed);
@@ -33,7 +33,7 @@ public:
 	int  GetMaxHp()			{ return m_iMaxHp; }
 	int  GetSpeed()			{ return m_iSpeed; }
 
-	virtual CImage GetImg() const {};
+	virtual CImage GetImg() const = 0;
 
 protected:
 	bool m_bCanDie;
