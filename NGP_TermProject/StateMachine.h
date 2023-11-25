@@ -34,8 +34,6 @@ public:
     //change to a new state
     void  ChangeState(State<entity_type>* pNewState)
     {
-        assert(pNewState &&
-            "<StateMachine::ChangeState>: trying to change to NULL state");
 
         //keep a record of the previous state
         m_pPreviousState = m_pCurrentState;

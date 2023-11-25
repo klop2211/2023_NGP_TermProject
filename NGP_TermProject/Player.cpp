@@ -8,6 +8,7 @@ Player::Player()
 	m_pImg = new CImage;
 	SetImg(L"./윈플 텀프 이미지/창술사.png");
 	m_pStateMachine = new StateMachine<Player>(this);
+	m_pStateMachine->SetCurrentState(PStay::Instance());
 	m_Location.x = 100;
 	m_Location.y = 100;
 	SetRect(RECT{ 100, 100, 100 + PLAYER_SIZE, 100 + PLAYER_SIZE });
@@ -33,6 +34,11 @@ void Player::Draw(HDC& memDc)
 {
 	m_pImg->Draw(memDc, m_rRect.left, m_rRect.top, m_rRect.right - m_rRect.left, m_rRect.bottom - m_rRect.top, 0, m_pImg->GetHeight() / m_iFrameMax * m_iFrameIdx, m_pImg->GetWidth(), m_pImg->GetHeight() / m_iFrameMax);
 
+}
+
+void Player::ChangeState(State<Player>* cState)
+{
+	m_pStateMachine->ChangeState(cState);
 }
 
 void Player::SetImg(const TCHAR* str)

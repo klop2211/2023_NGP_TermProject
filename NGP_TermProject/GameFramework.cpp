@@ -81,7 +81,7 @@ void GameFramework::OnProcessingKeyboardMessage(HWND hWnd, UINT message, WPARAM 
 
 }
 
-LRESULT GameFramework::OnProcessingWindowMessage(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+LRESULT CALLBACK GameFramework::OnProcessingWindowMessage(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	switch (message)
 	{

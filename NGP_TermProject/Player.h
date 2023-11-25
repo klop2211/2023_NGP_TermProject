@@ -16,6 +16,8 @@ public:
 	void Update(float elapsed);
 	void Draw(HDC& memDc);
 
+	void ChangeState(State<Player>* cState);
+
 public:
 	virtual CImage GetImg() const { return *m_pImg; }
 	Direction GetDir() const { return m_dDir; }
