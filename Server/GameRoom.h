@@ -15,6 +15,7 @@ public:
 	void Update();
 
 	void SpawnEnemy();
+	void UpdateEnemy();
 
 private:
 	std::chrono::time_point<std::chrono::system_clock> m_tPreviousTime;

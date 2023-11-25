@@ -24,6 +24,7 @@ void GameRoom::SetElapsedTime()
 void GameRoom::Update()
 {
 	SetElapsedTime();
+	UpdateEnemy();
 	SpawnEnemy();
 }
 
@@ -55,4 +56,9 @@ void GameRoom::SpawnEnemy()
 	default:
 		break;
 	}
+}
+
+void GameRoom::UpdateEnemy()
+{
+
 }
