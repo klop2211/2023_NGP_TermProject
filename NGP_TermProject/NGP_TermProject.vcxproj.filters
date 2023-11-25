@@ -1,164 +1,100 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="소스 파일">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
-    </Filter>
-    <Filter Include="헤더 파일">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
-    </Filter>
-    <Filter Include="리소스 파일">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
-    </Filter>
-    <Filter Include="2019180016">
-      <UniqueIdentifier>{e5f79fe1-d349-4eef-b06a-380d48e4f209}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="2019180016\Header">
-      <UniqueIdentifier>{6f3a1b73-e5b7-4e3e-b588-0746055d9597}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="2019180016\Source">
-      <UniqueIdentifier>{d82f6465-9e75-4aab-90c7-17bc97b98a17}</UniqueIdentifier>
-    </Filter>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="stdafx.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="targetver.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Resource.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="NGP_TermProject.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="GameFramework.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Packet.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="EventType.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Card.h">
-      <Filter>2019180016\Header</Filter>
-    </ClInclude>
-    <ClInclude Include="Monster.h">
-      <Filter>2019180016\Header</Filter>
-    </ClInclude>
-    <ClInclude Include="Object.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Wolf.h">
-      <Filter>2019180016\Header</Filter>
-    </ClInclude>
-    <ClInclude Include="Bat.h">
-      <Filter>2019180016\Header</Filter>
-    </ClInclude>
-    <ClInclude Include="Papyrus.h">
-      <Filter>2019180016\Header</Filter>
-    </ClInclude>
-    <ClInclude Include="CommonMonster.h">
-      <Filter>2019180016\Header</Filter>
-    </ClInclude>
-    <ClInclude Include="Bone.h">
-      <Filter>2019180016\Header</Filter>
-    </ClInclude>
-    <ClInclude Include="OtherCard.h">
-      <Filter>2019180016\Header</Filter>
-    </ClInclude>
-<<<<<<< Updated upstream
-    <ClInclude Include="Random.h">
-      <Filter>2019180016\Header</Filter>
-=======
-    <ClInclude Include="Player.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Scene.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="State.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="StateMachine.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="PlayerOwnedStates.h">
-      <Filter>헤더 파일</Filter>
->>>>>>> Stashed changes
-    </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="NGP_TermProject.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="stdafx.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="GameFramework.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Packet.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Card.cpp">
-      <Filter>2019180016\Source</Filter>
-    </ClCompile>
-    <ClCompile Include="Monster.cpp">
-      <Filter>2019180016\Source</Filter>
-    </ClCompile>
-    <ClCompile Include="Object.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Wolf.cpp">
+    <ClCompile Include="GameFramework.cpp" />
+    <ClCompile Include="NGP_TermProject.cpp" />
+    <ClCompile Include="Object.cpp" />
+    <ClCompile Include="Packet.cpp" />
+    <ClCompile Include="Player.cpp" />
+    <ClCompile Include="PlayerOwnedStates.cpp" />
+    <ClCompile Include="Scene.cpp" />
+    <ClCompile Include="stdafx.cpp" />
+    <ClCompile Include="Bone.cpp">
       <Filter>2019180016\Source</Filter>
     </ClCompile>
     <ClCompile Include="Bat.cpp">
       <Filter>2019180016\Source</Filter>
     </ClCompile>
-    <ClCompile Include="Papyrus.cpp">
+    <ClCompile Include="Card.cpp">
       <Filter>2019180016\Source</Filter>
     </ClCompile>
     <ClCompile Include="CommonMonster.cpp">
       <Filter>2019180016\Source</Filter>
     </ClCompile>
-    <ClCompile Include="Bone.cpp">
+    <ClCompile Include="Monster.cpp">
       <Filter>2019180016\Source</Filter>
     </ClCompile>
     <ClCompile Include="OtherCard.cpp">
       <Filter>2019180016\Source</Filter>
     </ClCompile>
-<<<<<<< Updated upstream
+    <ClCompile Include="Papyrus.cpp">
+      <Filter>2019180016\Source</Filter>
+    </ClCompile>
     <ClCompile Include="Random.cpp">
       <Filter>2019180016\Source</Filter>
-=======
-    <ClCompile Include="Player.cpp">
-      <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Scene.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="PlayerOwnedStates.cpp">
-      <Filter>소스 파일</Filter>
->>>>>>> Stashed changes
+    <ClCompile Include="Wolf.cpp">
+      <Filter>2019180016\Source</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="NGP_TermProject.rc">
-      <Filter>리소스 파일</Filter>
-    </ResourceCompile>
+    <ClInclude Include="EventType.h" />
+    <ClInclude Include="GameFramework.h" />
+    <ClInclude Include="Object.h" />
+    <ClInclude Include="Packet.h" />
+    <ClInclude Include="Player.h" />
+    <ClInclude Include="PlayerOwnedStates.h" />
+    <ClInclude Include="Scene.h" />
+    <ClInclude Include="State.h" />
+    <ClInclude Include="StateMachine.h" />
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="NGP_TermProject.h" />
+    <ClInclude Include="Resource.h" />
+    <ClInclude Include="targetver.h" />
+    <ClInclude Include="Bat.h">
+      <Filter>2019180016\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Bone.h">
+      <Filter>2019180016\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Card.h">
+      <Filter>2019180016\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="CommonMonster.h">
+      <Filter>2019180016\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Monster.h">
+      <Filter>2019180016\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="OtherCard.h">
+      <Filter>2019180016\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Papyrus.h">
+      <Filter>2019180016\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Random.h">
+      <Filter>2019180016\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Wolf.h">
+      <Filter>2019180016\Header</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="small.ico">
-      <Filter>리소스 파일</Filter>
-    </Image>
-    <Image Include="NGP_TermProject.ico">
-      <Filter>리소스 파일</Filter>
-    </Image>
+    <ResourceCompile Include="NGP_TermProject.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="NGP_TermProject.ico" />
+    <Image Include="small.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="2019180016">
+      <UniqueIdentifier>{923c814f-4d6e-498c-8452-e3d47d4eb5f5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="2019180016\Source">
+      <UniqueIdentifier>{598c4850-1288-4532-971f-081762e44a6e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="2019180016\Header">
+      <UniqueIdentifier>{a742d424-bcd5-4660-b3c2-a26a79925001}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
 </Project>

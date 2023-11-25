@@ -138,15 +138,12 @@
     <ClInclude Include="Monster.h" />
     <ClInclude Include="Object.h" />
     <ClInclude Include="Packet.h" />
-<<<<<<< Updated upstream
     <ClInclude Include="Random.h" />
-=======
     <ClInclude Include="Player.h" />
     <ClInclude Include="PlayerOwnedStates.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="State.h" />
     <ClInclude Include="StateMachine.h" />
->>>>>>> Stashed changes
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="NGP_TermProject.h" />
     <ClInclude Include="Resource.h" />
@@ -165,13 +162,10 @@
     <ClCompile Include="NGP_TermProject.cpp" />
     <ClCompile Include="Object.cpp" />
     <ClCompile Include="Packet.cpp" />
-<<<<<<< Updated upstream
     <ClCompile Include="Random.cpp" />
-=======
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="PlayerOwnedStates.cpp" />
     <ClCompile Include="Scene.cpp" />
->>>>>>> Stashed changes
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
     </ClCompile>
