@@ -3,6 +3,7 @@
 #include "StateMachine.h"
 
 #define PLAYER_SIZE 100
+#define FRAME_SPEED 3
 
 enum Direction{ Left, Right };
 
@@ -42,6 +43,7 @@ private:
 
 	int			m_iFrameMax;	// 스프라이트 이미지의 프레임 수
 	int			m_iFrameIdx;	// 현재 스프라이트 이미지의 프레임 번호
+	float		m_fFrameTime;	// 현재 스프라이트가 사용된 시간
 
 	StateMachine<Player>* m_pStateMachine;
 

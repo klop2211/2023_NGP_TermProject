@@ -12,6 +12,7 @@ Player::Player()
 	m_Location.x = 100;
 	m_Location.y = 100;
 	m_iSpeed = 0;
+	m_fFrameTime = 0.f;
 	SetRect(RECT{ 100, 100, 100 + PLAYER_SIZE, 100 + PLAYER_SIZE });
 }
 
@@ -29,11 +30,24 @@ Player::~Player()
 void Player::Update(float elapsed)
 {
 	m_pStateMachine->Update(elapsed);
+
+	// 이동
 	if (m_dDir == Right)
 		m_Location.x += m_iSpeed * elapsed;
 	else
 		m_Location.x -= m_iSpeed * elapsed;
+
+	// 위치기반 RECT 보정
 	SetRectByLocation();
+
+	// 스프라이트 프레임 조정
+	m_fFrameTime += FRAME_SPEED * elapsed;
+	m_iFrameIdx = (int)m_fFrameTime;
+	if (m_fFrameTime > m_iFrameMax) {
+		m_fFrameTime = 0.f;
+		m_iFrameIdx = 0;
+	}
+
 }
 
 void Player::Draw(HDC& memDc)
@@ -99,4 +113,5 @@ void Player::SetImg(const TCHAR* str)
 	m_pImg->Load(str);
 	m_iFrameMax = m_pImg->GetHeight() / 32;
 	m_iFrameIdx = 0;
+	m_fFrameTime = 0;
 }
