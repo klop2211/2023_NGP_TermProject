@@ -1,4 +1,6 @@
 #pragma once
+#include "State.h"
+
 template<class entity_type>
 class StateMachine
 {
@@ -10,9 +12,10 @@ class StateMachine
 
 public:
 
-    StateMachine(entity_type* owner) :m_pOwner(owner),
+    StateMachine(entity_type* owner) :
+        m_pOwner(owner),
         m_pCurrentState(NULL),
-        m_pPreviousState(NULL),
+        m_pPreviousState(NULL)
     {}
 
     virtual ~StateMachine() {}
@@ -22,10 +25,10 @@ public:
     void SetPreviousState(State<entity_type>* s) { m_pPreviousState = s; }
 
     //call this to update the FSM
-    void  Update()const
+    void  Update(float elapsed)const
     {
         //same for the current state
-        if (m_pCurrentState) m_pCurrentState->Execute(m_pOwner);
+        if (m_pCurrentState) m_pCurrentState->Execute(m_pOwner, elapsed);
     }
 
     //change to a new state

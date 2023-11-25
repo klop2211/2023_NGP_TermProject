@@ -1,6 +1,8 @@
 #pragma once
 #include "State.h"
 
+class Player;
+
 class PMove :
     public State<Player>
 {

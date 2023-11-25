@@ -1,5 +1,6 @@
 #pragma once
 #include "Object.h"
+#include "StateMachine.h"
 
 enum Direction{ Left, Right };
 

@@ -1,6 +1,8 @@
 #pragma once
 #include <chrono>
 
+class Scene;
+
 class GameFramework
 {
 public:
