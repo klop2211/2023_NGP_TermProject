@@ -15,7 +15,7 @@ public:
 	void Draw(HDC& memDc);
 
 public:
-	CImage GetImg() const { return *m_pImg; }
+	virtual CImage GetImg() const { return *m_pImg; }
 	Direction GetDir() const { return m_dDir; }
 
 	void SetDir(Direction dir) { m_dDir = dir; }

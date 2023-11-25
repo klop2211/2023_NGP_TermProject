@@ -24,7 +24,7 @@ Player::~Player()
 
 void Player::Update(float elapsed)
 {
-	m_pStateMachine->Update();
+	m_pStateMachine->Update(elapsed);
 }
 
 void Player::Draw(HDC& memDc)
