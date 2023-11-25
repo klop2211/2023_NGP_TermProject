@@ -17,6 +17,8 @@
 #define SERVERPORT 9000
 #define MAX_CLIENTS 2
 #define MAX_ROOMS 20
+#define Client1 0
+#define Client2 1
 
 using std::array;
 

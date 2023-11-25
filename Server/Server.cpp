@@ -1,7 +1,29 @@
+#include <queue>
 #include "Common.h"
 #include "GameRoom.h"
 
 array<Events, MAX_ROOMS> events;
+SOCKET client_sockets[MAX_CLIENTS];
+
+
+
+// StateMsg 로직 처리
+struct StateMsgArgu {};
+
+void ProcessStateMsg(BYTE StateMsg)
+{
+	switch (StateMsg)
+	{
+	default:
+		break;
+	}
+}
+
+struct StateMsgBuffer {
+	BYTE stateMsg;
+};
+std::queue<StateMsgBuffer> sharedBuffer;
+CRITICAL_SECTION cs;
 
 // 클라이언트를 처리하는 쓰레드
 DWORD WINAPI ProcessClient1(LPVOID arg) 
@@ -15,8 +37,32 @@ DWORD WINAPI ProcessClient1(LPVOID arg)
 
 	// 클라이언트 처리 로직
 
+	// 상태 메시지 수신
+	BYTE StateMsg;
+	BYTE upper2Bits = 0;
+	BYTE lower6Bits = 0;
+	int ReceiveStateMsg = recv(client_sockets[Client1], (char*)&StateMsg, sizeof(BYTE), 0);
+	if (ReceiveStateMsg == SOCKET_ERROR) {
+		err_quit("ReceiveStateMsg Err");
+	}
+	else {
+		// 상위 2비트 추출
+		upper2Bits = ReceiveStateMsg >> 6;
 
+		// 하위 6비트 추출
+		lower6Bits = ReceiveStateMsg & 0x3F;
+	}
 
+	// 하위 6비트를 통해 게임오버 판별
+	//StateMsg 구체화되면 수정 예정
+	ProcessStateMsg(lower6Bits);
+	
+	// 받은 내용 그대로 공유 버퍼에 쓰기
+	EnterCriticalSection(&cs); 
+	StateMsgBuffer buffer;
+	buffer.stateMsg = StateMsg;
+	sharedBuffer.push(buffer);
+	LeaveCriticalSection(&cs); 
 
 	SetEvent(events[RoomNum].hClient2Event);
 	return NULL;
@@ -33,8 +79,31 @@ DWORD WINAPI ProcessClient2(LPVOID arg)
 
 	// 클라이언트 처리 로직
 
+	// 상태 메시지 수신
+	BYTE StateMsg;
+	BYTE upper2Bits = 0;
+	BYTE lower6Bits = 0;
+	int ReceiveStateMsg = recv(client_sockets[Client2], (char*)&StateMsg, sizeof(BYTE), 0);
+	if (ReceiveStateMsg == SOCKET_ERROR) {
+		err_quit("ReceiveStateMsg Err");
+	}
+	else {
+		// 상위 2비트 추출
+		upper2Bits = ReceiveStateMsg >> 6;
 
+		// 하위 6비트 추출
+		lower6Bits = ReceiveStateMsg & 0x3F;
+	}
 
+	// 하위 6비트를 통해 게임오버 판별
+	ProcessStateMsg(lower6Bits);
+
+	// 받은 내용 그대로 공유 버퍼에 쓰기
+	EnterCriticalSection(&cs);
+	StateMsgBuffer buffer;
+	buffer.stateMsg = StateMsg;
+	sharedBuffer.push(buffer);
+	LeaveCriticalSection(&cs);
 
 	SetEvent(events[RoomNum].hRoomEvent);
 	return NULL;
@@ -87,7 +156,7 @@ int main(int argc, char* argv[])
 	HANDLE hThread = nullptr;
 	int ClientNum = 0;
 	int RoomNum = 0;
-	SOCKET client_sockets[MAX_CLIENTS];
+	
 
 	array<HANDLE, MAX_ROOMS> hClientArrToMakeRoom;
 	array<HANDLE, MAX_ROOMS> hRoomArr;
@@ -105,7 +174,7 @@ int main(int argc, char* argv[])
 		}
 
 
-		client_sockets [ClientNum] = client_sock;
+		client_sockets [ClientNum++] = client_sock;
 
 		// 클라랑 잘 연결 되었는지 출력 
 		char addr[INET_ADDRSTRLEN];
@@ -132,7 +201,7 @@ int main(int argc, char* argv[])
 			CloseHandle(hThread); 
 		}
 
-		hClientArrToMakeRoom[ClientNum++] = hThread;
+		hClientArrToMakeRoom[ClientNum] = hThread;
 
 		// 대기중인 인원이 2명인가?
 		// no->반복, yes -> 방 처리 스레드 생성
