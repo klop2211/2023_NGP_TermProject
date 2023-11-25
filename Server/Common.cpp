@@ -1,5 +1,21 @@
 #include "Common.h"
 
+Events::Events()
+{
+	// 쓰레드 제어를 위한 이벤트
+	hClient1Event = CreateEvent(NULL, FALSE, FALSE, NULL);
+	hClient2Event = CreateEvent(NULL, FALSE, FALSE, NULL);
+	hRoomEvent = CreateEvent(NULL, FALSE, FALSE, NULL);
+}
+
+Events::~Events()
+{
+	CloseHandle(hClient1Event);
+	CloseHandle(hClient2Event);
+	CloseHandle(hRoomEvent);
+}
+
+
 void err_quit(const char* msg)
 {
 	LPVOID lpMsgBuf;

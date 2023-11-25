@@ -1,11 +1,10 @@
+#define _CRT_SECURE_NO_WARNINGS
 #include <queue>
 #include "Common.h"
 #include "GameRoom.h"
 
 array<Events, MAX_ROOMS> events;
 SOCKET client_sockets[MAX_CLIENTS];
-
-
 
 // StateMsg 로직 처리
 struct StateMsgArgu {};
@@ -113,14 +112,24 @@ DWORD WINAPI ProcessRoom(LPVOID arg)
 {
 	DWORD retval;
 	RoomArg* Arg = (RoomArg*)arg;
-	retval = WaitForSingleObject(events[Arg->RoomNumber].hRoomEvent, INFINITE);
+	int RoomNum = Arg->RoomNumber;
+	array<HANDLE, MAX_CLIENTS> hClients;
 
+	// Array는 Vector와 다르게 Move의 효율이 좋지 않다.
+	//TODO: 실행되는지 확인
+	memcpy(hClients.data(), Arg->Client.data(), sizeof(HANDLE) * MAX_CLIENTS);
+
+	GameRoom* pGameRoom = new GameRoom;
 	// Main Game Room 로직
 	while (true)
 	{
+		retval = WaitForSingleObject(events[RoomNum].hRoomEvent, INFINITE);
 
+		pGameRoom->Update();
+
+		SetEvent(events[RoomNum].hClient1Event);
 	}
-	SetEvent(events[Arg->RoomNumber].hClient1Event);
+	delete pGameRoom;
 	return NULL;
 }
 
@@ -234,12 +243,12 @@ int main(int argc, char* argv[])
 		}
 	}
 
-	for (auto& handle : events)
-	{
-		CloseHandle(handle.hClient1Event);
-		CloseHandle(handle.hClient2Event);
-		CloseHandle(handle.hRoomEvent);
-	}
+	//for (auto& handle : events)
+	//{
+	//	CloseHandle(handle.hClient1Event);
+	//	CloseHandle(handle.hClient2Event);
+	//	CloseHandle(handle.hRoomEvent);
+	//}
 
 	// 윈속 종료
 	WSACleanup();
