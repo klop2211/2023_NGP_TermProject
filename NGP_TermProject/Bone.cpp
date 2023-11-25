@@ -9,10 +9,10 @@ CImage Bone::m_cImg;
 
 Bone::Bone(int m_iNum, int x, int y)
 {
-	//if (m_cImg.IsNull())
-	//{
-	//	m_cImg.Load(TEXT(""));
-	//}
+	if (m_cImg.IsNull())
+	{
+		m_cImg.Load(TEXT("적관련\\파피루스.png"));
+	}
 
 	this->m_iNum = m_iNum;
 	if (m_iNum == 0) {

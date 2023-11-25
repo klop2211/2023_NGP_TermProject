@@ -28,7 +28,8 @@ public:
 public:
 
 private:
-	static CImage m_cImg, m_cBossHpBar, m_cBoneImg;
+	CImage m_cImg, m_cBossHpBar;
+	static CImage m_cBoneImg;
 
 	bool m_bBreaked, m_bCanDown;
 	int m_iBreakCount, m_iKnockDown;

@@ -3,8 +3,6 @@
 #include "Bone.h"
 #include "Random.h"
 
-CImage Papyrus::m_cImg;
-CImage Papyrus::m_cBossHpBar;
 CImage Papyrus::m_cBoneImg;
 
 Papyrus::Papyrus()

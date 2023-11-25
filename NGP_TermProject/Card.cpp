@@ -17,8 +17,8 @@ Card::Card()
 
 	if (m_cManaImg[0].IsNull())
 	{
-		m_cManaImg[0].Load(TEXT(""));
-		m_cManaImg[1].Load(TEXT(""));
+		m_cManaImg[0].Load(TEXT("윈플 텀프 이미지\\마나.png"));
+		m_cManaImg[1].Load(TEXT("윈플 텀프 이미지\\빈마나.png"));
 	}
 }
 
