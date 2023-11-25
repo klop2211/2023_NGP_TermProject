@@ -25,6 +25,7 @@ public:
 public:
 	virtual CImage GetImg() const = 0;
 	RECT GetRect() const { return m_rRect; }
+	void SetRect(RECT rect) { m_rRect = rect; }
 
 protected:
 	// 메인 이미지

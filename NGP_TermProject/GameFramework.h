@@ -14,6 +14,9 @@ public:
 	void Draw();
 	void FrameAdvance();
 	void SetElapsedTime();
+	void OnProcessingMouseMessage(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
+	void OnProcessingKeyboardMessage(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
+	LRESULT CALLBACK OnProcessingWindowMessage(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 
 private:
 	HWND m_hWnd;

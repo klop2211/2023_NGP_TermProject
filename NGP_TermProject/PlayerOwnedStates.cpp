@@ -16,6 +16,7 @@ void PMove::Enter(Player* player)
 		player->SetImg(L"./윈플 텀프 이미지/창술사_move(left).png");
 	}
 
+	player->SetSpeed(20);
 }
 
 void PMove::Execute(Player* player, float elapsed)
@@ -34,6 +35,13 @@ PStay* PStay::Instance()
 
 void PStay::Enter(Player* player)
 {
+	if (player->GetDir() == Right) {
+		player->SetImg(L"./윈플 텀프 이미지/창술사.png");
+	}
+	else {
+		player->SetImg(L"./윈플 텀프 이미지/창술사(left).png");
+	}
+
 }
 
 void PStay::Execute(Player* player, float elapsed)

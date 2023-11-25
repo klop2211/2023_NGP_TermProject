@@ -27,9 +27,9 @@ void GameFramework::Update()
 void GameFramework::Draw()
 {
 	PAINTSTRUCT ps;
-	HDC hDc = BeginPaint(m_hWnd, &ps);
+	HDC hDc = GetDC(m_hWnd);
 	HDC memDc = CreateCompatibleDC(hDc);
-	HBITMAP hBit;
+	HBITMAP hBit = CreateCompatibleBitmap(hDc, WINWIDTH, WINHEIGHT);
 	HBITMAP oldBit = (HBITMAP)SelectObject(memDc, hBit);
 
 	m_pScene->Draw(memDc);
@@ -38,7 +38,7 @@ void GameFramework::Draw()
 
 	SelectObject(memDc, oldBit);
 	DeleteDC(memDc);
-	EndPaint(m_hWnd, &ps);
+	ReleaseDC(m_hWnd, hDc);
 }
 
 void GameFramework::FrameAdvance()
@@ -58,4 +58,49 @@ void GameFramework::SetElapsedTime()
 
 	m_fElapsedTime = elapsedSeconds.count();
 
+}
+
+void GameFramework::OnProcessingMouseMessage(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+{
+	m_pScene->OnProcessingMouseMessage(hWnd, message, wParam, lParam);
+	switch (message)
+	{
+	default:
+		break;
+	}
+}
+
+void GameFramework::OnProcessingKeyboardMessage(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+{
+	m_pScene->OnProcessingKeyboardMessage(hWnd, message, wParam, lParam);
+	switch (message)
+	{
+	default:
+		break;
+	}
+
+}
+
+LRESULT GameFramework::OnProcessingWindowMessage(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+{
+	switch (message)
+	{
+	case WM_SIZE:
+		break;
+	case WM_LBUTTONDOWN:
+	case WM_RBUTTONDOWN:
+	case WM_LBUTTONUP:
+	case WM_RBUTTONUP:
+	case WM_MOUSEMOVE:
+		OnProcessingMouseMessage(hWnd, message, wParam, lParam);
+		break;
+	case WM_KEYDOWN:
+	case WM_KEYUP:
+		OnProcessingKeyboardMessage(hWnd, message, wParam, lParam);
+		break;
+
+	default:
+		break;
+	}
+	return LRESULT(0);
 }

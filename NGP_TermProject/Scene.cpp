@@ -4,6 +4,8 @@
 Scene::Scene()
 {
 	m_pPlayer = new Player;
+	m_lObjectList.push_back(m_pPlayer);
+
 }
 
 Scene::~Scene()
@@ -24,4 +26,26 @@ void Scene::Draw(HDC& memDc)
 	for (auto object : m_lObjectList) {
 		object->Draw(memDc);
 	}
+}
+
+void Scene::OnProcessingMouseMessage(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+{
+	// 마우스 입력처리
+	switch (message)
+	{
+	default:
+		break;
+	}
+}
+
+void Scene::OnProcessingKeyboardMessage(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+{
+	// 키보드 입력처리
+	switch (message)
+	{
+
+	default:
+		break;
+	}
+
 }
