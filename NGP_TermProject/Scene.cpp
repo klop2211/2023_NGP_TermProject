@@ -15,8 +15,8 @@ Scene::Scene()
 	m_cBackGround.Load(TEXT("윈플 텀프 이미지\\배경성X.png"));
 
 	m_bStart = false, m_bChanging = false; 				//원래 시작용
-	//start = true, changing = false;				//화면바뀌는거 귀찮아서 만든거
-	m_bCardDrawing = true;
+	//m_bStart = true, changing = false;				//화면바뀌는거 귀찮아서 만든거
+	m_bCardDrawing = true, m_bIsClick = false;
 }
 
 Scene::~Scene()
@@ -81,6 +81,63 @@ void Scene::OnProcessingMouseMessage(HWND hWnd, UINT message, WPARAM wParam, LPA
 	// 마우스 입력처리
 	switch (message)
 	{
+	case WM_LBUTTONDOWN:
+		if (m_bStart) {
+			if (!m_bCardDrawing) {
+				m_bIsClick = true;
+				m_iStartX = m_iMx;
+				m_iStartY = m_iMy;
+			}
+		}
+		else
+		{
+			// 선택화면의 클릭 처리
+			if (m_iMx >= 500 && m_iMx <= 1100)
+			{
+				// GameStart 버튼
+				if (m_iMy >= 550 && m_iMy <= 650)
+				{
+					m_bChanging = true;
+				}
+				// Quit 버튼
+				else if (m_iMy >= 700 && m_iMy <= 800)
+				{
+					PostQuitMessage(0);
+				}
+			}
+		}
+		break;
+	case WM_MOUSEMOVE:
+		m_iMx = LOWORD(lParam);
+		m_iMy = HIWORD(lParam);
+
+		// TODO: 카드를 집었을 때 커서 위치에 그 카드 위치하게
+		//if (m_bIsClick && clickSelect != -1) {
+		//	handCard[clickSelect]->point.x += (m_iMx - m_iStartX);
+		//	handCard[clickSelect]->point.y += (m_iMy - m_iStartY);
+		//	m_iStartX = m_iMx;
+		//	m_iStartY = m_iMy;
+		//}
+		break;
+	case WM_LBUTTONUP:
+		if (m_bIsClick) {
+			//TODO: 플레이어가 카드 사용처리
+			
+			m_bIsClick = false;
+			//if (clickSelect != -1) {
+			//	if (m_iMy < WINHEIGHT * 3 / 5 && manaCount >= handCard[clickSelect]->Mana) {
+			//		manaCount -= handCard[clickSelect]->Mana;
+			//		useCard();
+			//		setCardPoint();
+			//	}
+			//	else {
+			//		handCard[clickSelect]->point = prevCardPoint;
+			//	}
+			//	clickSelect = -1;
+			//	prevCardPoint = { -1,-1 };
+			//}
+		}
+		break;
 	default:
 		break;
 	}
@@ -209,11 +266,11 @@ void Scene::UpdateGameStart(float elapsed)
 		//카드를 다쓰면 덱 초기화
 		//if (cardCount == deadCardCount) {
 		//	resetCard();
-		//	cardDrawing = true;
+		//	m_bCardDrawing = true;
 		//	wait = 0;
 		//}
 
-		//if (cardDrawing) {
+		//if (m_bCardDrawing) {
 		//	if (cardCount < 10) {
 		//		startShop(hDC, memdc);
 		//	}
@@ -222,8 +279,8 @@ void Scene::UpdateGameStart(float elapsed)
 		//		for (int i = 0; i < 4; i++) {
 		//			drawCard();
 		//		}
-		//		cardDrawing = false;
-		//		start = clock();
+		//		m_bCardDrawing = false;
+		//		m_bStart = clock();
 
 		//		//4장의 자리배치
 		//		setCardPoint();

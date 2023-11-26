@@ -39,6 +39,8 @@ private:
 	bool m_bChanging;
 	// 카드 뽑는중인지
 	bool m_bCardDrawing;
+	// 클릭중인지(홀드 드래그)
+	bool m_bIsClick;
 
 	// 화면 바꾸는데 사용
 	float m_fChangeCount;
@@ -47,5 +49,10 @@ private:
 	CImage m_cClosing;
 	// 배경화면
 	CImage m_cBackGround;
+
+	// 현재 마우스 좌표 저장
+	int m_iMx, m_iMy;
+	// 드래그 시 시작 마우스 좌표 저장
+	int m_iStartX, m_iStartY;
 };
 
