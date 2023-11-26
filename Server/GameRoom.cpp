@@ -21,10 +21,10 @@ void GameRoom::SetElapsedTime()
 
 }
 
-void GameRoom::Update()
+void GameRoom::Update(array<StateMsgBuffer, MAX_CLIENTS> StateMsg)
 {
 	SetElapsedTime();
-	UpdateEnemy();
+	UpdateEnemy(StateMsg);
 	SpawnEnemy();
 }
 
@@ -58,7 +58,7 @@ void GameRoom::SpawnEnemy()
 	}
 }
 
-void GameRoom::UpdateEnemy()
+void GameRoom::UpdateEnemy(array<StateMsgBuffer, MAX_CLIENTS> StateMsg)
 {
-
+	
 }

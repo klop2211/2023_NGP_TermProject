@@ -18,9 +18,12 @@ void ProcessStateMsg(BYTE StateMsg)
 	}
 }
 
-struct StateMsgBuffer {
-	BYTE stateMsg;
-};
+//struct StateMsgBuffer {
+//	BYTE stateMsg;
+//};
+
+array<array<StateMsgBuffer, MAX_CLIENTS>, MAX_ROOMS> SharedBuffer;
+
 std::queue<StateMsgBuffer> sharedBuffer;
 CRITICAL_SECTION cs;
 
@@ -59,8 +62,9 @@ DWORD WINAPI ProcessClient1(LPVOID arg)
 	// 받은 내용 그대로 공유 버퍼에 쓰기
 	EnterCriticalSection(&cs); 
 	StateMsgBuffer buffer;
-	buffer.stateMsg = StateMsg;
-	sharedBuffer.push(buffer);
+	buffer = StateMsg;
+	SharedBuffer[RoomNum][0] = buffer;
+	//sharedBuffer.push(buffer);
 	LeaveCriticalSection(&cs); 
 
 	SetEvent(events[RoomNum].hClient2Event);
@@ -100,8 +104,9 @@ DWORD WINAPI ProcessClient2(LPVOID arg)
 	// 받은 내용 그대로 공유 버퍼에 쓰기
 	EnterCriticalSection(&cs);
 	StateMsgBuffer buffer;
-	buffer.stateMsg = StateMsg;
-	sharedBuffer.push(buffer);
+	buffer = StateMsg;
+	SharedBuffer[RoomNum][1] = buffer;
+	//sharedBuffer.push(buffer);
 	LeaveCriticalSection(&cs);
 
 	SetEvent(events[RoomNum].hRoomEvent);
@@ -125,7 +130,7 @@ DWORD WINAPI ProcessRoom(LPVOID arg)
 	{
 		retval = WaitForSingleObject(events[RoomNum].hRoomEvent, INFINITE);
 
-		pGameRoom->Update();
+		pGameRoom->Update(SharedBuffer[RoomNum]);
 
 		SetEvent(events[RoomNum].hClient1Event);
 	}

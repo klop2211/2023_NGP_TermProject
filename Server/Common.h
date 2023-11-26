@@ -22,6 +22,8 @@
 
 using std::array;
 
+typedef BYTE StateMsgBuffer;
+
 struct RoomArg
 {
 	array<HANDLE, MAX_ROOMS> Client;

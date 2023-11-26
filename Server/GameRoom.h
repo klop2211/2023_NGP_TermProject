@@ -12,10 +12,9 @@ public:
 
 public:
 	void SetElapsedTime();
-	void Update();
-
+	void Update(array<StateMsgBuffer, MAX_CLIENTS> StateMsg);
 	void SpawnEnemy();
-	void UpdateEnemy();
+	void UpdateEnemy(array<StateMsgBuffer, MAX_CLIENTS> StateMsg);
 
 private:
 	std::chrono::time_point<std::chrono::system_clock> m_tPreviousTime;
