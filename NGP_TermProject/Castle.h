@@ -12,6 +12,7 @@ public:
 // Render
 public:
 	void Draw(HDC& memdc);
+	void DrawCastle(HDC& memdc);
 
 //Gettor Settor
 public:

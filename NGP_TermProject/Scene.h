@@ -49,6 +49,8 @@ private:
 	CImage m_cClosing;
 	// 배경화면
 	CImage m_cBackGround;
+	// 타이틀 화면에 쓰이는 이미지
+	CImage m_cLoadBit, m_cStartBit, m_cQuitBit;
 
 	// 현재 마우스 좌표 저장
 	int m_iMx, m_iMy;

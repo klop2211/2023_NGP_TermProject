@@ -13,6 +13,9 @@ Scene::Scene()
 	m_fChangeCount = 0;
 	m_cClosing.Load(TEXT("윈플 텀프 이미지\\원.png"));
 	m_cBackGround.Load(TEXT("윈플 텀프 이미지\\배경성X.png"));
+	m_cLoadBit.Load(TEXT("윈플 텀프 이미지\\레온하트성.png"));
+	m_cStartBit.Load(TEXT("윈플 텀프 이미지\\Start.png"));
+	m_cQuitBit.Load(TEXT("윈플 텀프 이미지\\Quit.png"));
 
 	m_bStart = false, m_bChanging = false; 				//원래 시작용
 	//m_bStart = true, changing = false;				//화면바뀌는거 귀찮아서 만든거
@@ -23,6 +26,9 @@ Scene::~Scene()
 {
 	m_cClosing.Destroy();
 	m_cBackGround.Destroy();
+	m_cLoadBit.Destroy();
+	m_cStartBit.Destroy();
+	m_cQuitBit.Destroy();
 }
 
 void Scene::Update(float elapsed)
@@ -172,7 +178,7 @@ void Scene::OnProcessingKeyboardMessage(HWND hWnd, UINT message, WPARAM wParam, 
 
 void Scene::UpdateChangeLoading(float elapsed)
 {
-	m_fChangeCount += 500 * elapsed;
+	m_fChangeCount += 1000 * elapsed;
 	if (m_fChangeCount >= 1000.f)
 	{
 		m_fChangeCount = 10;
@@ -182,25 +188,29 @@ void Scene::UpdateChangeLoading(float elapsed)
 
 void Scene::DrawChangeLoading(HDC& memDc)
 {
+	HBRUSH hBrush, oldBrush;
 	int iChangeCount = (int)m_fChangeCount;
+	DrawGameLoading(memDc);
+	//hBrush = CreateSolidBrush(RGB(0, 0, 0));
+	//oldBrush = (HBRUSH)SelectObject(memDc, hBrush);
+	//Rectangle(memDc, 0, 0, WINWIDTH, iChangeCount * 9 / 16);
+	//Rectangle(memDc, 0, 0, iChangeCount, WINHEIGHT);
+	//Rectangle(memDc, WINWIDTH - (iChangeCount), 0, WINWIDTH, WINHEIGHT);
+	//Rectangle(memDc, 0, WINHEIGHT - iChangeCount / 2, WINWIDTH, WINHEIGHT);
+	//SelectObject(memDc, oldBrush); DeleteObject(hBrush);
 
-	m_cClosing.Draw(memDc, -200 + iChangeCount, -550 + iChangeCount, 2000 - iChangeCount * 2, 2000 - iChangeCount * 2,
-		0, 0, m_cClosing.GetWidth(), m_cClosing.GetHeight());
+	//m_cClosing.Draw(memDc, -200 + iChangeCount, -550 + iChangeCount, 2000 - iChangeCount * 2, 2000 - iChangeCount * 2,
+	//	0, 0, m_cClosing.GetWidth(), m_cClosing.GetHeight());
 }
 
 void Scene::DrawGameLoading(HDC& memDc)
 {
-	CImage LoadBit, startBit, quitBit;
-	LoadBit.Load(TEXT("윈플 텀프 이미지\\레온하트성.png"));
-	startBit.Load(TEXT("윈플 텀프 이미지\\Start.png"));
-	quitBit.Load(TEXT("윈플 텀프 이미지\\Quit.png"));
-
-	LoadBit.Draw(memDc, 0, 0, WINWIDTH, WINHEIGHT,
-		0, 0, LoadBit.GetWidth(), LoadBit.GetHeight());
-	startBit.Draw(memDc, 500, 550, 600, 100,
-		0, 0, startBit.GetWidth(), startBit.GetHeight());
-	quitBit.Draw(memDc, 500, 700, 600, 100,
-		0, 0, quitBit.GetWidth(), quitBit.GetHeight());
+	m_cLoadBit.Draw(memDc, 0, 0, WINWIDTH, WINHEIGHT,
+		0, 0, m_cLoadBit.GetWidth(), m_cLoadBit.GetHeight());
+	m_cStartBit.Draw(memDc, 500, 550, 600, 100,
+		0, 0, m_cStartBit.GetWidth(), m_cStartBit.GetHeight());
+	m_cQuitBit.Draw(memDc, 500, 700, 600, 100,
+		0, 0, m_cQuitBit.GetWidth(), m_cQuitBit.GetHeight());
 }
 
 void Scene::DrawGameStart(HDC& memdc)
@@ -295,8 +305,7 @@ void Scene::DrawChangeStart(HDC& memdc) {
 
 	m_cBackGround.Draw(memdc, 0, 0, WINWIDTH, WINHEIGHT,
 		0, 0, m_cBackGround.GetWidth(), m_cBackGround.GetHeight());
-	m_pCastle->GetImg().Draw(memdc, 0, 0, 259, 635,
-		0, 0, m_pCastle->GetImg().GetWidth(), m_pCastle->GetImg().GetHeight());
+	m_pCastle->DrawCastle(memdc);
 
 	hBrush = CreateSolidBrush(RGB(0, 0, 0));
 	oldBrush = (HBRUSH)SelectObject(memdc, hBrush);
