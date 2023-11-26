@@ -2,7 +2,7 @@
 
 Castle::Castle()
 {
-	m_cImg.Load(TEXT("//윈플 텀프 이미지//성.png"));
+	m_cImg.Load(TEXT("윈플 텀프 이미지\\성.png"));
 	m_iCastleMovement = 0;
 }
 

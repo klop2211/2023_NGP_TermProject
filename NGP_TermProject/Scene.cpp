@@ -175,7 +175,7 @@ void Scene::UpdateChangeLoading(float elapsed)
 	m_fChangeCount += 500 * elapsed;
 	if (m_fChangeCount >= 1000.f)
 	{
-		m_fChangeCount = 0;
+		m_fChangeCount = 10;
 		m_bStart = true;
 	}
 }
@@ -291,23 +291,22 @@ void Scene::UpdateGameStart(float elapsed)
 
 void Scene::DrawChangeStart(HDC& memdc) {
 	HBRUSH hBrush, oldBrush;
-
-	m_cClosing.Load(TEXT("¿ø.png"));
+	int iChangeCount = (int)m_fChangeCount;
 
 	m_cBackGround.Draw(memdc, 0, 0, WINWIDTH, WINHEIGHT,
 		0, 0, m_cBackGround.GetWidth(), m_cBackGround.GetHeight());
-	m_cBackGround.Draw(memdc, 0, 0, 259, 635,
-		0, 0, m_cBackGround.GetWidth(), m_cBackGround.GetHeight());
+	m_pCastle->GetImg().Draw(memdc, 0, 0, 259, 635,
+		0, 0, m_pCastle->GetImg().GetWidth(), m_pCastle->GetImg().GetHeight());
 
 	hBrush = CreateSolidBrush(RGB(0, 0, 0));
 	oldBrush = (HBRUSH)SelectObject(memdc, hBrush);
-	Rectangle(memdc, 0, 0, WINWIDTH, 450 - m_fChangeCount);
-	Rectangle(memdc, 0, 0, 800 - m_fChangeCount, WINHEIGHT);
-	Rectangle(memdc, m_fChangeCount * 2 + (800 - m_fChangeCount), 0, WINWIDTH, WINHEIGHT);
-	Rectangle(memdc, 0, m_fChangeCount * 2 + 450 - m_fChangeCount, WINWIDTH, WINHEIGHT);
+	Rectangle(memdc, 0, 0, WINWIDTH, 450 - iChangeCount);
+	Rectangle(memdc, 0, 0, 800 - iChangeCount, WINHEIGHT);
+	Rectangle(memdc, iChangeCount * 2 + (800 - iChangeCount), 0, WINWIDTH, WINHEIGHT);
+	Rectangle(memdc, 0, iChangeCount * 2 + 450 - iChangeCount, WINWIDTH, WINHEIGHT);
 	SelectObject(memdc, oldBrush); DeleteObject(hBrush);
 
-	m_cClosing.Draw(memdc, 800 - m_fChangeCount, 450 - m_fChangeCount, m_fChangeCount * 2, m_fChangeCount * 2,
+	m_cClosing.Draw(memdc, 800 - iChangeCount, 450 - iChangeCount, iChangeCount * 2, iChangeCount * 2,
 		0, 0, m_cClosing.GetWidth(), m_cClosing.GetHeight());
 }
 
