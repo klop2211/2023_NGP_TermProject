@@ -52,6 +52,7 @@
     <ClCompile Include="stdafx.cpp">
       <Filter>2019182009\소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="Castle.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Bat.h">
@@ -120,6 +121,7 @@
     <ClInclude Include="targetver.h">
       <Filter>2019182009\헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="Castle.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="NGP_TermProject.rc" />

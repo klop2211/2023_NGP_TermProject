@@ -13,9 +13,39 @@ public:
 	void OnProcessingMouseMessage(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 	void OnProcessingKeyboardMessage(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 
+	// 게임 시작전 페이드아웃
+	void DrawChangeLoading(HDC& memDc);
+	void UpdateChangeLoading(float elapsed);
+
+	// 게임 시작전 선택화면
+	void DrawGameLoading(HDC& memDc);
+
+	// 메인 게임화면
+	void DrawGameStart(HDC& memDc);
+	void UpdateGameStart(float elapsed);
+
+	// 게임 시작전 페이드인
+	void DrawChangeStart(HDC& memDc);
+	void UpdateChangeStart(float elapsed);
 private:
 	Player* m_pPlayer;
 	std::list<Object*> m_lObjectList;
 
+	class Castle* m_pCastle;
+
+	// 게임이 시작했는지
+	bool m_bStart;
+	// 화면이 바뀌는 중인지
+	bool m_bChanging;
+	// 카드 뽑는중인지
+	bool m_bCardDrawing;
+
+	// 화면 바꾸는데 사용
+	float m_fChangeCount;
+
+	// 원 이미지
+	CImage m_cClosing;
+	// 배경화면
+	CImage m_cBackGround;
 };
 
