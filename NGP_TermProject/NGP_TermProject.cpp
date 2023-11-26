@@ -154,7 +154,11 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         break;
 
     case WM_CREATE:
-
+    {
+        RECT winRect = { 0,0,WINWIDTH,WINHEIGHT };
+        AdjustWindowRect(&winRect, WS_OVERLAPPEDWINDOW, false);
+        MoveWindow(hWnd, 100, 50, winRect.right - winRect.left, winRect.bottom - winRect.top, false);
+    }
         break;
     case WM_COMMAND:
         {

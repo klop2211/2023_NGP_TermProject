@@ -12,7 +12,7 @@ Scene::Scene()
 
 	m_fChangeCount = 0;
 	m_cClosing.Load(TEXT("윈플 텀프 이미지\\원.png"));
-	m_cBackGround.Load(TEXT("//윈플 텀프 이미지//배경성X.png"));
+	m_cBackGround.Load(TEXT("윈플 텀프 이미지\\배경성X.png"));
 
 	m_bStart = false, m_bChanging = false; 				//원래 시작용
 	//start = true, changing = false;				//화면바뀌는거 귀찮아서 만든거
