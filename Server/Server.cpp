@@ -2,12 +2,10 @@
 #include <queue>
 #include "Common.h"
 #include "GameRoom.h"
+#include "StateMassage.h"
 
 array<Events, MAX_ROOMS> events;
 SOCKET client_sockets[MAX_CLIENTS];
-
-// StateMsg 로직 처리
-struct StateMsgArgu {};
 
 void ProcessStateMsg(BYTE StateMsg)
 {
@@ -141,7 +139,7 @@ DWORD WINAPI ProcessRoom(LPVOID arg)
 int main(int argc, char* argv[])
 {
 	int retval;
-
+	
 	// 윈속 초기화
 	WSADATA wsa;
 	if (WSAStartup(MAKEWORD(2, 2), &wsa) != 0)
