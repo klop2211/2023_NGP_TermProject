@@ -59,9 +59,8 @@ DWORD WINAPI ProcessClient1(LPVOID arg)
 	
 	// 받은 내용 그대로 공유 버퍼에 쓰기
 	EnterCriticalSection(&cs); 
-	StateMsgBuffer buffer;
-	buffer = StateMsg;
-	SharedBuffer[RoomNum][0] = buffer;
+
+	SharedBuffer[RoomNum][0] = StateMsg;
 	//sharedBuffer.push(buffer);
 	LeaveCriticalSection(&cs); 
 
@@ -101,9 +100,8 @@ DWORD WINAPI ProcessClient2(LPVOID arg)
 
 	// 받은 내용 그대로 공유 버퍼에 쓰기
 	EnterCriticalSection(&cs);
-	StateMsgBuffer buffer;
-	buffer = StateMsg;
-	SharedBuffer[RoomNum][1] = buffer;
+
+	SharedBuffer[RoomNum][1] = StateMsg;
 	//sharedBuffer.push(buffer);
 	LeaveCriticalSection(&cs);
 

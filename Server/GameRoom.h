@@ -16,6 +16,8 @@ public:
 	void SpawnEnemy();
 	void UpdateEnemy(array<StateMsgBuffer, MAX_CLIENTS> StateMsg);
 
+	void SplitStateMsg();
+
 private:
 	std::chrono::time_point<std::chrono::system_clock> m_tPreviousTime;
 	float m_fElapsedTime;

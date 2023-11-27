@@ -60,5 +60,9 @@ void GameRoom::SpawnEnemy()
 
 void GameRoom::UpdateEnemy(array<StateMsgBuffer, MAX_CLIENTS> StateMsg)
 {
-	
+}
+
+void GameRoom::SplitStateMsg()
+{
+
 }
