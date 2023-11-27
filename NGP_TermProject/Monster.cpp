@@ -1,6 +1,7 @@
 #include "stdafx.h"
 
 #include "Monster.h"
+#include "CastleInteraction.h"
 
 void Monster::SyncLocationAtRect()
 {
@@ -16,6 +17,12 @@ void Monster::MoveXY(float x, float y, float elapsed)
 	m_Location.y += y * 20 * elapsed;
 	SyncLocationAtRect();
 }
+
+void Monster::SetCastleInteraction(CastleInteraction* castleIntercation)
+{
+	m_pCastleInteraction = castleIntercation;
+}
+
 //void Monster::Update(float elapsed)
 //{
 //}

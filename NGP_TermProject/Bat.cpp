@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "Bat.h"
+#include "CastleInteraction.h"
 
 CImage Bat::m_cImg;
 
@@ -80,8 +81,12 @@ void Bat::Update(float elapsed)
 			}
 			break;
 		case MonsterStatus::Attack:
-			if (m_iCount % 6 == 3) {
-				//hitCastle(m_iDamage);
+			if (m_iCount % 6 == 3)
+			{
+				if (m_pCastleInteraction)
+				{
+					m_pCastleInteraction->HitCastle(m_iDamage);
+				}
 			}
 			break;
 		case MonsterStatus::Hit:

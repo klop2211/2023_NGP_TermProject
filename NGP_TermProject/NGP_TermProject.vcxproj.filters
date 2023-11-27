@@ -55,6 +55,9 @@
     <ClCompile Include="Castle.cpp">
       <Filter>2019180016\Source</Filter>
     </ClCompile>
+    <ClCompile Include="CastleInteraction.cpp">
+      <Filter>2019180016\Interaction</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Bat.h">
@@ -126,6 +129,9 @@
     <ClInclude Include="Castle.h">
       <Filter>2019180016\Header</Filter>
     </ClInclude>
+    <ClInclude Include="CastleInteraction.h">
+      <Filter>2019180016\Interaction</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="NGP_TermProject.rc" />
@@ -152,6 +158,9 @@
     </Filter>
     <Filter Include="2019182009\소스 파일">
       <UniqueIdentifier>{cd06199e-f7a0-44c0-9f8f-a09b7a99fcd1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="2019180016\Interaction">
+      <UniqueIdentifier>{bfe5255a-35de-4d09-88ec-7c84878dc6cd}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

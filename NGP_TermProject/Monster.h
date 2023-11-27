@@ -2,6 +2,8 @@
 
 #include "Object.h"
 
+class CastleInteraction;
+
 enum class MonsterStatus { Move, Dead, Attack, Hit, Die };
 enum class StatusEffect { Ice_s = 1, Fire_s, NULL_S };
 
@@ -16,6 +18,7 @@ public:
 
 	void SyncLocationAtRect();
 	void MoveXY(float x, float y, float elapsed);
+
 
 	//Render
 public:
@@ -35,6 +38,8 @@ public:
 
 	virtual CImage GetImg() const = 0;
 
+	void SetCastleInteraction(CastleInteraction* castleIntercation);
+
 protected:
 	bool m_bCanDie;
 	int m_iDamage, m_iExperi; // , m_iMoney;
@@ -47,4 +52,7 @@ protected:
 
 	// 상태이상
 	StatusEffect m_eSE;
+
+	// 몬스터와 성의 공격 상호작용
+	CastleInteraction* m_pCastleInteraction;
 };

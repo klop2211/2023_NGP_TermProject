@@ -130,6 +130,7 @@
     <ClInclude Include="Bat.h" />
     <ClInclude Include="Bone.h" />
     <ClInclude Include="Castle.h" />
+    <ClInclude Include="CastleInteraction.h" />
     <ClInclude Include="CommonMonster.h" />
     <ClInclude Include="OtherCard.h" />
     <ClInclude Include="Papyrus.h" />
@@ -155,6 +156,7 @@
     <ClCompile Include="Bat.cpp" />
     <ClCompile Include="Bone.cpp" />
     <ClCompile Include="Castle.cpp" />
+    <ClCompile Include="CastleInteraction.cpp" />
     <ClCompile Include="CommonMonster.cpp" />
     <ClCompile Include="OtherCard.cpp" />
     <ClCompile Include="Papyrus.cpp" />

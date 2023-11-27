@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "Wolf.h"
+#include "CastleInteraction.h"
 
 CImage Wolf::m_cImg;
 
@@ -122,7 +123,10 @@ void Wolf::Update(float elapsed)
 		case MonsterStatus::Attack:
 			if (m_iCount % 10 == 6) {
 				// TODO: 소켓 보내기?
-				//hitCastle(m_iDamage);
+				if (m_pCastleInteraction)
+				{
+					m_pCastleInteraction->HitCastle(m_iDamage);
+				}
 			}
 			break;
 		case MonsterStatus::Hit:

@@ -20,6 +20,12 @@ void Castle::Update(float elapsed)
 	}
 }
 
+void Castle::HitCastle(int damage)
+{
+	m_iCastleMovement = 1;
+	m_iCastleHp -= damage;
+}
+
 void Castle::Draw(HDC& memdc)
 {
 	HBRUSH hBrush, oldBrush;

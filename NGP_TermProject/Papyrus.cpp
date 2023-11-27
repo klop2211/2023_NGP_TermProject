@@ -2,6 +2,7 @@
 #include "Papyrus.h"
 #include "Bone.h"
 #include "Random.h"
+#include "CastleInteraction.h"
 
 CImage Papyrus::m_cBoneImg;
 

@@ -1,13 +1,15 @@
 #pragma once
 #include "Object.h"
+#include "CastleInteraction.h"
 
-class Castle : public Object
+class Castle : public Object, public CastleInteraction
 {
 public:
 	Castle();
 	~Castle();
 
 	void Update(float elapsed);
+	void HitCastle(int damage);
 
 // Render
 public:
