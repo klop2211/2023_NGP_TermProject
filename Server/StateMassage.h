@@ -1,7 +1,7 @@
 #pragma once
-enum class MonsterType { Wolf, Bat, Papyrus };
-enum class PlayerMove {};
-enum class CardType {};
+enum class MonsterType : BYTE { Wolf, Bat, Papyrus };
+enum class PlayerMove : BYTE {};
+enum class CardType : BYTE {};
 
 // StateMsg 로직 처리
 struct StateMsgArgu {};
