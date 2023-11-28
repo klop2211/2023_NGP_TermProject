@@ -43,6 +43,9 @@ void GameRoom::SpawnEnemy()
 		if (WolfSpawnTimer >= 3.f)
 		{
 			// TODO: Wolf Spawn Code
+			MonsterSpawnStateMsg* SpawnMsg;
+			StateMsgByte SMB = 0;
+			MakeStateMsgByte(StateMsgType::MonsterSpawn);
 			m_WolfMap.insert({ m_iWolfSN++, new Wolf()});
 			WolfSpawnTimer = 0.f;
 		}
@@ -77,6 +80,35 @@ void GameRoom::UpdateEnemy()
 	}
 }
 
+void GameRoom::ProcessMonsterHpMsg(StateMsgArgu* Arg)
+{
+	MonsterHpStateMsg* HpMsg = (MonsterHpStateMsg*)Arg;
+	int SerialNum = HpMsg->MonsterSerialId;
+	int Damage = HpMsg->Damage;
+
+	switch (HpMsg->MonsterId)
+	{
+	case MonsterType::Wolf:
+		m_WolfMap[SerialNum]->IsDead(Damage);
+		break;
+	case MonsterType::Bat:
+		m_BatMap[SerialNum]->IsDead(Damage);
+		break;
+	case MonsterType::Papyrus:
+		break;
+	default:
+		break;
+	}
+}
+
+StateMsgByte GameRoom::MakeStateMsgByte(StateMsgType SMT)
+{
+	StateMsgByte ReturnValue = 0;
+	ReturnValue = (StateMsgByte)SMT;
+
+	return ReturnValue;
+}
+
 void GameRoom::UpdateEnemyUseStateMsg(array<StateMsgInfo, MAX_CLIENTS> StateMsg)
 {
 	for (int i = 0; i < MAX_CLIENTS; i++)
@@ -84,7 +116,7 @@ void GameRoom::UpdateEnemyUseStateMsg(array<StateMsgInfo, MAX_CLIENTS> StateMsg)
 		switch (StateMsg[i].StateMsg)
 		{
 		case (int)StateMsgType::MonsterHp:
-
+			ProcessMonsterHpMsg(StateMsg[i].pStateMsgArgu);
 			break;
 		case (int)StateMsgType::PlayerMove:
 

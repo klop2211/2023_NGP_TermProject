@@ -16,7 +16,7 @@ struct MonsterHpStateMsg : StateMsgArgu
 {
 	MonsterType MonsterId;
 	int MonsterSerialId;
-	int Hp;
+	int Damage;
 };
 struct PlayerMoveStateMsg : StateMsgArgu
 {
@@ -35,6 +35,6 @@ struct CastleHpStateMsg : StateMsgArgu
 
 struct StateMsgInfo
 {
-	StateMsgBuffer StateMsg;
+	StateMsgByte StateMsg;
 	StateMsgArgu* pStateMsgArgu;
 };

@@ -75,6 +75,7 @@ DWORD WINAPI ProcessClient1(LPVOID arg)
 		int MsgSize = GetStateMsgType(lower6Bits);
 
 		// 추가로 받을 인수 동적할당
+		// TODO: 적당한 시점에 해제하거나 스마트 포인터 사용해야함
 		StateMsgArg = MsgInstence::GetStateMsgArguType(lower6Bits);
 
 		ReceiveStateMsg = recv(client_sockets[Client1], (char*)StateMsgArg, MsgSize, 0);

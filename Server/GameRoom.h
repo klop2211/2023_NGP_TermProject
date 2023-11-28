@@ -20,6 +20,10 @@ public:
 	void UpdateEnemyUseStateMsg(array<StateMsgInfo, MAX_CLIENTS> StateMsg);
 	void UpdateEnemy();
 
+	void ProcessMonsterHpMsg(StateMsgArgu* Arg);
+
+	StateMsgByte MakeStateMsgByte(StateMsgType);
+
 private:
 	std::chrono::time_point<std::chrono::system_clock> m_tPreviousTime;
 	float m_fElapsedTime;
