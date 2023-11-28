@@ -3,7 +3,8 @@
 #include "StateMachine.h"
 
 #define PLAYER_SIZE 100
-#define FRAME_SPEED 3
+#define FRAME_SPEED 6
+#define PLAYER_MOVE_SPEED 170
 
 enum Direction{ Left, Right };
 

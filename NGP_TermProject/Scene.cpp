@@ -5,8 +5,7 @@
 
 Scene::Scene()
 {
-	m_pPlayer = new Player;
-	m_lObjectList.push_back(m_pPlayer);
+	m_pPlayer = NULL;
 
 	m_pCastle = new Castle;
 
@@ -151,7 +150,8 @@ void Scene::OnProcessingMouseMessage(HWND hWnd, UINT message, WPARAM wParam, LPA
 
 void Scene::OnProcessingKeyboardMessage(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-	m_pPlayer->OnProcessingKeyboardMessage(hWnd, message, wParam, lParam);
+	if(m_pPlayer)
+		m_pPlayer->OnProcessingKeyboardMessage(hWnd, message, wParam, lParam);
 	// 키보드 입력처리
 	switch (message)
 	{
@@ -326,5 +326,8 @@ void Scene::UpdateChangeStart(float elapsed)
 	{
 		m_fChangeCount = 0;
 		m_bChanging = false;
+		m_pPlayer = new Player;
+		m_lObjectList.push_back(m_pPlayer);
+
 	}
 }

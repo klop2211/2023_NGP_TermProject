@@ -16,7 +16,7 @@ void PMove::Enter(Player* player)
 		player->SetImg(L"./윈플 텀프 이미지/창술사_move(left).png");
 	}
 
-	player->SetSpeed(20);
+	player->SetSpeed(PLAYER_MOVE_SPEED);
 }
 
 void PMove::Execute(Player* player, float elapsed)
@@ -41,7 +41,7 @@ void PStay::Enter(Player* player)
 	else {
 		player->SetImg(L"./윈플 텀프 이미지/창술사(left).png");
 	}
-
+	player->SetSpeed(0);
 }
 
 void PStay::Execute(Player* player, float elapsed)

@@ -10,7 +10,7 @@ Player::Player()
 	m_pStateMachine = new StateMachine<Player>(this);
 	m_pStateMachine->SetCurrentState(PStay::Instance());
 	m_Location.x = 100;
-	m_Location.y = 100;
+	m_Location.y = GROUNDYPOINT - PLAYER_SIZE;
 	m_iSpeed = 0;
 	m_fFrameTime = 0.f;
 	SetRect(RECT{ 100, 100, 100 + PLAYER_SIZE, 100 + PLAYER_SIZE });
@@ -68,7 +68,6 @@ void Player::OnProcessingMouseMessage(HWND hWnd, UINT message, WPARAM wParam, LP
 
 void Player::OnProcessingKeyboardMessage(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-
 	// 키보드 입력처리
 	switch (message)
 	{
@@ -82,12 +81,20 @@ void Player::OnProcessingKeyboardMessage(HWND hWnd, UINT message, WPARAM wParam,
 		case 'd':
 		case 'D':
 			SetDir(Right);
-			ChangeState(PMove::Instance());
+			if (m_pStateMachine->isInState(*PStay::Instance()))
+				ChangeState(PMove::Instance());
+			if (GetAsyncKeyState(0x41) & 0x8000 && m_pStateMachine->isInState(*PMove::Instance()))
+				ChangeState(PStay::Instance());
+
 			break;
 		case 'a':
 		case 'A':
 			SetDir(Left);
-			ChangeState(PMove::Instance());
+			if (m_pStateMachine->isInState(*PStay::Instance()))
+				ChangeState(PMove::Instance());
+			if (GetAsyncKeyState(0x44) & 0x8000 && m_pStateMachine->isInState(*PMove::Instance()))
+				ChangeState(PStay::Instance());
+
 			break;
 		default:
 			break;
@@ -96,7 +103,24 @@ void Player::OnProcessingKeyboardMessage(HWND hWnd, UINT message, WPARAM wParam,
 	case WM_KEYUP:
 		switch (wParam)
 		{
-
+		case 'd':
+		case 'D':
+		case 'a':
+		case 'A':
+			if (!m_pStateMachine->isInState(*PStay::Instance()))
+				ChangeState(PStay::Instance());
+			if (GetAsyncKeyState(0x41) & 0x8000 || GetAsyncKeyState(0x44) & 0x8000) {
+				if (GetAsyncKeyState(0x41) & 0x8000) {
+					SetDir(Left);
+					if (m_pStateMachine->isInState(*PStay::Instance()))
+						ChangeState(PMove::Instance());
+				}
+				if (GetAsyncKeyState(0x44) & 0x8000) {
+					SetDir(Right);
+					if (m_pStateMachine->isInState(*PStay::Instance()))
+						ChangeState(PMove::Instance());
+				}
+			}
 		default:
 			break;
 		}
