@@ -225,48 +225,6 @@ void Scene::DrawGameStart(HDC& memdc)
 		0, 0, m_cBackGround.GetWidth(), m_cBackGround.GetHeight());
 
 	m_pCastle->Draw(memdc);
-
-	//TODO: 플레이어에서 각성기, 카드 출력
-	{
-		//각성기 출력창
-		//ultiImg.Draw(memdc, WINWIDTH - 150, 10, 100, 100,
-		//	0, 0, 77, 77);
-		//hBrush = CreateSolidBrush(RGB(255, 215, 0));
-		//oldBrush = (HBRUSH)SelectObject(memdc, hBrush);
-		//Rectangle(memdc, WINWIDTH - 150, 100, WINWIDTH - 150 + ((double)ultimate / ULTIMATESKILL) * 100, 110);
-		//SelectObject(memdc, oldBrush); DeleteObject(hBrush);
-
-		//왼쪽아래 카드 덱
-		//Deck.Draw(memdc, -44, 750, 204, 300,
-		//	0, 0, Deck.GetWidth(), Deck.GetHeight());
-
-		////덱의 카드 남은 수
-		//Ellipse(memdc, deckText);
-		//swprintf_s(numStr, L"%d", cardCount - (handCardCount + deadCardCount));
-		//DrawText(memdc, numStr, lstrlen(numStr), &deckText, DT_CENTER | DT_SINGLELINE | DT_VCENTER);
-
-		////경험치바 출력
-		//hBrush = CreateSolidBrush(RGB(0, 255, 255));
-		//oldBrush = (HBRUSH)SelectObject(memdc, hBrush);
-		//Rectangle(memdc, 170, WINHEIGHT - ((double)experience / experienceBar[level]) * 100, 190, WINHEIGHT);
-		//SelectObject(memdc, oldBrush); DeleteObject(hBrush);
-
-		////레벨출력
-		//swprintf_s(numStr, L"%d", level + 1);
-		//Rectangle(memdc, 150, WINHEIGHT - 20, 210, WINHEIGHT);
-		//DrawText(memdc, numStr, lstrlen(numStr), &levelRect, DT_CENTER | DT_SINGLELINE | DT_VCENTER);
-
-		////빈 마나
-		//for (int i = 0; i < maxMana; i++)
-		//{
-		//	manaImg[1].Draw(memdc, 1600 - 55 * ((i % 5) + 1), 900 - 55 * ((i / 5) + 1), 50, 50, 0, 0, manaImg[1].GetWidth(), manaImg[1].GetHeight());
-		//}
-		////찬 마나
-		//for (int i = 0; i < manaCount; i++)
-		//{
-		//	manaImg[0].Draw(memdc, 1600 - 55 * ((i % 5) + 1), 900 - 55 * ((i / 5) + 1), 50, 50, 0, 0, manaImg[0].GetWidth(), manaImg[0].GetHeight());
-		//}
-	}
 }
 
 void Scene::UpdateGameStart(float elapsed)
