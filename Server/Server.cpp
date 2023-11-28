@@ -88,7 +88,10 @@ DWORD WINAPI ProcessClient1(LPVOID arg)
 	// 받은 내용 그대로 공유 버퍼에 쓰기
 	SharedBuffer[RoomNum][0].StateMsg = StateMsg;
 	SharedBuffer[RoomNum][0].pStateMsgArgu = StateMsgArg;
-
+	
+	// 다음번 수신된 데이터는 다음 방으로
+	Arg->RoomNumber++;
+	
 	SetEvent(events[RoomNum].hClient2Event);
 	return NULL;
 }
@@ -136,6 +139,9 @@ DWORD WINAPI ProcessClient2(LPVOID arg)
 	SharedBuffer[RoomNum][1].StateMsg = StateMsg;
 	SharedBuffer[RoomNum][1].pStateMsgArgu = StateMsgArg;
 
+	// 다음번 수신된 데이터는 다음 방으로
+	Arg->RoomNumber++;
+
 	SetEvent(events[RoomNum].hRoomEvent);
 	return NULL;
 }
@@ -158,6 +164,9 @@ DWORD WINAPI ProcessRoom(LPVOID arg)
 		retval = WaitForSingleObject(events[RoomNum].hRoomEvent, INFINITE);
 
 		pGameRoom->Update(SharedBuffer[RoomNum]);
+		
+		// 다음 업데이트는 다음 방에서 
+		Arg->RoomNumber++;
 
 		SetEvent(events[RoomNum].hClient1Event);
 	}
