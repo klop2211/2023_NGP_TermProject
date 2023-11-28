@@ -2,10 +2,17 @@
 #include <queue>
 #include "Common.h"
 #include "GameRoom.h"
-#include "StateMassage.h"
+#include "StateMessage.h"
+#include "MsgInstence.h"
 
+// 최대 방 개수만큼 이벤트 생성
 array<Events, MAX_ROOMS> events;
+
+// 최대 방 개수만큼 소켓 보유
 SOCKET client_sockets[MAX_CLIENTS];
+
+// 상태 메세지를 저장할 공유 버퍼
+array<array<StateMsgInfo, MAX_CLIENTS>, MAX_ROOMS> SharedBuffer;
 
 void ProcessStateMsg(BYTE StateMsg)
 {
@@ -20,10 +27,20 @@ void ProcessStateMsg(BYTE StateMsg)
 //	BYTE stateMsg;
 //};
 
-array<array<StateMsgBuffer, MAX_CLIENTS>, MAX_ROOMS> SharedBuffer;
-
-std::queue<StateMsgBuffer> sharedBuffer;
-CRITICAL_SECTION cs;
+int GetStateMsgType(BYTE LowerBits)
+{
+	switch (LowerBits)
+	{
+	case (int)StateMsgType::MonsterSpawn:	return sizeof(MonsterSpawnStateMsg);
+	case (int)StateMsgType::MonsterHp:		return sizeof(MonsterHpStateMsg);
+	case  (int)StateMsgType::PlayerMove:	return sizeof(PlayerMoveStateMsg);
+	case (int)StateMsgType::UseCard:		return sizeof(UseCardStateMsg);
+	case  (int)StateMsgType::CastleHp:		return sizeof(CastleHpStateMsg);
+	default:
+		printf("State Message Type에 오류");
+		return 0;
+	}
+}
 
 // 클라이언트를 처리하는 쓰레드
 DWORD WINAPI ProcessClient1(LPVOID arg) 
@@ -41,6 +58,8 @@ DWORD WINAPI ProcessClient1(LPVOID arg)
 	BYTE StateMsg;
 	BYTE upper2Bits = 0;
 	BYTE lower6Bits = 0;
+	StateMsgArgu* StateMsgArg = nullptr;
+
 	int ReceiveStateMsg = recv(client_sockets[Client1], (char*)&StateMsg, sizeof(BYTE), 0);
 	if (ReceiveStateMsg == SOCKET_ERROR) {
 		err_quit("ReceiveStateMsg Err");
@@ -51,6 +70,14 @@ DWORD WINAPI ProcessClient1(LPVOID arg)
 
 		// 하위 6비트 추출
 		lower6Bits = ReceiveStateMsg & 0x3F;
+
+		// 추가로 읽을 바이트 사이즈
+		int MsgSize = GetStateMsgType(lower6Bits);
+
+		// 추가로 받을 인수 동적할당
+		StateMsgArg = MsgInstence::GetStateMsgArguType(lower6Bits);
+
+		ReceiveStateMsg = recv(client_sockets[Client1], (char*)StateMsgArg, MsgSize, 0);
 	}
 
 	// 하위 6비트를 통해 게임오버 판별
@@ -58,11 +85,8 @@ DWORD WINAPI ProcessClient1(LPVOID arg)
 	ProcessStateMsg(lower6Bits);
 	
 	// 받은 내용 그대로 공유 버퍼에 쓰기
-	EnterCriticalSection(&cs); 
-
-	SharedBuffer[RoomNum][0] = StateMsg;
-	//sharedBuffer.push(buffer);
-	LeaveCriticalSection(&cs); 
+	SharedBuffer[RoomNum][0].StateMsg = StateMsg;
+	SharedBuffer[RoomNum][0].pStateMsgArgu = StateMsgArg;
 
 	SetEvent(events[RoomNum].hClient2Event);
 	return NULL;
@@ -83,6 +107,8 @@ DWORD WINAPI ProcessClient2(LPVOID arg)
 	BYTE StateMsg;
 	BYTE upper2Bits = 0;
 	BYTE lower6Bits = 0;
+	StateMsgArgu * StateMsgArg = nullptr;
+
 	int ReceiveStateMsg = recv(client_sockets[Client2], (char*)&StateMsg, sizeof(BYTE), 0);
 	if (ReceiveStateMsg == SOCKET_ERROR) {
 		err_quit("ReceiveStateMsg Err");
@@ -93,17 +119,21 @@ DWORD WINAPI ProcessClient2(LPVOID arg)
 
 		// 하위 6비트 추출
 		lower6Bits = ReceiveStateMsg & 0x3F;
+
+		// 추가로 읽을 바이트 사이즈
+		int MsgSize = GetStateMsgType(lower6Bits);
+
+		// 추가로 받을 인수 동적할당
+		StateMsgArg = MsgInstence::GetStateMsgArguType(lower6Bits);
+
+		ReceiveStateMsg = recv(client_sockets[Client1], (char*)StateMsgArg, MsgSize, 0);
 	}
 
 	// 하위 6비트를 통해 게임오버 판별
 	ProcessStateMsg(lower6Bits);
 
-	// 받은 내용 그대로 공유 버퍼에 쓰기
-	EnterCriticalSection(&cs);
-
-	SharedBuffer[RoomNum][1] = StateMsg;
-	//sharedBuffer.push(buffer);
-	LeaveCriticalSection(&cs);
+	SharedBuffer[RoomNum][1].StateMsg = StateMsg;
+	SharedBuffer[RoomNum][1].pStateMsgArgu = StateMsgArg;
 
 	SetEvent(events[RoomNum].hRoomEvent);
 	return NULL;

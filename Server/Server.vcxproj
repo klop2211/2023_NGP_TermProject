@@ -129,12 +129,14 @@
   <ItemGroup>
     <ClCompile Include="Common.cpp" />
     <ClCompile Include="GameRoom.cpp" />
+    <ClCompile Include="MsgInstence.cpp" />
     <ClCompile Include="Server.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Common.h" />
     <ClInclude Include="GameRoom.h" />
-    <ClInclude Include="StateMassage.h" />
+    <ClInclude Include="MsgInstence.h" />
+    <ClInclude Include="StateMessage.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

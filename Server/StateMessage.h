@@ -23,7 +23,7 @@ struct PlayerMoveStateMsg : StateMsgArgu
 	int PlayerId;
 	PlayerMove pMove;
 };
-struct MonsterUseCardStateMsg : StateMsgArgu
+struct UseCardStateMsg : StateMsgArgu
 {
 	int PlayerId;
 	CardType card;
@@ -31,4 +31,10 @@ struct MonsterUseCardStateMsg : StateMsgArgu
 struct CastleHpStateMsg : StateMsgArgu
 {
 	int Hp;
+};
+
+struct StateMsgInfo
+{
+	StateMsgBuffer StateMsg;
+	StateMsgArgu* pStateMsgArgu;
 };

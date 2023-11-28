@@ -1,6 +1,7 @@
 #pragma once
 
 #include <chrono>
+#include "StateMessage.h"
 
 class GameRoom
 {
@@ -12,9 +13,9 @@ public:
 
 public:
 	void SetElapsedTime();
-	void Update(array<StateMsgBuffer, MAX_CLIENTS> StateMsg);
+	void Update(array<StateMsgInfo, MAX_CLIENTS> StateMsg);
 	void SpawnEnemy();
-	void UpdateEnemy(array<StateMsgBuffer, MAX_CLIENTS> StateMsg);
+	void UpdateEnemy(array<StateMsgInfo, MAX_CLIENTS> StateMsg);
 
 	void SplitStateMsg();
 
