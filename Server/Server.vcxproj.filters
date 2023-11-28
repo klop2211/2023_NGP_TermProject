@@ -13,6 +13,15 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Monster">
+      <UniqueIdentifier>{ac2ab363-56b8-45ec-a7ba-0eb9aaadb35c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Monster\Source">
+      <UniqueIdentifier>{eac29aa7-006d-4c02-908f-dc854cff9415}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Monster\Header">
+      <UniqueIdentifier>{ae427565-bd91-4c6c-ad6b-bba765b5b494}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Server.cpp">
@@ -27,6 +36,15 @@
     <ClCompile Include="MsgInstence.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="Monster.cpp">
+      <Filter>Monster\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Bat.cpp">
+      <Filter>Monster\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Wolf.cpp">
+      <Filter>Monster\Source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Common.h">
@@ -40,6 +58,15 @@
     </ClInclude>
     <ClInclude Include="MsgInstence.h">
       <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Monster.h">
+      <Filter>Monster\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Bat.h">
+      <Filter>Monster\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Wolf.h">
+      <Filter>Monster\Header</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

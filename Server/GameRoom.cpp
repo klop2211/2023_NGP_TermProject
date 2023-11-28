@@ -1,8 +1,12 @@
 #include "Common.h"
 #include "GameRoom.h"
 
+#include "Wolf.h"
+#include "Bat.h"
+
 GameRoom::GameRoom()
 {
+	m_iWolfSN = m_iBatSN = 0;
 }
 
 GameRoom::~GameRoom()
@@ -24,7 +28,8 @@ void GameRoom::SetElapsedTime()
 void GameRoom::Update(array<StateMsgInfo, MAX_CLIENTS> StateMsg)
 {
 	SetElapsedTime();
-	UpdateEnemy(StateMsg);
+	UpdateEnemyUseStateMsg(StateMsg);
+	UpdateEnemy();
 	SpawnEnemy();
 }
 
@@ -38,6 +43,7 @@ void GameRoom::SpawnEnemy()
 		if (WolfSpawnTimer >= 3.f)
 		{
 			// TODO: Wolf Spawn Code
+			m_WolfMap.insert({ m_iWolfSN++, new Wolf()});
 			WolfSpawnTimer = 0.f;
 		}
 		break;
@@ -47,6 +53,7 @@ void GameRoom::SpawnEnemy()
 		if (BatSpawnTimer >= 3.f)
 		{
 			// TODO: Bat Spawn Code
+			m_iBatSN++;
 			BatSpawnTimer = 0.f;
 		}
 		break;
@@ -58,11 +65,40 @@ void GameRoom::SpawnEnemy()
 	}
 }
 
-void GameRoom::UpdateEnemy(array<StateMsgInfo, MAX_CLIENTS> StateMsg)
+void GameRoom::UpdateEnemy()
 {
+	for (auto it : m_BatMap)
+	{
+		it.second->Update(m_fElapsedTime);
+	}
+	for (auto it : m_WolfMap)
+	{
+		it.second->Update(m_fElapsedTime);
+	}
 }
 
-void GameRoom::SplitStateMsg()
+void GameRoom::UpdateEnemyUseStateMsg(array<StateMsgInfo, MAX_CLIENTS> StateMsg)
 {
+	for (int i = 0; i < MAX_CLIENTS; i++)
+	{
+		switch (StateMsg[i].StateMsg)
+		{
+		case (int)StateMsgType::MonsterHp:
+
+			break;
+		case (int)StateMsgType::PlayerMove:
+
+			break;
+		case (int)StateMsgType::CastleHp:
+
+			break;
+		case (int)StateMsgType::UseCard:
+
+			break;
+		default:
+			printf("GameRoom::UpdateEnemy Error!\n");
+			break;
+		}
+	}
 
 }
