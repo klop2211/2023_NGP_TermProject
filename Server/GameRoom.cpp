@@ -103,6 +103,7 @@ void GameRoom::ProcessMonsterHpMsg(StateMsgArgu* Arg)
 
 StateMsgByte GameRoom::MakeStateMsgByte(StateMsgType SMT)
 {
+	// 
 	StateMsgByte ReturnValue = 0;
 	ReturnValue = (StateMsgByte)SMT;
 

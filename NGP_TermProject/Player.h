@@ -7,6 +7,10 @@
 #define PLAYER_MOVE_SPEED 170
 
 enum Direction{ Left, Right };
+enum ObjectType {
+	Drop_Spear = 100, Meteor_Spear, Explosion, Wall, Hurricane, None, Ice, Fire, Knockdown, SowrdLight,
+	Rotation_Spear, Airborne_Spear, Red_Spear, Earthquake, Flame_Zone, Drop_Red_Spear, Yellow_Spear, Purple_Spear
+};
 
 class Player :    
 	public Object
@@ -24,6 +28,12 @@ public:
 	void OnProcessingKeyboardMessage(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 
 	void UiDraw(HDC& memDc);
+	void UseCard();
+	void SetCardPoint();
+	void DrawCard();
+	void DrawCard(bool Attention);
+	void PlusUltimate();
+	void MakeCard(int randomValue, int** tripord);
 
 public:
 	virtual CImage GetImg() const { return *m_pImg; }
@@ -43,24 +53,39 @@ private:
 	Direction	m_dDir;			// 방향
 	int			m_iSpeed;		// 이동속도
 	CImage*		m_pImg;			// 그릴 이미지
-	CImage*		m_pUltiImg;		// 각성기 이미지
-	CImage*		m_pDeck;		// 카드 뒷면 이미지
-	CImage*		m_pManaImg[2];	// 마나 이미지
 
 	int			m_iFrameMax;	// 스프라이트 이미지의 프레임 수
 	int			m_iFrameIdx;	// 현재 스프라이트 이미지의 프레임 번호
 	float		m_fFrameTime;	// 현재 스프라이트가 사용된 시간
 
-	int			m_iUltimate;	// 궁극기 게이지
-	int			m_iCardCount;	// 남은 카드 개수
+	//========================================================================
+	CImage* m_pUltiImg;		// 각성기 이미지
+	CImage* m_pDeck;		// 카드 뒷면 이미지
+	CImage* m_pManaImg[2];	// 마나 이미지
+
+	int**		m_ppTripord;		// 트라이포드
+		
+	int			m_iUltimate;		// 궁극기 게이지
+	int			m_iCardCount;		// 덱 카드개수 
 	int			m_iHandCardCount;	// 손에있는 카드 개수
 	int			m_iDeadCardCount;	// 쓴 카드 개수
-	int			m_iMaxMana;		// 최대 마나
-	int			m_iManaCount;	// 사용가능한 남은 마나
-	int			m_iLevel;		// 레벨
+	int			m_iMaxMana;			// 최대 마나
+	int			m_iManaCount;		// 사용가능한 남은 마나
+	int			m_iLevel;			// 레벨
+	bool		m_bOnemore;			// 스킬 한번더 사용?
 
 	int			m_iExperience;			// 경험치
 	int			m_iExperienceBar[10];	// 현 레벨의 경험치 최대량
+
+	bool		m_bIsClick;				// 카드를 집고있는지
+	int			m_iStartX, m_iStartY;	// 카드를 집은 위치
+	int			m_iClickSelect;			// 잡고있는 카드
+	POINT		m_pPrevCardPoint;		// 카드를 놓았을때 돌아가야하는 위치
+
+	class Card* m_pCard[30] = { nullptr };		// 덱 카드
+	Card*		m_pHandCard[7] = { nullptr };	// 손 카드
+	////////////////////////////////////////////////////////////////////////////////
+
 
 	StateMachine<Player>* m_pStateMachine;
 

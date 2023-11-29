@@ -26,8 +26,9 @@ protected:
 	//카드의 트라이포드 확인
 	int** m_iTripord = nullptr;
 
+public:
 	virtual void __init__() { }
-	//virtual bool getOnce() { return NULL; }
+	virtual bool GetOnce() { return NULL; }
 
 	//Render
 public:
@@ -49,9 +50,10 @@ public:
 	int GetDestruction()		{ return m_iDestruction; }
 	int GetNeutralization()		{ return m_iNeutralization; }
 
-	bool GetIsValid()			{ return GetIsValid(); }
+	bool GetIsValid()			{ return m_bIsValid; }
 	bool GetCheep()				{ return m_bCheep; }
 
 	void SetIsValid(bool Valid) { m_bIsValid = Valid; }
 	void SetPoint(int x, int y) { m_pPoint.x = x; m_pPoint.y = y; }
+	void SetPoint(POINT rect)	{ m_pPoint = rect; }
 };

@@ -4,8 +4,8 @@
 
 class CastleInteraction;
 
-enum class MonsterStatus { Move, Dead, Attack, Hit, Die };
-enum class StatusEffect { Ice_s = 1, Fire_s, NULL_S };
+enum class MonsterStatus : BYTE { Move, Dead, Attack, Hit, Die };
+enum class StatusEffect : BYTE { Ice_s = 1, Fire_s, NULL_S };
 
 class Monster : public Object
 {
