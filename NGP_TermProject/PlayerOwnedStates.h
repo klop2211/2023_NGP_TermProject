@@ -46,3 +46,49 @@ public:
     virtual void Exit(Player* player);
 
 };
+
+class PStun :
+    public State<Player>
+{
+private:
+    PStun() {}
+    PStun(const PStun&);
+    PStun& operator=(const PStun&);
+
+public:
+
+    static PStun* Instance();
+
+public:
+
+    virtual void Enter(Player* player);
+
+    virtual void Execute(Player* player, float elapsed);
+
+    virtual void Exit(Player* player);
+
+};
+
+class PSkill :
+    public State<Player>
+{
+private:
+    PSkill() {}
+    PSkill(const PSkill&);
+    PSkill& operator=(const PSkill&);
+
+public:
+
+    static PSkill* Instance();
+
+public:
+
+    virtual void Enter(Player* player);
+
+    virtual void Execute(Player* player, float elapsed);
+
+    virtual void Exit(Player* player);
+
+};
+
+
