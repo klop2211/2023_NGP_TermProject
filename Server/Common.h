@@ -19,6 +19,7 @@
 #define MAX_ROOMS 20
 #define Client1 0
 #define Client2 1
+#define StateMsgNone 0
 
 using std::array;
 

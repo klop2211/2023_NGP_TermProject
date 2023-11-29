@@ -74,11 +74,22 @@ DWORD WINAPI ProcessClient1(LPVOID arg)
 		// 추가로 읽을 바이트 사이즈
 		int MsgSize = GetStateMsgType(lower6Bits);
 
-		// 추가로 받을 인수 동적할당
-		// TODO: 적당한 시점에 해제하거나 스마트 포인터 사용해야함
-		StateMsgArg = MsgInstence::GetStateMsgArguType(lower6Bits);
+		//클라에서 주기적으로 상태 메시지 보내기
+		//보낼 메시지가 없으면 0을 보내기
+		//상태메시지가 0일떄는 StateMsgArg 수신받지 않기 & 클라에서 수신하지 않기
 
-		ReceiveStateMsg = recv(client_sockets[Client1], (char*)StateMsgArg, MsgSize, 0);
+		// 상태메시지가 0이 아닐 떄
+		//0일 때는 StateMsgArg == nullptr 그대로
+		if (ReceiveStateMsg != StateMsgNone)
+		{
+			// 추가로 받을 인수 동적할당
+			// TODO: 적당한 시점에 해제하거나 스마트 포인터 사용해야함
+			StateMsgArg = MsgInstence::GetStateMsgArguType(lower6Bits);
+			ReceiveStateMsg = recv(client_sockets[Client1], (char*)StateMsgArg, MsgSize, 0);
+			if (ReceiveStateMsg == SOCKET_ERROR) {
+				err_quit("ReceiveStateMsgArg Err");
+			}
+		}
 	}
 
 	// 하위 6비트를 통해 게임오버 판별
@@ -127,10 +138,18 @@ DWORD WINAPI ProcessClient2(LPVOID arg)
 		// 추가로 읽을 바이트 사이즈
 		int MsgSize = GetStateMsgType(lower6Bits);
 
-		// 추가로 받을 인수 동적할당
-		StateMsgArg = MsgInstence::GetStateMsgArguType(lower6Bits);
-
-		ReceiveStateMsg = recv(client_sockets[Client1], (char*)StateMsgArg, MsgSize, 0);
+		// 상태메시지가 0이 아닐 떄
+		//0일 때는 StateMsgArg == nullptr 그대로
+		if (ReceiveStateMsg != StateMsgNone)
+		{
+			// 추가로 받을 인수 동적할당
+			// TODO: 적당한 시점에 해제하거나 스마트 포인터 사용해야함
+			StateMsgArg = MsgInstence::GetStateMsgArguType(lower6Bits);
+			ReceiveStateMsg = recv(client_sockets[Client2], (char*)StateMsgArg, MsgSize, 0);
+			if (ReceiveStateMsg == SOCKET_ERROR) {
+				err_quit("ReceiveStateMsgArg Err");
+			}
+		}
 	}
 
 	// 하위 6비트를 통해 게임오버 판별
