@@ -70,63 +70,73 @@ DWORD WINAPI ProcessClient1(LPVOID arg)
 	int RoomNum = Arg->RoomNumber;
 
 	DWORD retval;
-	retval = WaitForSingleObject(events[RoomNum].hClient1Event, INFINITE);
 
-	// 클라이언트 처리 로직
+	while (true)
+	{
+		retval = WaitForSingleObject(events[RoomNum].hClient1Event, INFINITE);
 
-	// 상태 메시지 수신
-	BYTE StateMsg;
-	BYTE upper2Bits = 0;
-	BYTE lower6Bits = 0;
-	StateMsgArgu* StateMsgArg = nullptr;
+		// 클라이언트 처리 로직
 
-	int ReceiveStateMsg = recv(client_sockets[Client1], (char*)&StateMsg, sizeof(BYTE), 0);
-	if (ReceiveStateMsg == SOCKET_ERROR) {
-		err_quit("ReceiveStateMsg Err");
-	}
-	else {
-		// 상위 2비트 추출
-		upper2Bits = ReceiveStateMsg >> 6;
+		// 상태 메시지 수신
+		BYTE StateMsg;
+		BYTE upper2Bits = 0;
+		BYTE lower6Bits = 0;
+		StateMsgArgu* StateMsgArg = nullptr;
 
-		// 하위 6비트 추출
-		lower6Bits = ReceiveStateMsg & 0x3F;
+		int ReceiveStateMsg = recv(client_sockets[Client1], (char*)&StateMsg, sizeof(BYTE), 0);
+		if (ReceiveStateMsg == SOCKET_ERROR) {
+			err_quit("ReceiveStateMsg Err");
+		}
+		else {
+			// 상위 2비트 추출
+			upper2Bits = ReceiveStateMsg >> 6;
 
-		// 추가로 읽을 바이트 사이즈
-		int MsgSize = GetStateMsgType(lower6Bits);
+			// 하위 6비트 추출
+			lower6Bits = ReceiveStateMsg & 0x3F;
 
-		//클라에서 주기적으로 상태 메시지 보내기
-		//보낼 메시지가 없으면 0을 보내기
-		//상태메시지가 0일떄는 StateMsgArg 수신받지 않기 & 클라에서 수신하지 않기
+			// 추가로 읽을 바이트 사이즈
+			int MsgSize = GetStateMsgType(lower6Bits);
 
-		// 상태메시지가 0이 아닐 떄
-		//0일 때는 StateMsgArg == nullptr 그대로
-		if (ReceiveStateMsg != StateMsgNone)
-		{
-			// 추가로 받을 인수 동적할당
-			// TODO: 적당한 시점에 해제하거나 스마트 포인터 사용해야함
-			StateMsgArg = MsgInstence::GetStateMsgArguType(lower6Bits);
-			ReceiveStateMsg = recv(client_sockets[Client1], (char*)StateMsgArg, MsgSize, 0);
-			if (ReceiveStateMsg == SOCKET_ERROR) {
-				err_quit("ReceiveStateMsgArg Err");
+			//클라에서 주기적으로 상태 메시지 보내기
+			//보낼 메시지가 없으면 0을 보내기
+			//상태메시지가 0일떄는 StateMsgArg 수신받지 않기 & 클라에서 수신하지 않기
+
+			// 상태메시지가 0이 아닐 떄
+			//0일 때는 StateMsgArg == nullptr 그대로
+			if (ReceiveStateMsg != StateMsgNone)
+			{
+				// 추가로 받을 인수 동적할당
+				// TODO: 적당한 시점에 해제하거나 스마트 포인터 사용해야함
+				StateMsgArg = MsgInstence::GetStateMsgArguType(lower6Bits);
+				ReceiveStateMsg = recv(client_sockets[Client1], (char*)StateMsgArg, MsgSize, 0);
+				if (ReceiveStateMsg == SOCKET_ERROR) {
+					err_quit("ReceiveStateMsgArg Err");
+				}
+
+				StateMsgInfo SMI;
+				SMI.StateMsg = lower6Bits;
+				SMI.pStateMsgArgu = StateMsgArg;
+				SharedBuffer[RoomNum][0] = SMI;
 			}
 		}
-	}
 
-	// 하위 6비트를 통해 게임오버 판별
-	//StateMsg 구체화되면 수정 예정
-	bool isGameOver = IsGameOver(lower6Bits, StateMsgArg);
+		// 하위 6비트를 통해 게임오버 판별
+		//StateMsg 구체화되면 수정 예정
+		bool isGameOver = IsGameOver(lower6Bits, StateMsgArg);
 	
-	// 받은 내용 그대로 공유 버퍼에 쓰기
-	SharedBuffer[RoomNum][0].StateMsg = StateMsg;
-	SharedBuffer[RoomNum][0].pStateMsgArgu = StateMsgArg;
+		// 받은 내용 그대로 공유 버퍼에 쓰기
+		SharedBuffer[RoomNum][0].StateMsg = StateMsg;
+		SharedBuffer[RoomNum][0].pStateMsgArgu = StateMsgArg;
 	
-	if (isGameOver)
-	{
-		CloseHandle(GetCurrentThread());
-	}
-	else
-	{
-		SetEvent(events[RoomNum].hClient2Event);
+		if (isGameOver)
+		{
+			CloseHandle(GetCurrentThread());
+		}
+		else
+		{
+			SetEvent(events[RoomNum].hClient2Event);
+		}
+
 	}
 		
 	return NULL;
@@ -139,57 +149,65 @@ DWORD WINAPI ProcessClient2(LPVOID arg)
 	int RoomNum = Arg->RoomNumber;
 
 	DWORD retval;
-	retval = WaitForSingleObject(events[RoomNum].hClient2Event, INFINITE);
+	while (true)
+	{
+		retval = WaitForSingleObject(events[RoomNum].hClient2Event, INFINITE);
 
-	// 클라이언트 처리 로직
+		// 클라이언트 처리 로직
 
-	// 상태 메시지 수신
-	BYTE StateMsg;
-	BYTE upper2Bits = 0;
-	BYTE lower6Bits = 0;
-	StateMsgArgu * StateMsgArg = nullptr;
+		// 상태 메시지 수신
+		BYTE StateMsg;
+		BYTE upper2Bits = 0;
+		BYTE lower6Bits = 0;
+		StateMsgArgu * StateMsgArg = nullptr;
 
-	int ReceiveStateMsg = recv(client_sockets[Client2], (char*)&StateMsg, sizeof(BYTE), 0);
-	if (ReceiveStateMsg == SOCKET_ERROR) {
-		err_quit("ReceiveStateMsg Err");
-	}
-	else {
-		// 상위 2비트 추출
-		upper2Bits = ReceiveStateMsg >> 6;
+		int ReceiveStateMsg = recv(client_sockets[Client2], (char*)&StateMsg, sizeof(BYTE), 0);
+		if (ReceiveStateMsg == SOCKET_ERROR) {
+			err_quit("ReceiveStateMsg Err");
+		}
+		else {
+			// 상위 2비트 추출
+			upper2Bits = ReceiveStateMsg >> 6;
 
-		// 하위 6비트 추출
-		lower6Bits = ReceiveStateMsg & 0x3F;
+			// 하위 6비트 추출
+			lower6Bits = ReceiveStateMsg & 0x3F;
 
-		// 추가로 읽을 바이트 사이즈
-		int MsgSize = GetStateMsgType(lower6Bits);
+			// 추가로 읽을 바이트 사이즈
+			int MsgSize = GetStateMsgType(lower6Bits);
 
-		// 상태메시지가 0이 아닐 떄
-		//0일 때는 StateMsgArg == nullptr 그대로
-		if (ReceiveStateMsg != StateMsgNone)
-		{
-			// 추가로 받을 인수 동적할당
-			// TODO: 적당한 시점에 해제하거나 스마트 포인터 사용해야함
-			StateMsgArg = MsgInstence::GetStateMsgArguType(lower6Bits);
-			ReceiveStateMsg = recv(client_sockets[Client2], (char*)StateMsgArg, MsgSize, 0);
-			if (ReceiveStateMsg == SOCKET_ERROR) {
-				err_quit("ReceiveStateMsgArg Err");
+			// 상태메시지가 0이 아닐 떄
+			//0일 때는 StateMsgArg == nullptr 그대로
+			if (ReceiveStateMsg != StateMsgNone)
+			{
+				// 추가로 받을 인수 동적할당
+				// TODO: 적당한 시점에 해제하거나 스마트 포인터 사용해야함
+				StateMsgArg = MsgInstence::GetStateMsgArguType(lower6Bits);
+				ReceiveStateMsg = recv(client_sockets[Client2], (char*)StateMsgArg, MsgSize, 0);
+				if (ReceiveStateMsg == SOCKET_ERROR) {
+					err_quit("ReceiveStateMsgArg Err");
+				}
+
+				StateMsgInfo SMI;
+				SMI.StateMsg = lower6Bits;
+				SMI.pStateMsgArgu = StateMsgArg;
+				SharedBuffer[RoomNum][1] = SMI;
 			}
 		}
-	}
 
-	// 하위 6비트를 통해 게임오버 판별
-	bool isGameOver = IsGameOver(lower6Bits, StateMsgArg);
+		// 하위 6비트를 통해 게임오버 판별
+		bool isGameOver = IsGameOver(lower6Bits, StateMsgArg);
 
-	SharedBuffer[RoomNum][1].StateMsg = StateMsg;
-	SharedBuffer[RoomNum][1].pStateMsgArgu = StateMsgArg;
+		SharedBuffer[RoomNum][1].StateMsg = StateMsg;
+		SharedBuffer[RoomNum][1].pStateMsgArgu = StateMsgArg;
 
-	if (isGameOver)
-	{
-		CloseHandle(GetCurrentThread());
-	}
-	else
-	{
-		SetEvent(events[RoomNum].hRoomEvent);
+		if (isGameOver)
+		{
+			CloseHandle(GetCurrentThread());
+		}
+		else
+		{
+			SetEvent(events[RoomNum].hRoomEvent);
+		}
 	}
 		
 	return NULL;
