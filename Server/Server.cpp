@@ -14,7 +14,7 @@ SOCKET client_sockets[MAX_CLIENTS];
 // 상태 메세지를 저장할 공유 버퍼
 array<array<StateMsgInfo, MAX_CLIENTS>, MAX_ROOMS> SharedBuffer;
 
-void ProcessGameOver(BYTE StateMsg, StateMsgArgu* arg)
+bool IsGameOver(BYTE StateMsg, StateMsgArgu* arg)
 {
 	switch (StateMsg)
 	{
@@ -29,8 +29,13 @@ void ProcessGameOver(BYTE StateMsg, StateMsgArgu* arg)
 				sprintf(buffer, "Game Over");
 				send(client_sockets[i], buffer, strlen(buffer), 0);
 			}
+			return true;
 		}
+		else
+			return false;
+		break;
 	default:
+		return false;
 		break;
 	}
 }
@@ -106,13 +111,21 @@ DWORD WINAPI ProcessClient1(LPVOID arg)
 
 	// 하위 6비트를 통해 게임오버 판별
 	//StateMsg 구체화되면 수정 예정
-	ProcessGameOver(lower6Bits, StateMsgArg);
+	bool isGameOver = IsGameOver(lower6Bits, StateMsgArg);
 	
 	// 받은 내용 그대로 공유 버퍼에 쓰기
 	SharedBuffer[RoomNum][0].StateMsg = StateMsg;
 	SharedBuffer[RoomNum][0].pStateMsgArgu = StateMsgArg;
 	
-	SetEvent(events[RoomNum].hClient2Event);
+	if (isGameOver)
+	{
+		CloseHandle(GetCurrentThread());
+	}
+	else
+	{
+		SetEvent(events[RoomNum].hClient2Event);
+	}
+		
 	return NULL;
 }
 
@@ -162,12 +175,20 @@ DWORD WINAPI ProcessClient2(LPVOID arg)
 	}
 
 	// 하위 6비트를 통해 게임오버 판별
-	ProcessGameOver(lower6Bits, StateMsgArg);
+	bool isGameOver = IsGameOver(lower6Bits, StateMsgArg);
 
 	SharedBuffer[RoomNum][1].StateMsg = StateMsg;
 	SharedBuffer[RoomNum][1].pStateMsgArgu = StateMsgArg;
 
-	SetEvent(events[RoomNum].hRoomEvent);
+	if (isGameOver)
+	{
+		CloseHandle(GetCurrentThread());
+	}
+	else
+	{
+		SetEvent(events[RoomNum].hRoomEvent);
+	}
+		
 	return NULL;
 }
 
@@ -305,7 +326,7 @@ int main(int argc, char* argv[])
 
 		}
 	}
-
+	
 	//for (auto& handle : events)
 	//{
 	//	CloseHandle(handle.hClient1Event);
