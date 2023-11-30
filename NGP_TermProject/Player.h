@@ -1,16 +1,15 @@
 #pragma once
 #include "Object.h"
 #include "StateMachine.h"
+#include "SkillObject.h"
 
 #define PLAYER_SIZE 100
 #define FRAME_SPEED 6
 #define PLAYER_MOVE_SPEED 170
 
 enum Direction{ Left, Right };
-enum ObjectType {
-	Drop_Spear = 100, Meteor_Spear, Explosion, Wall, Hurricane, None, Ice, Fire, Knockdown, SowrdLight,
-	Rotation_Spear, Airborne_Spear, Red_Spear, Earthquake, Flame_Zone, Drop_Red_Spear, Yellow_Spear, Purple_Spear
-};
+
+class Card;
 
 class Player :    
 	public Object
@@ -34,14 +33,27 @@ public:
 	void DrawCard(bool Attention);
 	void PlusUltimate();
 	void MakeCard(int randomValue, int** tripord);
+	int	ActivatedTripordNumber(CardName cardName, int num) { return m_ppTripord[(int)cardName][num]; }
+	void AddSkillObject(const SkillObject& skillObject);
 
 public:
-	virtual CImage GetImg() const { return *m_pImg; }
+	CImage GetImg() const { return *m_pImg; }
 	Direction GetDir() const { return m_dDir; }
+	CardName GetUseCardName() const;
+	int GetStunDamage() const { return m_iStunDamage; }
+	int GetDamage() const { return m_iDamage; }
+	int GetDestruction() const { return m_iDestruction; }
+	int GetNamedDamage() const { return m_iNamedDamage; }
+	int GetType() const { return m_iType; }
 
 	void SetDir(Direction dir) { m_dDir = dir; }
 	void SetImg(const TCHAR* str);
 	void SetSpeed(const int speed) { m_iSpeed = speed; }
+	void SetDamage(const int damege) { m_iDamage = damege; }
+	void SetStunDamage(const int stunDamage) { m_iStunDamage = stunDamage; }
+	void SetDestruction(const int destruction) { m_iDestruction = destruction; }
+	void SetNamedDamage(const int NamedDamage) { m_iNamedDamage = NamedDamage; }
+	void SetType(const int type) { m_iType = type; }
 	void SetRectByLocation() {
 		m_rRect.left = (int)m_Location.x;
 		m_rRect.top = (int)m_Location.y;
@@ -52,6 +64,12 @@ public:
 private:
 	Direction	m_dDir;			// 방향
 	int			m_iSpeed;		// 이동속도
+	int			m_iDamage;		// 공격력(충돌시 가하는 데미지)
+	int			m_iStunDamage;	// 무력화 수치(기존에는 Neutralization이라 표기했지만 생소한 영단어보다는 이해가 편하게 바꿈
+	int			m_iDestruction;	// 부위파괴 수치
+	int			m_iNamedDamage; // 네임드 추가데미지 기존 데미지에 이 수치를 + 하여 계산
+	int			m_iType;			// 현재 속성 타입
+
 	CImage*		m_pImg;			// 그릴 이미지
 
 	int			m_iFrameMax;	// 스프라이트 이미지의 프레임 수
@@ -82,12 +100,13 @@ private:
 	int			m_iClickSelect;			// 잡고있는 카드
 	POINT		m_pPrevCardPoint;		// 카드를 놓았을때 돌아가야하는 위치
 
-	class Card* m_pCard[30] = { nullptr };		// 덱 카드
+	Card*		m_pCard[30] = { nullptr };		// 덱 카드
 	Card*		m_pHandCard[7] = { nullptr };	// 손 카드
 	////////////////////////////////////////////////////////////////////////////////
 
 
 	StateMachine<Player>* m_pStateMachine;
+	std::list<SkillObject> m_lSkillObjects;
 
 };
 

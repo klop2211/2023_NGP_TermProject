@@ -23,9 +23,10 @@ public:
 
 	//Gettor, Settor
 public:
-	virtual CImage GetImg() const = 0;
 	RECT GetRect() const { return m_rRect; }
 	void SetRect(RECT rect) { m_rRect = rect; }
+	void SetRect(LONG l, LONG t, LONG r, LONG b) { m_rRect = RECT{ l,t,r,b }; }
+	FPOINT GetLocation() { return m_Location; }
 
 protected:
 	// 메인 이미지
