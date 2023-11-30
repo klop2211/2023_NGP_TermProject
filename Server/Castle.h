@@ -9,6 +9,9 @@ public:
 	Castle();
 	~Castle();
 
+	// TODO: 게임 종료 판정 추가 필요
+	void GetDamage(int hp);
+
 public:
 	int GetMaxHp() { return m_iMaxHp; }
 	int GetCurrnetHp() {return m_iCurrentHp;}

@@ -31,6 +31,7 @@ public:
 	void WriteMonsterState(MonsterType, BYTE, MonsterStateType);
 	void WritePlayerLocation();
 	void WriteMonsterSpawn(MonsterType, BYTE);
+	void WriteCastleHp();
 
 	void ReadPlayerLocation(StateMsgArgu*);
 private:

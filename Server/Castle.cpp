@@ -11,3 +11,8 @@ Castle::~Castle()
 {
 	delete m_pBoundingBox;
 }
+
+void Castle::GetDamage(int hp)
+{
+	m_iCurrentHp -= hp;
+}
