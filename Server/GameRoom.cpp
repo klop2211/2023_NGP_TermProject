@@ -37,7 +37,9 @@ void GameRoom::Update(array<StateMsgInfo, MAX_CLIENTS> StateMsg)
 	UpdateUseStateMsg(StateMsg);
 	UpdateEnemy();
 	SpawnEnemy();
-	m_pStream->Send();
+
+
+	// m_pStream->Send();
 }
 
 void GameRoom::SpawnEnemy()
@@ -209,8 +211,10 @@ void GameRoom::WritePlayerLocation()
 		PLM.Location.x = m_PlayerLocations[i].x;
 		PLM.Location.y = m_PlayerLocations[i].y;
 
+		m_pStream->Init();
 		m_pStream->Write(StateMsgType::PlayerLocation);
 		m_pStream->Write(PLM);
+		m_pStream->Send();
 	}
 }
 

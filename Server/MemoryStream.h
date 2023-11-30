@@ -8,11 +8,10 @@ public:
 	MemoryStream(array<SOCKET, MAX_ROOMS>& sockets)
 		: m_Sockets(sockets) {};
 
-	// Mem Stream
 	template<typename Type>
 	void Write(const Type&, int bytes = -1);
 	void Send();
-
+	void Init();
 private:
 	// 원시 자료형인지 확인
 	template<typename Type>

@@ -1,5 +1,6 @@
 #include "Common.h"
 #include "MemoryStream.h"
+#include "StateMessage.h"
 
 void MemoryStream::Send()
 {
@@ -11,7 +12,11 @@ void MemoryStream::Send()
 			err_display("send()");
 		}
 	}
+	Init();
+}
 
+void MemoryStream::Init()
+{
 	m_iNowWriteIndex = 0;
 	memset(buf, 0, SENDBUFFERSIZE);
 }
