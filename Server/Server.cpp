@@ -222,6 +222,15 @@ DWORD WINAPI ProcessRoom(LPVOID arg)
 
 int main(int argc, char* argv[])
 {
+	// 방 로직 확인용 코드
+	//{
+	//	GameRoom* pGameRoom = new GameRoom;
+	//	while (true)
+	//	{
+	//		pGameRoom->Update(SharedBuffer[0]);
+	//		pGameRoom->WriteMonsterState(MonsterType::Wolf, 0, MonsterStateType::Attack);
+	//	}
+	//}
 	int retval;
 	
 	// 윈속 초기화

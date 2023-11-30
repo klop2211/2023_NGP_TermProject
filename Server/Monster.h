@@ -39,8 +39,8 @@ public:
 	void SetLocation(FPOINT Location)	{ m_Location = Location; }
 	void SetSize(POINT Size)			{ m_Size = Size; }
 
-	void AddElapsedTime(float time)		{ m_fAttackTimer += time; }
-
+	void MinusElapsedTime(float time)	{ m_fAttackTimer -= time; }
+	void InitAttackCoolTime()			{ m_fAttackTimer = m_fAttackCoolTime;	}
 protected:
 	MonsterState* m_State;
 	BYTE	m_iSerialNum;

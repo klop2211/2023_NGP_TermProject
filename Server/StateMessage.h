@@ -21,16 +21,17 @@ struct MonsterSpawnStateMsg : StateMsgArgu
 // 서버 -> 클라 (충돌처리 후 전송)
 struct MonsterHpStateMsg : StateMsgArgu
 {
-	MonsterType MonsterId;
-	BYTE MonsterSerialId;
+	MonsterType Type;
+	BYTE SerialId;
 	BYTE Damage;
 };
 
+// 서버 -> 클라
 struct MonsterStateMsg : StateMsgArgu
 {
-	MonsterType MonsterId;
-	BYTE MonsterSerialId;
-	MonsterStateType MonsterState;
+	MonsterType Type;
+	BYTE SerialId;
+	MonsterStateType State;
 };
 
 // 서버 <-> 클라

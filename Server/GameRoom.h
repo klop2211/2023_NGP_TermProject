@@ -27,6 +27,8 @@ public:
 	bool IsCollision(const RECT& a, const RECT& b);
 	void IsCollisionMonsterWithCastle();
 
+	void WriteMonsterState(MonsterType, BYTE, MonsterStateType);
+
 private:
 	std::chrono::time_point<std::chrono::system_clock> m_tPreviousTime;
 	float m_fElapsedTime;
