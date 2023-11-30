@@ -22,7 +22,7 @@
 #define MAX_ROOMS 20
 #define Client1 0
 #define Client2 1
-#define StateMsgNone 0
+#define StateMsgNone -1
 
 #define CLIENTWINWIDTH	1600
 #define CLIENTWINHEIGHT	900
