@@ -37,7 +37,6 @@ public:
 private:
 	static DWORD WINAPI ReceiveThread(LPVOID arg);
 
-
 private:
 	Player* m_pPlayer;
 	std::list<Object*> m_lObjectList;

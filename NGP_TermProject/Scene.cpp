@@ -52,7 +52,12 @@ void Scene::Update(float elapsed)
 		else
 		{
 			UpdateGameStart(elapsed);		//메인 게임화면
-			send(*m_pSock, (char*)StateMsgType::PlayerLocation, sizeof(StateMsgType), 0);
+			StateMsgType smt = StateMsgType::PlayerLocation;
+			send(*m_pSock, (char*)&smt, sizeof(StateMsgType), 0);
+
+			StateMsgArgu* sma = new PlayerLocationMsg;
+			send(*m_pSock, (char*)sma, sizeof(PlayerLocationMsg), 0);
+
 			//TODO: 게임종료
 		}
 	}
@@ -327,15 +332,56 @@ DWORD WINAPI Scene::ReceiveThread(LPVOID arg)
 	//if (retval == SOCKET_ERROR) err_quit("connect()");
 
 	StateMsgType typeBuf;
+	
+	retval = recv(*m_pSock, (char*)&typeBuf, sizeof(BYTE), 0);
 
 	while (1) {
 		WaitForSingleObject(*m_pWriteEvent, INFINITE);   // 쓰기 완료 대기
 
-		retval = recv(*m_pSock, (char*)&typeBuf, sizeof(BYTE), 0);
+		BYTE StateMsg;
+		BYTE upper2Bits = 0;
+		BYTE lower6Bits = 0;
+		StateMsgArgu* StateMsgArg = nullptr;
+
+		retval = recv(*m_pSock, (char*)&StateMsg, sizeof(BYTE), 0);
+
+		// 상위 2비트 추출
+		upper2Bits = StateMsg >> 6;
+
+		// 하위 6비트 추출
+		lower6Bits = StateMsg & 0x3F;
+
+		// 추가로 읽을 바이트 사이즈
+		int MsgSize;
+		switch (StateMsg)
+		{
+		case (int)StateMsgType::MonsterSpawn:	MsgSize = sizeof(MonsterSpawnStateMsg); break;
+		case (int)StateMsgType::MonsterHp:		MsgSize = sizeof(MonsterHpStateMsg);break;
+		case  (int)StateMsgType::PlayerLocation:MsgSize = sizeof(PlayerLocationMsg);break;
+		case (int)StateMsgType::UseCard:		MsgSize = sizeof(UseCardStateMsg);	break;
+		case  (int)StateMsgType::CastleHp:		MsgSize = sizeof(CastleHpStateMsg);	break;
+		default:
+			break;
+		}
+
+		switch (StateMsg)
+		{
+		case	(int)StateMsgType::MonsterSpawn:	StateMsgArg = new MonsterSpawnStateMsg; break;
+		case	(int)StateMsgType::MonsterHp:		StateMsgArg = new MonsterHpStateMsg;	break;
+		case	(int)StateMsgType::PlayerLocation:	StateMsgArg = new PlayerLocationMsg;	break;
+		case	(int)StateMsgType::UseCard:			StateMsgArg = new UseCardStateMsg;		break;
+		case	(int)StateMsgType::CastleHp:		StateMsgArg = new CastleHpStateMsg;		break;
+		default:
+			break;
+		}
+		retval = recv(*m_pSock, (char*)StateMsgArg, MsgSize, 0);
 
 		SetEvent(*m_pReadEvent);
 	}
 
 	return 0;
 }
+
+
+
 
