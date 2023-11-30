@@ -84,6 +84,8 @@ void GameRoom::UpdateEnemy()
 		if (it.second->GetCanAttack())
 		{
 			WriteMonsterState(MonsterType::Bat, it.first, MonsterStateType::Attack);
+			m_pCastle->GetDamage(it.second->GetDamage());
+			WriteCastleHp();
 		}
 	}
 	for (auto it : m_WolfMap)
@@ -92,6 +94,8 @@ void GameRoom::UpdateEnemy()
 		if (it.second->GetCanAttack())
 		{
 			WriteMonsterState(MonsterType::Wolf, it.first, MonsterStateType::Attack);
+			m_pCastle->GetDamage(it.second->GetDamage());
+			WriteCastleHp();
 		}
 	}
 }
@@ -162,15 +166,15 @@ void GameRoom::UpdateUseStateMsg(array<StateMsgInfo, MAX_CLIENTS> StateMsg)
 	{
 		switch (StateMsg[i].StateMsg)
 		{
-		case (int)StateMsgType::MonsterHp:
-			ProcessMonsterHpMsg(StateMsg[i].pStateMsgArgu);
-			break;
+		//case (int)StateMsgType::MonsterHp:
+		//	ProcessMonsterHpMsg(StateMsg[i].pStateMsgArgu);
+		//	break;
 		case (int)StateMsgType::PlayerLocation:
 			ReadPlayerLocation(StateMsg[i].pStateMsgArgu);
 			break;
-		case (int)StateMsgType::CastleHp:
+		//case (int)StateMsgType::CastleHp:
 
-			break;
+		//	break;
 		case (int)StateMsgType::UseCard:
 
 			break;
@@ -220,6 +224,14 @@ void GameRoom::WriteMonsterSpawn(MonsterType MT, BYTE id)
 	m_pStream->Write(MSSM);
 }
 
+void GameRoom::WriteCastleHp()
+{
+	m_pStream->Write(StateMsgType::CastleHp);
+	m_pStream->Write(m_pCastle->GetCurrnetHp());
+}
+
+//=========================Read==================================
+//
 void GameRoom::ReadPlayerLocation(StateMsgArgu* SMA)
 {
 	PlayerLocationMsg* PLM = dynamic_cast<PlayerLocationMsg*>(SMA);
