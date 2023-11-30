@@ -29,8 +29,10 @@ public:
 	void UpdateChangeStart(float elapsed);
 
 
-	HANDLE GetReadEvent() const { return m_pReadEvent; }
+	void WaitReadEvent() const { WaitForSingleObject(*m_pReadEvent, INFINITE); }
+	void SetWriteEvent() { SetEvent(*m_pWriteEvent); }
 	bool IsGameStart() const { return m_bStart; }
+
 
 private:
 	static DWORD WINAPI ReceiveThread(LPVOID arg);

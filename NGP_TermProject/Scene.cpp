@@ -34,6 +34,7 @@ Scene::~Scene()
 	m_cLoadBit.Destroy();
 	m_cStartBit.Destroy();
 	m_cQuitBit.Destroy();
+
 	delete m_pSock;
 	delete m_pReadEvent;
 	delete m_pWriteEvent;

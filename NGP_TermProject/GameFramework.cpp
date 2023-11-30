@@ -43,11 +43,13 @@ void GameFramework::Draw()
 
 void GameFramework::FrameAdvance()
 {
-	if(m_pScene->IsGameStart())
-		WaitForSingleObject(m_pScene->GetReadEvent(), INFINITE);   // 읽기 완료 대기
+	if (m_pScene->IsGameStart())
+		m_pScene->WaitReadEvent();   // 읽기 완료 대기
 	SetElapsedTime();
 	Update();
 	Draw();
+	if (m_pScene->IsGameStart())
+		m_pScene->SetWriteEvent();
 }
 
 void GameFramework::SetElapsedTime()
