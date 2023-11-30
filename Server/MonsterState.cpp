@@ -39,9 +39,12 @@ void MonsterAttackState::Enter(Monster* monster)
 
 void MonsterAttackState::Execute(Monster* monster, float ElapsedTime)
 {
-	//monster->AddElapsedTime(ElapsedTime);
-	//if(monster->GetAttackTimer())
-	//monster->SetCanAttack(true);
+	monster->MinusElapsedTime(ElapsedTime);
+	if (monster->GetAttackTimer() < 0.f)
+	{
+		monster->SetCanAttack(true);
+		monster->InitAttackCoolTime();
+	}
 }
 
 void MonsterAttackState::Exit(Monster* monster)

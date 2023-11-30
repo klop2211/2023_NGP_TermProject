@@ -3,7 +3,8 @@
 
 Monster::Monster(int SerialNum) :
 	m_iSerialNum(SerialNum),
-	m_bCanAttack(false)
+	m_bCanAttack(false),
+	m_fAttackTimer(0.f)
 {
 }
 

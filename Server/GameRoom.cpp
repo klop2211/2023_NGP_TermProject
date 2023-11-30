@@ -88,8 +88,7 @@ void GameRoom::UpdateEnemy()
 		it.second->Update(m_fElapsedTime);
 		if (it.second->GetCanAttack())
 		{
-			// TODO: 공격 메세지
-			//m_pStream->Write();
+			WriteMonsterState(MonsterType::Bat, it.first, MonsterStateType::Attack);
 		}
 	}
 	for (auto it : m_WolfMap)
@@ -97,8 +96,7 @@ void GameRoom::UpdateEnemy()
 		it.second->Update(m_fElapsedTime);
 		if (it.second->GetCanAttack())
 		{
-			// TODO: 공격 메세지
-			//m_pStream->Write();
+			WriteMonsterState(MonsterType::Wolf, it.first, MonsterStateType::Attack);
 		}
 	}
 }
@@ -120,7 +118,6 @@ void GameRoom::IsCollisionMonsterWithCastle()
 	{
 		if (IsCollision(m_pCastle->GetBB(), it.second->GetBoundingBox()))
 		{
-			// TODO: 공격 상태로 변경 메세지 전송
 			it.second->ChangeState(MonsterAttackState::Instance());
 
 		}
@@ -137,10 +134,10 @@ void GameRoom::IsCollisionMonsterWithCastle()
 void GameRoom::ProcessMonsterHpMsg(StateMsgArgu* Arg)
 {
 	MonsterHpStateMsg* HpMsg = (MonsterHpStateMsg*)Arg;
-	int SerialNum = HpMsg->MonsterSerialId;
+	int SerialNum = HpMsg->SerialId;
 	int Damage = HpMsg->Damage;
 
-	switch (HpMsg->MonsterId)
+	switch (HpMsg->Type)
 	{
 	case MonsterType::Wolf:
 		m_WolfMap[SerialNum]->IsDead(Damage);
@@ -188,4 +185,17 @@ void GameRoom::UpdateEnemyUseStateMsg(array<StateMsgInfo, MAX_CLIENTS> StateMsg)
 		}
 	}
 
+}
+
+//=======================Write==============================
+//
+void GameRoom::WriteMonsterState(MonsterType MT, BYTE id, MonsterStateType MST)
+{
+	MonsterStateMsg MSM;
+	MSM.Type = MT;
+	MSM.SerialId = id;
+	MSM.State = MST;
+
+	m_pStream->Write(StateMsgType::MonsterState);
+	m_pStream->Write(MSM);
 }
