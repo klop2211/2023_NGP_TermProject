@@ -11,7 +11,6 @@ class GameRoom
 public:
 	GameRoom();
 	~GameRoom();
-
 public:
 	void SetElapsedTime();
 	void Update(array<StateMsgInfo, MAX_CLIENTS> StateMsg);
@@ -51,4 +50,6 @@ private:
 	// 스폰 타이머
 	float BatSpawnTimer;
 	float WolfSpawnTimer;
+
+	class MemoryStream* stream;
 };

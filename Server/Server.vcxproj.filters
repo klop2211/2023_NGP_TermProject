@@ -57,6 +57,9 @@
     <ClCompile Include="CommonMonster.cpp">
       <Filter>2019180016\Source</Filter>
     </ClCompile>
+    <ClCompile Include="MemoryStream.cpp">
+      <Filter>2019180016\Source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Common.h">
@@ -87,6 +90,9 @@
       <Filter>2019180016\Header</Filter>
     </ClInclude>
     <ClInclude Include="CommonMonster.h">
+      <Filter>2019180016\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="MemoryStream.h">
       <Filter>2019180016\Header</Filter>
     </ClInclude>
   </ItemGroup>

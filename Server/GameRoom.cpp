@@ -48,11 +48,10 @@ void GameRoom::SpawnEnemy()
 		{
 			// TODO: Wolf Spawn Code
 			MonsterSpawnStateMsg* SpawnMsg;
-			StateMsgByte SMB = 0;
-			MakeStateMsgByte(StateMsgType::MonsterSpawn);
+			StateMsgByte SMB = MakeStateMsgByte(StateMsgType::MonsterSpawn);
 
 			m_WolfMap.insert({ m_iWolfSN, new Wolf(m_iWolfSN)});
-			m_iWolfSN ++;
+			m_iWolfSN++;
 			WolfSpawnTimer = 0.f;
 		}
 		break;

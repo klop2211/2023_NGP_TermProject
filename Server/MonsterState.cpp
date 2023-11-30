@@ -1,6 +1,9 @@
 #include "MonsterState.h"
 #include "Monster.h"
 
+#include "StateMessage.h"
+#include "MemoryStream.h"
+
 MonsterMoveState* MonsterMoveState::Instance()
 {
 	static MonsterMoveState instance;
