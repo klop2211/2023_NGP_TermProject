@@ -61,6 +61,7 @@ struct CastleHpStateMsg : StateMsgArgu
 	int Hp;
 };
 
+// 서버에서 배열로 관리하기위해
 struct StateMsgInfo
 {
 	StateMsgByte StateMsg;

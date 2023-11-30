@@ -211,6 +211,7 @@ void GameRoom::WritePlayerLocation()
 		PLM.Location.x = m_PlayerLocations[i].x;
 		PLM.Location.y = m_PlayerLocations[i].y;
 
+		// TODO: »èÁ¦
 		m_pStream->Init();
 		m_pStream->Write(StateMsgType::PlayerLocation);
 		m_pStream->Write(PLM);

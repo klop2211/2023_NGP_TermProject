@@ -74,6 +74,7 @@ DWORD WINAPI ProcessClient1(LPVOID arg)
 	while (true)
 	{
 		retval = WaitForSingleObject(events[RoomNum].hClient1Event, INFINITE);
+		printf("hClient1Event Run\n");
 
 		// 클라이언트 처리 로직
 
@@ -152,6 +153,7 @@ DWORD WINAPI ProcessClient2(LPVOID arg)
 	while (true)
 	{
 		retval = WaitForSingleObject(events[RoomNum].hClient2Event, INFINITE);
+		printf("hClient2Event Run\n");
 
 		// 클라이언트 처리 로직
 
@@ -229,6 +231,7 @@ DWORD WINAPI ProcessRoom(LPVOID arg)
 	while (true)
 	{
 		retval = WaitForSingleObject(events[RoomNum].hRoomEvent, INFINITE);
+		printf("server Run\n");
 
 		pGameRoom->Update(SharedBuffer[RoomNum]);
 
@@ -346,6 +349,7 @@ int main(int argc, char* argv[])
 			//	send(client_sockets[i], buffer, strlen(buffer), 0);
 			//}
 
+			int i{ 0 };
 			for (const auto& s : client_sockets)
 			{
 				StateMsgType SMT = StateMsgType::GameStart;
@@ -353,10 +357,16 @@ int main(int argc, char* argv[])
 				if (retval == SOCKET_ERROR) {
 					err_display("send()");
 				}
+				retval = send(s, (char*)&i, sizeof(int), 0);
+				if (retval == SOCKET_ERROR) {
+					err_display("send()");
+				}
+				i++;
 			}
 
 			// 클라1 신호 on
 			SetEvent(events[RoomNum++].hClient1Event);
+			printf("hClient1Event On\n");
 
 		}
 		else
