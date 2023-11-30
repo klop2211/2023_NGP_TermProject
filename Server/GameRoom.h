@@ -24,6 +24,10 @@ public:
 
 	StateMsgByte MakeStateMsgByte(StateMsgType);
 
+	// COllision Fuction
+	bool IsCollision(const RECT& a, const RECT& b);
+	void IsCollisionMonsterWithCastle();
+
 private:
 	std::chrono::time_point<std::chrono::system_clock> m_tPreviousTime;
 	float m_fElapsedTime;

@@ -13,7 +13,6 @@ public:
 
 	virtual void ChangeState(MonsterState* pNewState);
 
-	//TODO: Collision check
 	RECT GetBoundingBox();
 
 public:

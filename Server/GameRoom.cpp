@@ -4,6 +4,7 @@
 #include "Wolf.h"
 #include "Bat.h"
 #include "Castle.h"
+#include "MonsterState.h"
 
 GameRoom::GameRoom()
 {
@@ -60,7 +61,12 @@ void GameRoom::SpawnEnemy()
 
 		if (BatSpawnTimer >= 3.f)
 		{
-			// TODO: Bat Spawn Code
+			// TODO: Bat Spawn 메세지 전송
+			MonsterSpawnStateMsg* SpawnMsg;
+			StateMsgByte SMB = 0;
+			MakeStateMsgByte(StateMsgType::MonsterSpawn);
+
+			m_BatMap.insert({ m_iBatSN, new Bat(m_iBatSN) });
 			m_iBatSN++;
 			BatSpawnTimer = 0.f;
 		}
@@ -82,6 +88,37 @@ void GameRoom::UpdateEnemy()
 	for (auto it : m_WolfMap)
 	{
 		it.second->Update(m_fElapsedTime);
+	}
+}
+
+bool GameRoom::IsCollision(const RECT& a, const RECT& b)
+{
+	if (a.left > b.right) return false;
+	if (a.right < b.left) return false;
+	if (a.top > b.bottom) return false;
+	if (a.bottom < b.top) return false;
+
+	return true;
+}
+
+void GameRoom::IsCollisionMonsterWithCastle()
+{
+	RECT BB;
+	for (auto it : m_BatMap)
+	{
+		if (IsCollision(m_pCastle->GetBB(), it.second->GetBoundingBox()))
+		{
+			// TODO: 공격 상태로 변경 메세지 전송
+			it.second->ChangeState(MonsterAttackState::Instance());
+
+		}
+	}
+	for (auto it : m_WolfMap)
+	{
+		if (IsCollision(m_pCastle->GetBB(), it.second->GetBoundingBox()))
+		{
+			it.second->ChangeState(MonsterAttackState::Instance());
+		}
 	}
 }
 
