@@ -9,7 +9,7 @@ class GameRoom
 	enum PhaseEnum {WolfPhase, BatPhase, BossPhase};
 
 public:
-	GameRoom(array<SOCKET, MAX_ROOMS>);
+	GameRoom(array<SOCKET, MAX_ROOMS>&);
 	~GameRoom();
 public:
 	void SetElapsedTime();
@@ -34,9 +34,6 @@ public:
 
 	void ReadPlayerLocation(StateMsgArgu*);
 private:
-	// 방에 연결된 클라 소켓
-	array<SOCKET, MAX_ROOMS> m_ClientSockets;
-
 	std::chrono::time_point<std::chrono::system_clock> m_tPreviousTime;
 	float m_fElapsedTime;
 

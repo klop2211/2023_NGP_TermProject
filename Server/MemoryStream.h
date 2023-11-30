@@ -5,10 +5,13 @@
 class MemoryStream
 {
 public:
+	MemoryStream(array<SOCKET, MAX_ROOMS>& sockets)
+		: m_Sockets(sockets) {};
+
 	// Mem Stream
 	template<typename Type>
 	void Write(const Type&, int bytes = -1);
-	void Send(const array<SOCKET, MAX_ROOMS>&);
+	void Send();
 
 private:
 	// 원시 자료형인지 확인
@@ -42,8 +45,7 @@ void MemoryStream::Write(const Type& data, int bytes)
 
 	if (m_iNowWriteIndex + size > SENDBUFFERSIZE)
 	{
-		//TODO: 고쳐야함
-		//Send();
+		Send();
 	}
 
 	memcpy_s(buf + m_iNowWriteIndex, SENDBUFFERSIZE - (m_iNowWriteIndex + size), &data, size);

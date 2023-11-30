@@ -7,11 +7,11 @@
 #include "MonsterState.h"
 #include "MemoryStream.h"
 
-GameRoom::GameRoom(array<SOCKET, MAX_ROOMS> ClientSocket)
+GameRoom::GameRoom(array<SOCKET, MAX_ROOMS>& ClientSocket)
 {
 	m_iWolfSN = m_iBatSN = 0;
 	m_pCastle = new Castle();
-	m_pStream = new MemoryStream();
+	m_pStream = new MemoryStream(ClientSocket);
 }
 
 GameRoom::~GameRoom()
@@ -37,7 +37,7 @@ void GameRoom::Update(array<StateMsgInfo, MAX_CLIENTS> StateMsg)
 	UpdateUseStateMsg(StateMsg);
 	UpdateEnemy();
 	SpawnEnemy();
-	m_pStream->Send(m_ClientSockets);
+	m_pStream->Send();
 }
 
 void GameRoom::SpawnEnemy()

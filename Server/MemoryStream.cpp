@@ -1,10 +1,10 @@
 #include "Common.h"
 #include "MemoryStream.h"
 
-void MemoryStream::Send(const array<SOCKET, MAX_ROOMS>& sockets)
+void MemoryStream::Send()
 {
 	int retval;
-	for (const auto& s : sockets)
+	for (const auto& s : m_Sockets)
 	{
 		retval = send(s, buf, m_iNowWriteIndex, 0);
 		if (retval == SOCKET_ERROR) {
