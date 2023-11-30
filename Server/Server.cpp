@@ -14,10 +14,22 @@ SOCKET client_sockets[MAX_CLIENTS];
 // 상태 메세지를 저장할 공유 버퍼
 array<array<StateMsgInfo, MAX_CLIENTS>, MAX_ROOMS> SharedBuffer;
 
-void ProcessStateMsg(BYTE StateMsg)
+void ProcessGameOver(BYTE StateMsg, StateMsgArgu* arg)
 {
 	switch (StateMsg)
 	{
+	// 하위 6비트가 castleHp를 가리킬때 
+	case (int)StateMsgType::CastleHp:
+		CastleHpStateMsg* Castle = static_cast<CastleHpStateMsg*>(arg);
+		if (Castle->Hp <= 0)
+		{
+			//game over 
+			for (int i = 0; i < MAX_CLIENTS; ++i) {
+				char buffer[100];
+				sprintf(buffer, "Game Over");
+				send(client_sockets[i], buffer, strlen(buffer), 0);
+			}
+		}
 	default:
 		break;
 	}
@@ -94,7 +106,7 @@ DWORD WINAPI ProcessClient1(LPVOID arg)
 
 	// 하위 6비트를 통해 게임오버 판별
 	//StateMsg 구체화되면 수정 예정
-	ProcessStateMsg(lower6Bits);
+	ProcessGameOver(lower6Bits, StateMsgArg);
 	
 	// 받은 내용 그대로 공유 버퍼에 쓰기
 	SharedBuffer[RoomNum][0].StateMsg = StateMsg;
@@ -150,7 +162,7 @@ DWORD WINAPI ProcessClient2(LPVOID arg)
 	}
 
 	// 하위 6비트를 통해 게임오버 판별
-	ProcessStateMsg(lower6Bits);
+	ProcessGameOver(lower6Bits, StateMsgArg);
 
 	SharedBuffer[RoomNum][1].StateMsg = StateMsg;
 	SharedBuffer[RoomNum][1].pStateMsgArgu = StateMsgArg;
