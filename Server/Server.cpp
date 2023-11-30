@@ -20,6 +20,8 @@ bool IsGameOver(BYTE StateMsg, StateMsgArgu* arg)
 	{
 	// 하위 6비트가 castleHp를 가리킬때 
 	case (int)StateMsgType::CastleHp:
+	{
+
 		CastleHpStateMsg* Castle = static_cast<CastleHpStateMsg*>(arg);
 		if (Castle->Hp <= 0)
 		{
@@ -33,6 +35,7 @@ bool IsGameOver(BYTE StateMsg, StateMsgArgu* arg)
 		}
 		else
 			return false;
+	}
 		break;
 	default:
 		return false;

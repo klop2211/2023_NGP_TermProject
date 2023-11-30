@@ -29,9 +29,6 @@
 
 using std::array;
 
-// 메세지의 헤더 역할, 이거보고 다음에 뭐가 올지 알 수 있음
-typedef BYTE StateMsgByte;
-
 struct RoomArg
 {
 	array<HANDLE, MAX_ROOMS> Client;

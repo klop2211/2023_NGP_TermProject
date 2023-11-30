@@ -5,6 +5,9 @@ enum class CardType : BYTE {};
 enum class StateMsgType : BYTE {MonsterSpawn, MonsterHp, MonsterState, PlayerMove, CastleHp, UseCard, GameStart};
 enum class MonsterStateType : BYTE {Move, Attack, Ice, Fire};
 
+// 메세지의 헤더 역할, 이거보고 다음에 뭐가 올지 알 수 있음
+typedef BYTE StateMsgByte;
+
 // StateMsg 로직 처리
 struct StateMsgArgu {};
 
