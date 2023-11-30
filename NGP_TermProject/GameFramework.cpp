@@ -46,13 +46,18 @@ void GameFramework::FrameAdvance()
 	auto interval = std::chrono::milliseconds(33);
 	auto currentTime = std::chrono::system_clock::now();
 	if (currentTime - m_tPreviousTime >= interval) {
-		if (m_pScene->IsGameStart())
+		if (m_pScene->IsGameStart()) {
 			m_pScene->WaitReadEvent();   // 읽기 완료 대기
-		SetElapsedTime();
-		Update();
-		Draw();
-		if (m_pScene->IsGameStart())
+			SetElapsedTime();
+			Update();
+			Draw();
 			m_pScene->SetWriteEvent();
+		}
+		else {
+			SetElapsedTime();
+			Update();
+			Draw();
+		}
 	}
 }
 

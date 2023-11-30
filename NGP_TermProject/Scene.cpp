@@ -52,7 +52,7 @@ void Scene::Update(float elapsed)
 		else
 		{
 			UpdateGameStart(elapsed);		//메인 게임화면
-
+			send(*m_pSock, (char*)StateMsgType::PlayerLocation, sizeof(StateMsgType), 0);
 			//TODO: 게임종료
 		}
 	}
@@ -326,13 +326,12 @@ DWORD WINAPI Scene::ReceiveThread(LPVOID arg)
 	retval = connect(*m_pSock, (struct sockaddr*)&serveraddr, sizeof(serveraddr));
 	//if (retval == SOCKET_ERROR) err_quit("connect()");
 
-	StateMsgType* typeBuf;
-	typeBuf = new StateMsgType;
+	StateMsgType typeBuf;
 
 	while (1) {
 		WaitForSingleObject(*m_pWriteEvent, INFINITE);   // 쓰기 완료 대기
 
-		retval = recv(*m_pSock, (char*)typeBuf, sizeof(StateMsgType), 0);
+		retval = recv(*m_pSock, (char*)&typeBuf, sizeof(BYTE), 0);
 
 		SetEvent(*m_pReadEvent);
 	}
