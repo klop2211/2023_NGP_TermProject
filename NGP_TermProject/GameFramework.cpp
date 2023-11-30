@@ -43,13 +43,17 @@ void GameFramework::Draw()
 
 void GameFramework::FrameAdvance()
 {
-	if (m_pScene->IsGameStart())
-		m_pScene->WaitReadEvent();   // 읽기 완료 대기
-	SetElapsedTime();
-	Update();
-	Draw();
-	if (m_pScene->IsGameStart())
-		m_pScene->SetWriteEvent();
+	auto interval = std::chrono::milliseconds(33);
+	auto currentTime = std::chrono::system_clock::now();
+	if (currentTime - m_tPreviousTime >= interval) {
+		if (m_pScene->IsGameStart())
+			m_pScene->WaitReadEvent();   // 읽기 완료 대기
+		SetElapsedTime();
+		Update();
+		Draw();
+		if (m_pScene->IsGameStart())
+			m_pScene->SetWriteEvent();
+	}
 }
 
 void GameFramework::SetElapsedTime()
