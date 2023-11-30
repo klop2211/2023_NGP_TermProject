@@ -89,10 +89,10 @@ DWORD WINAPI ProcessClient1(LPVOID arg)
 		}
 		else {
 			// 상위 2비트 추출
-			upper2Bits = ReceiveStateMsg >> 6;
+			upper2Bits = StateMsg >> 6;
 
 			// 하위 6비트 추출
-			lower6Bits = ReceiveStateMsg & 0x3F;
+			lower6Bits = StateMsg & 0x3F;
 
 			// 추가로 읽을 바이트 사이즈
 			int MsgSize = GetStateMsgType(lower6Bits);
