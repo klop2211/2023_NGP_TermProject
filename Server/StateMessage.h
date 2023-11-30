@@ -41,7 +41,7 @@ struct MonsterStateMsg : StateMsgArgu
 	MonsterStateType State;
 };
 
-// 서버 <-> 클라 /
+// 서버 <-> 클라 /*
 struct PlayerLocationMsg : StateMsgArgu
 {
 	BYTE PlayerId;
@@ -55,7 +55,7 @@ struct UseCardStateMsg : StateMsgArgu
 	CardType card;
 };
 
-// 서버 -> 클라
+// 서버 -> 클라 /
 struct CastleHpStateMsg : StateMsgArgu
 {
 	int Hp;

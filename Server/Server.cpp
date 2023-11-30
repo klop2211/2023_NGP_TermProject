@@ -348,7 +348,11 @@ int main(int argc, char* argv[])
 
 			for (const auto& s : client_sockets)
 			{
-				retval = send(s, (char*)StateMsgType::GameStart, sizeof(StateMsgType), 0);
+				StateMsgType SMT = StateMsgType::GameStart;
+				retval = send(s, (char*)&SMT, sizeof(StateMsgType), 0);
+				if (retval == SOCKET_ERROR) {
+					err_display("send()");
+				}
 			}
 
 			// 클라1 신호 on
