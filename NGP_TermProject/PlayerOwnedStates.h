@@ -77,6 +77,8 @@ private:
     PSkill(const PSkill&);
     PSkill& operator=(const PSkill&);
 
+    bool m_bOnemore = false;
+
 public:
 
     static PSkill* Instance();

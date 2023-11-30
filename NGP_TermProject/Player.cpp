@@ -260,609 +260,445 @@ void Player::UiDraw(HDC& memDc)
 
 void Player::UseCard()
 {
-	if (player.GetState() != Skill && player.GetState() != Stun)
+	if (!m_pStateMachine->isInState(*PSkill::Instance()) && !m_pStateMachine->isInState(*PStun::Instance()))
 	{
 		//TODO: 카드 실행
 		bool canNull = true;
-		player.SetState(Skill);
-		switch (m_pHandCard[m_iClickSelect]->GetCardName())
-		{
-		case CardName::N_cjdfydwls: // 청룡진
-			if (player.GetDirection() == Left)
-				player.SetImage(L"./\\윈플 텀프 이미지\\창술사_청룡진_이펙트(left).png");
-			else
-				player.SetImage(L"./\\윈플 텀프 이미지\\창술사_청룡진_이펙트.png");
-			for (int i = 0; i < player.GetFrame_Max(); i++) {
-				player.SetOder(i, { 0,0 }, -1);
-			}
-			player.SetBaseDelay(10);
-			player.SetSpeed(player.GetOder(0).speed.x, player.GetOder(0).speed.y);
-			player.SetDamage(5);
-			player.SetNeutralization(5);
-			player.SetDestruction(1);
-			if (m_ppTripord[(int)CardName::N_cjdfydwls][0] == 1) {
-				player.SetNeutralization(player.GetNeutralization() + 2);
-			}
-			else if (m_ppTripord[(int)CardName::N_cjdfydwls][0] == 2) {
-				player.SetDamage(player.GetDamage() + 1);
+		ChangeState(PSkill::Instance());
+		//switch (m_pHandCard[m_iClickSelect]->GetCardName())
+		//{
+		//case CardName::N_ghltjsckd: // 회선창
+		//	if (player.GetDirection() == Left)
+		//		player.SetImage(L"./\\윈플 텀프 이미지\\창술사_회선창_이펙트(left).png");
+		//	else
+		//		player.SetImage(L"./\\윈플 텀프 이미지\\창술사_회선창_이펙트.png");
+		//	for (int i = 0; i < player.GetFrame_Max(); i++) {
+		//		if (i < 2) {
+		//			if (player.GetDirection() == Left)
+		//				player.SetOder(i, { -15,10 }, -1);
+		//			else
+		//				player.SetOder(i, { 15,10 }, -1);
+		//		}
+		//		else {
+		//			if (player.GetDirection() == Left)
+		//				player.SetOder(i, { -15,-10 }, -1);
+		//			else
+		//				player.SetOder(i, { 15,-10 }, -1);
+		//		}
+		//	}
+		//	m_bOnemore = true;
+		//	player.SetBaseDelay(3);
+		//	player.SetSpeed(player.GetOder(0).speed.x, player.GetOder(0).speed.y);
+		//	player.SetDamage(9);
+		//	player.SetNeutralization(10);
+		//	player.SetDestruction(0);
+		//	if (m_ppTripord[(int)CardName::N_ghltjsckd][0] == 1) {
+		//		for (int i = 0; i < player.GetFrame_Max(); i++) {
+		//			if (i < 2) {
+		//				if (player.GetDirection() == Left)
+		//					player.SetOder(i, { -20,10 }, -1);
+		//				else
+		//					player.SetOder(i, { 20,10 }, -1);
+		//			}
+		//			else {
+		//				if (player.GetDirection() == Left)
+		//					player.SetOder(i, { -20,-10 }, -1);
+		//				else
+		//					player.SetOder(i, { 20,-10 }, -1);
+		//			}
+		//		}
 
-			}
-			else if (m_ppTripord[(int)CardName::N_cjdfydwls][0] == 3) {
-				player.SetRect(player.GetRect().left - 30, player.GetRect().top - 30, player.GetRect().right, player.GetRect().bottom);
-			}
-			if (m_ppTripord[(int)CardName::N_cjdfydwls][1] == 1) {
-				if (player.GetDirection() == Left)
-					player.SetImage(L"./\\윈플 텀프 이미지\\창술사_청룡진창사라지는_이펙트(left).png");
-				else
-					player.SetImage(L"./\\윈플 텀프 이미지\\창술사_청룡진창사라지는_이펙트.png");
-				for (int i = 0; i < player.GetFrame_Max(); i++) {
-					player.SetOder(i, { 0,0 }, -1);
-					if (i == 4)
-						player.SetOder(i, { 0,0 }, Drop_Spear);
+		//	}
+		//	else if (m_ppTripord[(int)CardName::N_ghltjsckd][0] == 2) {
+		//		player.SetDamage(player.GetDamage() + 2);
+		//	}
+		//	else if (m_ppTripord[(int)CardName::N_ghltjsckd][0] == 3) {
+		//		m_bOnemore = false;
+		//		player.SetDamage(player.GetDamage() + 4);
+		//	}
+		//	if (m_ppTripord[(int)CardName::N_ghltjsckd][1] == 1) {
+		//		player.SetType(Knockdown);
+		//	}
+		//	else if (m_ppTripord[(int)CardName::N_ghltjsckd][1] == 2) {
+		//		player.SetNamed_Damage(3);
+		//	}
+		//	else if (m_ppTripord[(int)CardName::N_ghltjsckd][(int)TriIndex::I_Tier2] == 3) {
+		//		PlusUltimate();
+		//	}
 
-				}
-				player.SetRect(player.GetRect().left + 30, player.GetRect().top + 30, player.GetRect().right, player.GetRect().bottom);
-				player.SetBaseDelay(4);
-				player.SetDamage(player.GetDamage() + 2);
+		//	if (m_ppTripord[(int)CardName::N_ghltjsckd][(int)TriIndex::I_Tier3] == 1) {
+		//		if (!m_pHandCard[m_iClickSelect]->GetOnce()) {//찐카드
+		//			Ghltjsckd* temp = new Ghltjsckd(m_ppTripord, true);
+		//			m_pHandCard[m_iClickSelect] = temp;
+		//			canNull = false;
+		//		}
+		//	}
+		//	else if (m_ppTripord[(int)CardName::N_ghltjsckd][(int)TriIndex::I_Tier3] == 2) {
+		//		DrawCard(true);
+		//	}
+		//	break;
+		//case CardName::N_dusghkstja: // 연환섬
+		//	if (player.GetDirection() == Left)
+		//		player.SetImage(L"./\\윈플 텀프 이미지\\창술사_연환섬_이펙트_돌진추가(left).png");
+		//	else
+		//		player.SetImage(L"./\\윈플 텀프 이미지\\창술사_연환섬_이펙트_돌진추가.png");
+		//	for (int i = 0; i < player.GetFrame_Max(); i++) {
+		//		if (i < 3) {
+		//			if (player.GetDirection() == Left)
+		//				player.SetOder(i, { -20,0 }, -1);
+		//			else
+		//				player.SetOder(i, { 20,0 }, -1);
+		//		}
+		//		else {
+		//			player.SetOder(i, { 0,0 }, -1);
+		//		}
+		//	}
+		//	player.SetBaseDelay(3);
+		//	player.SetSpeed(player.GetOder(0).speed.x, player.GetOder(0).speed.y);
+		//	player.SetDamage(6);
+		//	player.SetNeutralization(5);
+		//	player.SetDestruction(1);
+		//	if (m_ppTripord[(int)CardName::N_dusghkstja][0] == 1) {
+		//		player.SetFrame_Now(3);
+		//		player.SetDamage(6 + 1);
+		//	}
+		//	else if (m_ppTripord[(int)CardName::N_dusghkstja][0] == 2) {
+		//		for (int i = 0; i < player.GetFrame_Max(); i++) {
+		//			if (i < 3) {
+		//				if (player.GetDirection() == Left)
+		//					player.SetOder(i, { -25,0 }, -1);
+		//				else
+		//					player.SetOder(i, { 25,0 }, -1);
+		//			}
+		//			else {
+		//				player.SetOder(i, { 0,0 }, -1);
+		//			}
+		//		}
+		//	}
+		//	else if (m_ppTripord[(int)CardName::N_dusghkstja][(int)TriIndex::I_Tier1] == 3) {
+		//		PlusUltimate();
+		//	}
+		//	if (m_ppTripord[(int)CardName::N_dusghkstja][1] == 1) {
+		//		player.SetBaseDelay(2);
+		//	}
+		//	else if (m_ppTripord[(int)CardName::N_dusghkstja][1] == 2) {
+		//		player.SetNeutralization(player.GetNeutralization() + 3);
+		//	}
+		//	else if (m_ppTripord[(int)CardName::N_dusghkstja][1] == 3) {
+		//		player.SetDamage(player.GetDamage() + 2);
+		//	}
+		//	if (m_ppTripord[(int)CardName::N_dusghkstja][2] == 1) {
+		//		DrawCard();
+		//	}
+		//	else if (m_ppTripord[(int)CardName::N_dusghkstja][2] == 2) {
+		//		for (int i = 0; i < player.GetFrame_Max(); i++) {
+		//			if (i < 3) {
+		//				if (player.GetDirection() == Left)
+		//					player.SetOder(i, { -25,0 }, -1);
+		//				else
+		//					player.SetOder(i, { 25,0 }, -1);
+		//			}
+		//			else {
+		//				player.SetOder(i, { 0,0 }, SowrdLight);
+		//			}
+		//		}
 
-			}
-			else if (m_ppTripord[(int)CardName::N_cjdfydwls][1] == 2) {
-				player.SetRect(player.GetRect().left - 30, player.GetRect().top - 30, player.GetRect().right, player.GetRect().bottom);
+		//	}
 
-			}
-			else if (m_ppTripord[(int)CardName::N_cjdfydwls][1] == 3) {
-				player.SetOder(3, { 0,0 }, Wall);
+		//	break;
+		//case CardName::N_cjdfydcnftn: // 청룡출수
+		//	if (player.GetDirection() == Left)
+		//		player.SetImage(L"./\\윈플 텀프 이미지\\창술사_청룡출수_이펙트(left).png");
+		//	else
+		//		player.SetImage(L"./\\윈플 텀프 이미지\\창술사_청룡출수_이펙트.png");
+		//	for (int i = 0; i < player.GetFrame_Max(); i++) {
+		//		if (i < 4) {
+		//			if (player.GetDirection() == Left)
+		//				player.SetOder(i, { -20,0 }, -1);
+		//			else
+		//				player.SetOder(i, { 20,0 }, -1);
+		//		}
+		//		else {
+		//			player.SetOder(i, { 0,0 }, -1);
+		//		}
+		//	}
+		//	player.SetBaseDelay(2);
+		//	player.SetSpeed(player.GetOder(0).speed.x, player.GetOder(0).speed.y);
+		//	player.SetDamage(5);
+		//	player.SetNeutralization(15);
+		//	player.SetDestruction(0);
+		//	if (m_ppTripord[(int)CardName::N_cjdfydcnftn][0] == 1) {
+		//		player.SetDamage(player.GetDamage() + 1);
 
-			}
-			if (m_ppTripord[(int)CardName::N_cjdfydwls][2] == 1) {
-				DrawCard();
-				SetCardPoint();
-			}
-			else if (m_ppTripord[(int)CardName::N_cjdfydwls][2] == 2) {
-				//TODO:마나감소 
-			}
-			break;
-		case CardName::N_qksdnjftja: // 반월섬
-			if (player.GetDirection() == Left)
-				player.SetImage(L"./\\윈플 텀프 이미지\\창술사_반월섬_이펙트(left).png");
-			else
-				player.SetImage(L"./\\윈플 텀프 이미지\\창술사_반월섬_이펙트.png");
-			for (int i = 0; i < player.GetFrame_Max(); i++) {
-				if (i < 2)
-					if (player.GetDirection() == Left)
-						player.SetOder(i, { -20,0 }, -1);
-					else
-						player.SetOder(i, { 20,0 }, -1);
+		//	}
+		//	else if (m_ppTripord[(int)CardName::N_cjdfydcnftn][0] == 2) {
+		//		player.SetFrame_Now(4);
+		//		player.SetDamage(player.GetDamage() + 2);
 
-				else
-					player.SetOder(i, { 0,0 }, -1);
+		//	}
+		//	else if (m_ppTripord[(int)CardName::N_cjdfydcnftn][0] == 3) {
+		//		for (int i = 0; i < player.GetFrame_Max(); i++) {
+		//			if (i < 4) {
+		//				if (player.GetDirection() == Left)
+		//					player.SetOder(i, { -25,0 }, -1);
+		//				else
+		//					player.SetOder(i, { 25,0 }, -1);
+		//			}
+		//			else {
+		//				player.SetOder(i, { 0,0 }, -1);
+		//			}
+		//		}
+		//	}
+		//	if (m_ppTripord[(int)CardName::N_cjdfydcnftn][1] == 1) {
+		//		player.SetType(Hurricane);
+		//	}
+		//	else if (m_ppTripord[(int)CardName::N_cjdfydcnftn][1] == 2) {
+		//		//TODO:각성게이지 추가회복
+		//	}
+		//	else if (m_ppTripord[(int)CardName::N_cjdfydcnftn][1] == 3) {
+		//		player.SetRect(player.GetRect().left - 30, player.GetRect().top - 30, player.GetRect().right, player.GetRect().bottom);
+		//	}
+		//	if (m_ppTripord[(int)CardName::N_cjdfydcnftn][2] == 1) {
+		//		player.SetOder(player.GetFrame_Max() - 1, { 0,0 }, Rotation_Spear);
+		//	}
+		//	else if (m_ppTripord[(int)CardName::N_cjdfydcnftn][2] == 2) {
+		//		player.SetOder(player.GetFrame_Max() - 1, { 0,0 }, Airborne_Spear);
+		//	}
 
-			}
-			player.SetBaseDelay(5);
-			player.SetSpeed(player.GetOder(0).speed.x, player.GetOder(0).speed.y);
-			player.SetDamage(12);
-			player.SetNeutralization(20);
-			player.SetDestruction(2);
+		//	break;
+		//case CardName::N_dmsgkdbtjdxks: // 은하유성탄
+		//	if (player.GetDirection() == Left)
+		//		player.SetImage(L"./\\윈플 텀프 이미지\\창술사_은하유성탄_이펙트(left).png");
+		//	else
+		//		player.SetImage(L"./\\윈플 텀프 이미지\\창술사_은하유성탄_이펙트.png");
+		//	for (int i = 0; i < player.GetFrame_Max(); i++) {
+		//		if (i < 4) {
+		//			player.SetOder(i, { 0,15 }, -1);
+		//		}
+		//		else if (i < 9) {
+		//			if (i == 7)
+		//				player.SetOder(i, { 0, 0 }, Meteor_Spear);
+		//			else
+		//				player.SetOder(i, { 0, 0 }, -1);
+		//		}
+		//		else {
+		//			if (player.GetFrame_Max() - 1)
+		//				player.SetOder(i, { 0, -20 }, Explosion);
+		//			else
+		//				player.SetOder(i, { 0, -20 }, -1);
+		//		}
+		//	}
+		//	player.SetBaseDelay(5);
+		//	player.SetSpeed(player.GetOder(0).speed.x, player.GetOder(0).speed.y);
+		//	player.SetDamage(20);
+		//	player.SetNeutralization(40);
+		//	player.SetDestruction(2);
 
-			if (m_ppTripord[(int)CardName::N_qksdnjftja][0] == 1) {
-				player.SetDestruction(player.GetDestruction() + 1);
-			}
-			else if (m_ppTripord[(int)CardName::N_qksdnjftja][0] == 2) {
-				player.SetDamage(player.GetDamage() + 2);
-			}
-			else if (m_ppTripord[(int)CardName::N_qksdnjftja][0] == 3) {
-				for (int i = 0; i < player.GetFrame_Max(); i++) {
-					if (i < 2)
-						if (player.GetDirection() == Left)
-							player.SetOder(i, { -30,0 }, -1);
-						else
-							player.SetOder(i, { 30,0 }, -1);
+		//	break;
+		//case CardName::N_wjrfydvh: // 적룡포
+		//	if (player.GetDirection() == Left)
+		//		player.SetImage(L"./\\윈플 텀프 이미지\\창술사_적룡포_이펙트(left).png");
+		//	else
+		//		player.SetImage(L"./\\윈플 텀프 이미지\\창술사_적룡포_이펙트.png");
+		//	for (int i = 0; i < player.GetFrame_Max(); i++) {
+		//		player.SetOder(i, { 0, 0 }, -1);
+		//	}
+		//	player.SetOder(player.GetFrame_Max() - 2, { 0,0 }, Red_Spear);
+		//	player.SetBaseDelay(3);
+		//	player.SetSpeed(player.GetOder(0).speed.x, player.GetOder(0).speed.y);
+		//	player.SetDamage(15);
+		//	player.SetNeutralization(5);
+		//	player.SetDestruction(1);
 
-					else
-						player.SetOder(i, { 0,0 }, -1);
+		//	if (m_ppTripord[(int)CardName::N_wjrfydvh][0] == 1) {
+		//		player.SetBaseDelay(2);
+		//	}
+		//	else if (m_ppTripord[(int)CardName::N_wjrfydvh][0] == 2) {
+		//		// 사거리증가는 Insert_Object에서 처리합니다
+		//	}
+		//	else if (m_ppTripord[(int)CardName::N_wjrfydvh][0] == 3) {
+		//		player.SetDamage(player.GetDamage() + 3);
+		//	}
 
-				}
+		//	if (m_ppTripord[(int)CardName::N_wjrfydvh][1] == 1) {
+		//		//TODO:마나감소
+		//	}
+		//	else if (m_ppTripord[(int)CardName::N_wjrfydvh][(int)TriIndex::I_Tier2] == 2) {
+		//		DrawCard(false);
+		//	}
+		//	else if (m_ppTripord[(int)CardName::N_wjrfydvh][1] == 3) {
+		//		player.SetDestruction(player.GetDestruction() + 1);
+		//	}
 
-			}
-			if (m_ppTripord[(int)CardName::N_qksdnjftja][1] == 1) {
-				player.SetNeutralization(player.GetNeutralization() + 10);
-			}
-			else if (m_ppTripord[(int)CardName::N_qksdnjftja][1] == 2) {
-				player.SetNamed_Damage(player.GetNamed_Damage() + 2);
-			}
-			else if (m_ppTripord[(int)CardName::N_qksdnjftja][1] == 3) {
-				//TODO:마나감소 
+		//	if (m_ppTripord[(int)CardName::N_wjrfydvh][2] == 1) {
+		//		// 2층에 추가 창생성 Insert_Object에서 처리합니다
+		//	}
+		//	else if (m_ppTripord[(int)CardName::N_wjrfydvh][2] == 2) {
+		//		player.SetNamed_Damage(player.GetNamed_Damage() + 15);
+		//	}
 
-			}
-			if (m_ppTripord[(int)CardName::N_qksdnjftja][2] == 1) {
-				player.SetType(Hurricane);
-			}
-			else if (m_ppTripord[(int)CardName::N_qksdnjftja][2] == 2) {
-				player.SetOder(player.GetFrame_Max() - 1, { 0,0 }, Hurricane);
-			}
+		//	break;
+		//case CardName::N_dbtjdrkdcjs: // 유성강천
+		//	if (player.GetDirection() == Left)
+		//		player.SetImage(L"./\\윈플 텀프 이미지\\창술사_유성강천_이펙트(left).png");
+		//	else
+		//		player.SetImage(L"./\\윈플 텀프 이미지\\창술사_유성강천_이펙트.png");
+		//	for (int i = 0; i < player.GetFrame_Max(); i++) {
+		//		if (i < 3) {
+		//			if (player.GetDirection() == Left)
+		//				player.SetOder(i, { 0,12 }, -1);
+		//			else
+		//				player.SetOder(i, { 0,12 }, -1);
+		//		}
+		//		else if (i < 6) {
+		//			player.SetOder(i, { 0, 0 }, -1);
+		//		}
+		//		else if (i < 8) {
+		//			if (player.GetDirection() == Left)
+		//				player.SetOder(i, { -15,-20 }, -1);
+		//			else
+		//				player.SetOder(i, { 15,-20 }, -1);
 
-			break;
-		case CardName::N_aodfyddufvk: // 맹룡열파
-			if (player.GetDirection() == Left)
-				player.SetImage(L"./\\윈플 텀프 이미지\\창술사_맹룡열파2_이펙트(left).png");
-			else
-				player.SetImage(L"./\\윈플 텀프 이미지\\창술사_맹룡열파2_이펙트.png");
-			for (int i = 0; i < player.GetFrame_Max(); i++) {
-				if (player.GetDirection() == Left)
-					player.SetOder(i, { -2,0 }, -1);
-				else
-					player.SetOder(i, { 2,0 }, -1);
-			}
-			player.SetBaseDelay(5);
-			player.SetSpeed(player.GetOder(0).speed.x, player.GetOder(0).speed.y);
-			player.SetDamage(10);
-			player.SetNeutralization(15);
-			player.SetDestruction(0);
-			if (m_ppTripord[(int)CardName::N_aodfyddufvk][0] == 1) {
-				player.SetRect(player.GetRect().left - 30, player.GetRect().top - 30, player.GetRect().right, player.GetRect().bottom);
-			}
-			else if (m_ppTripord[(int)CardName::N_aodfyddufvk][0] == 2) {
-				player.SetNeutralization(player.GetNeutralization() + 5);
-			}
-			else if (m_ppTripord[(int)CardName::N_aodfyddufvk][0] == 3) {
-				player.SetDamage(player.GetDamage() + 2);
-			}
-			if (m_ppTripord[(int)CardName::N_aodfyddufvk][1] == 1) {
-				player.SetBaseDelay(4);
-			}
-			else if (m_ppTripord[(int)CardName::N_aodfyddufvk][1] == 2) {
-				if (player.GetDirection() == Left)
-					player.SetImage(L"./\\윈플 텀프 이미지\\창술사_맹룡열파2_빙결이펙트(left).png");
-				else
-					player.SetImage(L"./\\윈플 텀프 이미지\\창술사_맹룡열파2_빙결이펙트.png");
-				player.SetType(Ice);
-			}
-			else if (m_ppTripord[(int)CardName::N_aodfyddufvk][1] == 3) {
-				if (player.GetDirection() == Left)
-					player.SetImage(L"./\\윈플 텀프 이미지\\창술사_맹룡열파2_화염이펙트(left).png");
-				else
-					player.SetImage(L"./\\윈플 텀프 이미지\\창술사_맹룡열파2_화염이펙트.png");
-				player.SetType(Fire);
-			}
-			if (m_ppTripord[(int)CardName::N_aodfyddufvk][2] == 1) {
-				m_bOnemore = true;
-			}
-			else if (m_ppTripord[(int)CardName::N_aodfyddufvk][2] == 2) {
-				//TODO:마나감소
-			}
-			break;
-		case CardName::N_ghltjsckd: // 회선창
-			if (player.GetDirection() == Left)
-				player.SetImage(L"./\\윈플 텀프 이미지\\창술사_회선창_이펙트(left).png");
-			else
-				player.SetImage(L"./\\윈플 텀프 이미지\\창술사_회선창_이펙트.png");
-			for (int i = 0; i < player.GetFrame_Max(); i++) {
-				if (i < 2) {
-					if (player.GetDirection() == Left)
-						player.SetOder(i, { -15,10 }, -1);
-					else
-						player.SetOder(i, { 15,10 }, -1);
-				}
-				else {
-					if (player.GetDirection() == Left)
-						player.SetOder(i, { -15,-10 }, -1);
-					else
-						player.SetOder(i, { 15,-10 }, -1);
-				}
-			}
-			m_bOnemore = true;
-			player.SetBaseDelay(3);
-			player.SetSpeed(player.GetOder(0).speed.x, player.GetOder(0).speed.y);
-			player.SetDamage(9);
-			player.SetNeutralization(10);
-			player.SetDestruction(0);
-			if (m_ppTripord[(int)CardName::N_ghltjsckd][0] == 1) {
-				for (int i = 0; i < player.GetFrame_Max(); i++) {
-					if (i < 2) {
-						if (player.GetDirection() == Left)
-							player.SetOder(i, { -20,10 }, -1);
-						else
-							player.SetOder(i, { 20,10 }, -1);
-					}
-					else {
-						if (player.GetDirection() == Left)
-							player.SetOder(i, { -20,-10 }, -1);
-						else
-							player.SetOder(i, { 20,-10 }, -1);
-					}
-				}
+		//		}
+		//		else
+		//			player.SetOder(i, { 0, 0 }, -1);
+		//	}
+		//	player.SetBaseDelay(5);
+		//	player.SetSpeed(player.GetOder(0).speed.x, player.GetOder(0).speed.y);
+		//	player.SetDamage(12);
+		//	player.SetNeutralization(5);
+		//	player.SetDestruction(0);
+		//	if (m_ppTripord[(int)CardName::N_dbtjdrkdcjs][0] == 1) {
+		//		player.SetBaseDelay(4);
 
-			}
-			else if (m_ppTripord[(int)CardName::N_ghltjsckd][0] == 2) {
-				player.SetDamage(player.GetDamage() + 2);
-			}
-			else if (m_ppTripord[(int)CardName::N_ghltjsckd][0] == 3) {
-				m_bOnemore = false;
-				player.SetDamage(player.GetDamage() + 4);
-			}
-			if (m_ppTripord[(int)CardName::N_ghltjsckd][1] == 1) {
-				player.SetType(Knockdown);
-			}
-			else if (m_ppTripord[(int)CardName::N_ghltjsckd][1] == 2) {
-				player.SetNamed_Damage(3);
-			}
-			else if (m_ppTripord[(int)CardName::N_ghltjsckd][(int)TriIndex::I_Tier2] == 3) {
-				PlusUltimate();
-			}
+		//	}
+		//	else if (m_ppTripord[(int)CardName::N_dbtjdrkdcjs][0] == 2) {
+		//		player.SetSeedDamage(player.GetSeedDamage() + 2);
 
-			if (m_ppTripord[(int)CardName::N_ghltjsckd][(int)TriIndex::I_Tier3] == 1) {
-				if (!m_pHandCard[m_iClickSelect]->GetOnce()) {//찐카드
-					Ghltjsckd* temp = new Ghltjsckd(m_ppTripord, true);
-					m_pHandCard[m_iClickSelect] = temp;
-					canNull = false;
-				}
-			}
-			else if (m_ppTripord[(int)CardName::N_ghltjsckd][(int)TriIndex::I_Tier3] == 2) {
-				DrawCard(true);
-			}
-			break;
-		case CardName::N_dusghkstja: // 연환섬
-			if (player.GetDirection() == Left)
-				player.SetImage(L"./\\윈플 텀프 이미지\\창술사_연환섬_이펙트_돌진추가(left).png");
-			else
-				player.SetImage(L"./\\윈플 텀프 이미지\\창술사_연환섬_이펙트_돌진추가.png");
-			for (int i = 0; i < player.GetFrame_Max(); i++) {
-				if (i < 3) {
-					if (player.GetDirection() == Left)
-						player.SetOder(i, { -20,0 }, -1);
-					else
-						player.SetOder(i, { 20,0 }, -1);
-				}
-				else {
-					player.SetOder(i, { 0,0 }, -1);
-				}
-			}
-			player.SetBaseDelay(3);
-			player.SetSpeed(player.GetOder(0).speed.x, player.GetOder(0).speed.y);
-			player.SetDamage(6);
-			player.SetNeutralization(5);
-			player.SetDestruction(1);
-			if (m_ppTripord[(int)CardName::N_dusghkstja][0] == 1) {
-				player.SetFrame_Now(3);
-				player.SetDamage(6 + 1);
-			}
-			else if (m_ppTripord[(int)CardName::N_dusghkstja][0] == 2) {
-				for (int i = 0; i < player.GetFrame_Max(); i++) {
-					if (i < 3) {
-						if (player.GetDirection() == Left)
-							player.SetOder(i, { -25,0 }, -1);
-						else
-							player.SetOder(i, { 25,0 }, -1);
-					}
-					else {
-						player.SetOder(i, { 0,0 }, -1);
-					}
-				}
-			}
-			else if (m_ppTripord[(int)CardName::N_dusghkstja][(int)TriIndex::I_Tier1] == 3) {
-				PlusUltimate();
-			}
-			if (m_ppTripord[(int)CardName::N_dusghkstja][1] == 1) {
-				player.SetBaseDelay(2);
-			}
-			else if (m_ppTripord[(int)CardName::N_dusghkstja][1] == 2) {
-				player.SetNeutralization(player.GetNeutralization() + 3);
-			}
-			else if (m_ppTripord[(int)CardName::N_dusghkstja][1] == 3) {
-				player.SetDamage(player.GetDamage() + 2);
-			}
-			if (m_ppTripord[(int)CardName::N_dusghkstja][2] == 1) {
-				DrawCard();
-			}
-			else if (m_ppTripord[(int)CardName::N_dusghkstja][2] == 2) {
-				for (int i = 0; i < player.GetFrame_Max(); i++) {
-					if (i < 3) {
-						if (player.GetDirection() == Left)
-							player.SetOder(i, { -25,0 }, -1);
-						else
-							player.SetOder(i, { 25,0 }, -1);
-					}
-					else {
-						player.SetOder(i, { 0,0 }, SowrdLight);
-					}
-				}
+		//	}
+		//	else if (m_ppTripord[(int)CardName::N_dbtjdrkdcjs][0] == 3) {
+		//		player.SetNamed_Damage(player.GetNamed_Damage() + 2);
+		//	}
+		//	if (m_ppTripord[(int)CardName::N_dbtjdrkdcjs][1] == 1) {
+		//		player.SetOder(player.GetFrame_Max() - 1, { 0,0 }, Earthquake);
+		//	}
+		//	else if (m_ppTripord[(int)CardName::N_dbtjdrkdcjs][1] == 2) {
+		//		player.SetOder(player.GetFrame_Max() - 1, { 0,0 }, Flame_Zone);
+		//	}
+		//	else if (m_ppTripord[(int)CardName::N_dbtjdrkdcjs][1] == 3) {
+		//		player.SetOder(player.GetFrame_Max() - 1, { 0,0 }, Wall);
+		//	}
+		//	if (m_ppTripord[(int)CardName::N_dbtjdrkdcjs][2] == 1) {
+		//		player.SetOder(player.GetFrame_Max() - 1, { 0,0 }, Drop_Red_Spear);
+		//	}
+		//	else if (m_ppTripord[(int)CardName::N_dbtjdrkdcjs][2] == 2) {
+		//		for (int i = 0; i < player.GetFrame_Max(); i++) {
+		//			player.SetOder(i, { 0, 0 }, -1);
+		//		}
+		//		player.SetSpeed(player.GetOder(0).speed.x, player.GetOder(0).speed.y);
+		//		if (player.GetDirection() == Left)
+		//			player.SetImage(L"./\\윈플 텀프 이미지\\창술사_유성강천창사라지는_이펙트(left).png");
+		//		else
+		//			player.SetImage(L"./\\윈플 텀프 이미지\\창술사_유성강천창사라지는_이펙트.png");
+		//		player.SetOder(4, { 0,0 }, Drop_Red_Spear);
+		//	}
 
-			}
+		//	break;
+		//case CardName::N_rhlddufvk: // 굉열파
+		//	if (player.GetDirection() == Left)
+		//		player.SetImage(L"./\\윈플 텀프 이미지\\창술사_굉열파_이펙트(left).png");
+		//	else
+		//		player.SetImage(L"./\\윈플 텀프 이미지\\창술사_굉열파_이펙트.png");
+		//	for (int i = 0; i < player.GetFrame_Max(); i++) {
+		//		if (i > 4)
+		//			if (player.GetDirection() == Left)
+		//				player.SetOder(i, { -8,0 }, -1);
+		//			else
+		//				player.SetOder(i, { 8,0 }, -1);
+		//		else
+		//			player.SetOder(i, { 0, 0 }, -1);
+		//	}
+		//	player.SetOder(player.GetFrame_Max() - 2, { 0,0 }, Yellow_Spear);
+		//	player.SetBaseDelay(4);
+		//	player.SetSpeed(player.GetOder(0).speed.x, player.GetOder(0).speed.y);
+		//	player.SetDamage(10);
+		//	player.SetNeutralization(5);
+		//	player.SetDestruction(1);
+		//	if (m_ppTripord[(int)CardName::N_rhlddufvk][0] == 1) {
+		//		player.SetDestruction(player.GetDestruction() + 1);
+		//	}
+		//	else if (m_ppTripord[(int)CardName::N_rhlddufvk][0] == 2) {
+		//		player.SetBaseDelay(3);
+		//	}
+		//	else if (m_ppTripord[(int)CardName::N_rhlddufvk][0] == 3) {
+		//		player.SetRuncount(100);
+		//	}
+		//	if (m_ppTripord[(int)CardName::N_rhlddufvk][1] == 1) {
+		//		if (player.GetDirection() == Left)
+		//			player.SetImage(L"./\\윈플 텀프 이미지\\창술사_굉열파_화염이펙트(left).png");
+		//		else
+		//			player.SetImage(L"./\\윈플 텀프 이미지\\창술사_굉열파_화염이펙트.png");
+		//		player.SetType(Fire);
+		//	}
+		//	else if (m_ppTripord[(int)CardName::N_rhlddufvk][1] == 2) {
+		//		//적을 창끝까지 밀쳐냄
+		//	}
+		//	else if (m_ppTripord[(int)CardName::N_rhlddufvk][1] == 3) {
+		//		player.SetNamed_Damage(player.GetNamed_Damage() + 3);
+		//	}
+		//	if (m_ppTripord[(int)CardName::N_rhlddufvk][2] == 1) {
+		//		player.SetBaseDelay(player.GetBaseDelay() + 1);
+		//		player.SetDamage(player.GetDamage() + 4);
+		//	}
+		//	else if (m_ppTripord[(int)CardName::N_rhlddufvk][2] == 2) {
+		//		//TODO:마나감소
+		//	}
 
-			break;
-		case CardName::N_cjdfydcnftn: // 청룡출수
-			if (player.GetDirection() == Left)
-				player.SetImage(L"./\\윈플 텀프 이미지\\창술사_청룡출수_이펙트(left).png");
-			else
-				player.SetImage(L"./\\윈플 텀프 이미지\\창술사_청룡출수_이펙트.png");
-			for (int i = 0; i < player.GetFrame_Max(); i++) {
-				if (i < 4) {
-					if (player.GetDirection() == Left)
-						player.SetOder(i, { -20,0 }, -1);
-					else
-						player.SetOder(i, { 20,0 }, -1);
-				}
-				else {
-					player.SetOder(i, { 0,0 }, -1);
-				}
-			}
-			player.SetBaseDelay(2);
-			player.SetSpeed(player.GetOder(0).speed.x, player.GetOder(0).speed.y);
-			player.SetDamage(5);
-			player.SetNeutralization(15);
-			player.SetDestruction(0);
-			if (m_ppTripord[(int)CardName::N_cjdfydcnftn][0] == 1) {
-				player.SetDamage(player.GetDamage() + 1);
+		//	break;
+		//case CardName::N_sktjsckd: // 나선창
+		//	if (player.GetDirection() == Left)
+		//		player.SetImage(L"./\\윈플 텀프 이미지\\창술사_나선창_이펙트(left).png");
+		//	else
+		//		player.SetImage(L"./\\윈플 텀프 이미지\\창술사_나선창_이펙트.png");
+		//	for (int i = 0; i < player.GetFrame_Max(); i++) {
+		//		player.SetOder(i, { 0, 0 }, -1);
+		//	}
+		//	player.SetOder(player.GetFrame_Max() - 1, { 0, 0 }, Purple_Spear);
+		//	player.SetBaseDelay(4);
+		//	player.SetSpeed(player.GetOder(0).speed.x, player.GetOder(0).speed.y);
+		//	player.SetDamage(7);
+		//	player.SetNeutralization(5);
+		//	player.SetDestruction(0);
 
-			}
-			else if (m_ppTripord[(int)CardName::N_cjdfydcnftn][0] == 2) {
-				player.SetFrame_Now(4);
-				player.SetDamage(player.GetDamage() + 2);
-
-			}
-			else if (m_ppTripord[(int)CardName::N_cjdfydcnftn][0] == 3) {
-				for (int i = 0; i < player.GetFrame_Max(); i++) {
-					if (i < 4) {
-						if (player.GetDirection() == Left)
-							player.SetOder(i, { -25,0 }, -1);
-						else
-							player.SetOder(i, { 25,0 }, -1);
-					}
-					else {
-						player.SetOder(i, { 0,0 }, -1);
-					}
-				}
-			}
-			if (m_ppTripord[(int)CardName::N_cjdfydcnftn][1] == 1) {
-				player.SetType(Hurricane);
-			}
-			else if (m_ppTripord[(int)CardName::N_cjdfydcnftn][1] == 2) {
-				//TODO:각성게이지 추가회복
-			}
-			else if (m_ppTripord[(int)CardName::N_cjdfydcnftn][1] == 3) {
-				player.SetRect(player.GetRect().left - 30, player.GetRect().top - 30, player.GetRect().right, player.GetRect().bottom);
-			}
-			if (m_ppTripord[(int)CardName::N_cjdfydcnftn][2] == 1) {
-				player.SetOder(player.GetFrame_Max() - 1, { 0,0 }, Rotation_Spear);
-			}
-			else if (m_ppTripord[(int)CardName::N_cjdfydcnftn][2] == 2) {
-				player.SetOder(player.GetFrame_Max() - 1, { 0,0 }, Airborne_Spear);
-			}
-
-			break;
-		case CardName::N_dmsgkdbtjdxks: // 은하유성탄
-			if (player.GetDirection() == Left)
-				player.SetImage(L"./\\윈플 텀프 이미지\\창술사_은하유성탄_이펙트(left).png");
-			else
-				player.SetImage(L"./\\윈플 텀프 이미지\\창술사_은하유성탄_이펙트.png");
-			for (int i = 0; i < player.GetFrame_Max(); i++) {
-				if (i < 4) {
-					player.SetOder(i, { 0,15 }, -1);
-				}
-				else if (i < 9) {
-					if (i == 7)
-						player.SetOder(i, { 0, 0 }, Meteor_Spear);
-					else
-						player.SetOder(i, { 0, 0 }, -1);
-				}
-				else {
-					if (player.GetFrame_Max() - 1)
-						player.SetOder(i, { 0, -20 }, Explosion);
-					else
-						player.SetOder(i, { 0, -20 }, -1);
-				}
-			}
-			player.SetBaseDelay(5);
-			player.SetSpeed(player.GetOder(0).speed.x, player.GetOder(0).speed.y);
-			player.SetDamage(20);
-			player.SetNeutralization(40);
-			player.SetDestruction(2);
-
-			break;
-		case CardName::N_wjrfydvh: // 적룡포
-			if (player.GetDirection() == Left)
-				player.SetImage(L"./\\윈플 텀프 이미지\\창술사_적룡포_이펙트(left).png");
-			else
-				player.SetImage(L"./\\윈플 텀프 이미지\\창술사_적룡포_이펙트.png");
-			for (int i = 0; i < player.GetFrame_Max(); i++) {
-				player.SetOder(i, { 0, 0 }, -1);
-			}
-			player.SetOder(player.GetFrame_Max() - 2, { 0,0 }, Red_Spear);
-			player.SetBaseDelay(3);
-			player.SetSpeed(player.GetOder(0).speed.x, player.GetOder(0).speed.y);
-			player.SetDamage(15);
-			player.SetNeutralization(5);
-			player.SetDestruction(1);
-
-			if (m_ppTripord[(int)CardName::N_wjrfydvh][0] == 1) {
-				player.SetBaseDelay(2);
-			}
-			else if (m_ppTripord[(int)CardName::N_wjrfydvh][0] == 2) {
-				// 사거리증가는 Insert_Object에서 처리합니다
-			}
-			else if (m_ppTripord[(int)CardName::N_wjrfydvh][0] == 3) {
-				player.SetDamage(player.GetDamage() + 3);
-			}
-
-			if (m_ppTripord[(int)CardName::N_wjrfydvh][1] == 1) {
-				//TODO:마나감소
-			}
-			else if (m_ppTripord[(int)CardName::N_wjrfydvh][(int)TriIndex::I_Tier2] == 2) {
-				DrawCard(false);
-			}
-			else if (m_ppTripord[(int)CardName::N_wjrfydvh][1] == 3) {
-				player.SetDestruction(player.GetDestruction() + 1);
-			}
-
-			if (m_ppTripord[(int)CardName::N_wjrfydvh][2] == 1) {
-				// 2층에 추가 창생성 Insert_Object에서 처리합니다
-			}
-			else if (m_ppTripord[(int)CardName::N_wjrfydvh][2] == 2) {
-				player.SetNamed_Damage(player.GetNamed_Damage() + 15);
-			}
-
-			break;
-		case CardName::N_dbtjdrkdcjs: // 유성강천
-			if (player.GetDirection() == Left)
-				player.SetImage(L"./\\윈플 텀프 이미지\\창술사_유성강천_이펙트(left).png");
-			else
-				player.SetImage(L"./\\윈플 텀프 이미지\\창술사_유성강천_이펙트.png");
-			for (int i = 0; i < player.GetFrame_Max(); i++) {
-				if (i < 3) {
-					if (player.GetDirection() == Left)
-						player.SetOder(i, { 0,12 }, -1);
-					else
-						player.SetOder(i, { 0,12 }, -1);
-				}
-				else if (i < 6) {
-					player.SetOder(i, { 0, 0 }, -1);
-				}
-				else if (i < 8) {
-					if (player.GetDirection() == Left)
-						player.SetOder(i, { -15,-20 }, -1);
-					else
-						player.SetOder(i, { 15,-20 }, -1);
-
-				}
-				else
-					player.SetOder(i, { 0, 0 }, -1);
-			}
-			player.SetBaseDelay(5);
-			player.SetSpeed(player.GetOder(0).speed.x, player.GetOder(0).speed.y);
-			player.SetDamage(12);
-			player.SetNeutralization(5);
-			player.SetDestruction(0);
-			if (m_ppTripord[(int)CardName::N_dbtjdrkdcjs][0] == 1) {
-				player.SetBaseDelay(4);
-
-			}
-			else if (m_ppTripord[(int)CardName::N_dbtjdrkdcjs][0] == 2) {
-				player.SetSeedDamage(player.GetSeedDamage() + 2);
-
-			}
-			else if (m_ppTripord[(int)CardName::N_dbtjdrkdcjs][0] == 3) {
-				player.SetNamed_Damage(player.GetNamed_Damage() + 2);
-			}
-			if (m_ppTripord[(int)CardName::N_dbtjdrkdcjs][1] == 1) {
-				player.SetOder(player.GetFrame_Max() - 1, { 0,0 }, Earthquake);
-			}
-			else if (m_ppTripord[(int)CardName::N_dbtjdrkdcjs][1] == 2) {
-				player.SetOder(player.GetFrame_Max() - 1, { 0,0 }, Flame_Zone);
-			}
-			else if (m_ppTripord[(int)CardName::N_dbtjdrkdcjs][1] == 3) {
-				player.SetOder(player.GetFrame_Max() - 1, { 0,0 }, Wall);
-			}
-			if (m_ppTripord[(int)CardName::N_dbtjdrkdcjs][2] == 1) {
-				player.SetOder(player.GetFrame_Max() - 1, { 0,0 }, Drop_Red_Spear);
-			}
-			else if (m_ppTripord[(int)CardName::N_dbtjdrkdcjs][2] == 2) {
-				for (int i = 0; i < player.GetFrame_Max(); i++) {
-					player.SetOder(i, { 0, 0 }, -1);
-				}
-				player.SetSpeed(player.GetOder(0).speed.x, player.GetOder(0).speed.y);
-				if (player.GetDirection() == Left)
-					player.SetImage(L"./\\윈플 텀프 이미지\\창술사_유성강천창사라지는_이펙트(left).png");
-				else
-					player.SetImage(L"./\\윈플 텀프 이미지\\창술사_유성강천창사라지는_이펙트.png");
-				player.SetOder(4, { 0,0 }, Drop_Red_Spear);
-			}
-
-			break;
-		case CardName::N_rhlddufvk: // 굉열파
-			if (player.GetDirection() == Left)
-				player.SetImage(L"./\\윈플 텀프 이미지\\창술사_굉열파_이펙트(left).png");
-			else
-				player.SetImage(L"./\\윈플 텀프 이미지\\창술사_굉열파_이펙트.png");
-			for (int i = 0; i < player.GetFrame_Max(); i++) {
-				if (i > 4)
-					if (player.GetDirection() == Left)
-						player.SetOder(i, { -8,0 }, -1);
-					else
-						player.SetOder(i, { 8,0 }, -1);
-				else
-					player.SetOder(i, { 0, 0 }, -1);
-			}
-			player.SetOder(player.GetFrame_Max() - 2, { 0,0 }, Yellow_Spear);
-			player.SetBaseDelay(4);
-			player.SetSpeed(player.GetOder(0).speed.x, player.GetOder(0).speed.y);
-			player.SetDamage(10);
-			player.SetNeutralization(5);
-			player.SetDestruction(1);
-			if (m_ppTripord[(int)CardName::N_rhlddufvk][0] == 1) {
-				player.SetDestruction(player.GetDestruction() + 1);
-			}
-			else if (m_ppTripord[(int)CardName::N_rhlddufvk][0] == 2) {
-				player.SetBaseDelay(3);
-			}
-			else if (m_ppTripord[(int)CardName::N_rhlddufvk][0] == 3) {
-				player.SetRuncount(100);
-			}
-			if (m_ppTripord[(int)CardName::N_rhlddufvk][1] == 1) {
-				if (player.GetDirection() == Left)
-					player.SetImage(L"./\\윈플 텀프 이미지\\창술사_굉열파_화염이펙트(left).png");
-				else
-					player.SetImage(L"./\\윈플 텀프 이미지\\창술사_굉열파_화염이펙트.png");
-				player.SetType(Fire);
-			}
-			else if (m_ppTripord[(int)CardName::N_rhlddufvk][1] == 2) {
-				//적을 창끝까지 밀쳐냄
-			}
-			else if (m_ppTripord[(int)CardName::N_rhlddufvk][1] == 3) {
-				player.SetNamed_Damage(player.GetNamed_Damage() + 3);
-			}
-			if (m_ppTripord[(int)CardName::N_rhlddufvk][2] == 1) {
-				player.SetBaseDelay(player.GetBaseDelay() + 1);
-				player.SetDamage(player.GetDamage() + 4);
-			}
-			else if (m_ppTripord[(int)CardName::N_rhlddufvk][2] == 2) {
-				//TODO:마나감소
-			}
-
-			break;
-		case CardName::N_sktjsckd: // 나선창
-			if (player.GetDirection() == Left)
-				player.SetImage(L"./\\윈플 텀프 이미지\\창술사_나선창_이펙트(left).png");
-			else
-				player.SetImage(L"./\\윈플 텀프 이미지\\창술사_나선창_이펙트.png");
-			for (int i = 0; i < player.GetFrame_Max(); i++) {
-				player.SetOder(i, { 0, 0 }, -1);
-			}
-			player.SetOder(player.GetFrame_Max() - 1, { 0, 0 }, Purple_Spear);
-			player.SetBaseDelay(4);
-			player.SetSpeed(player.GetOder(0).speed.x, player.GetOder(0).speed.y);
-			player.SetDamage(7);
-			player.SetNeutralization(5);
-			player.SetDestruction(0);
-
-			if (m_ppTripord[(int)CardName::N_sktjsckd][0] == 1) {
-				player.SetSeedDamage(player.GetSeedDamage() + 1);
-			}
-			else if (m_ppTripord[(int)CardName::N_sktjsckd][0] == 2) {
-				player.SetRuncount(100);
-			}
-			else if (m_ppTripord[(int)CardName::N_sktjsckd][(int)TriIndex::I_Tier1] == 3) {
-				PlusUltimate();
-			}
-			if (m_ppTripord[(int)CardName::N_sktjsckd][1] == 1) {
-				m_bOnemore = true;
-			}
-			else if (m_ppTripord[(int)CardName::N_sktjsckd][1] == 2) {
-				player.SetNamed_Damage(player.GetNamed_Damage() + 2);
-			}
-			else if (m_ppTripord[(int)CardName::N_sktjsckd][(int)TriIndex::I_Tier2] == 3) {
-				DrawCard(false);
-			}
-			if (m_ppTripord[(int)CardName::N_sktjsckd][2] == 1) {
-				//사거리증가
-			}
+		//	if (m_ppTripord[(int)CardName::N_sktjsckd][0] == 1) {
+		//		player.SetSeedDamage(player.GetSeedDamage() + 1);
+		//	}
+		//	else if (m_ppTripord[(int)CardName::N_sktjsckd][0] == 2) {
+		//		player.SetRuncount(100);
+		//	}
+		//	else if (m_ppTripord[(int)CardName::N_sktjsckd][(int)TriIndex::I_Tier1] == 3) {
+		//		PlusUltimate();
+		//	}
+		//	if (m_ppTripord[(int)CardName::N_sktjsckd][1] == 1) {
+		//		m_bOnemore = true;
+		//	}
+		//	else if (m_ppTripord[(int)CardName::N_sktjsckd][1] == 2) {
+		//		player.SetNamed_Damage(player.GetNamed_Damage() + 2);
+		//	}
+		//	else if (m_ppTripord[(int)CardName::N_sktjsckd][(int)TriIndex::I_Tier2] == 3) {
+		//		DrawCard(false);
+		//	}
+		//	if (m_ppTripord[(int)CardName::N_sktjsckd][2] == 1) {
+		//		//사거리증가
+		//	}
 
 
-			break;
+		//	break;
 
-		default:
-			break;
-		}
-		player.SetOder(player.GetFrame_Now(), { 0,0 }, -1);
+		//default:
+		//	break;
+		//}
+		//player.SetOder(player.GetFrame_Now(), { 0,0 }, -1);
 
 		if (canNull) {
 			m_pHandCard[m_iClickSelect] = nullptr;
@@ -1022,6 +858,16 @@ void Player::MakeCard(int randomValue, int** tripord)
 
 	m_pCard[m_iCardCount++] = temp;
 	m_pCard[m_iCardCount++] = temp1;
+}
+
+void Player::AddSkillObject(const SkillObject& skillObject)
+{
+	m_lSkillObjects.push_back(skillObject);
+}
+
+CardName Player::GetUseCardName() const
+{
+	return m_pHandCard[m_iClickSelect]->GetCardName();
 }
 
 void Player::SetImg(const TCHAR* str)

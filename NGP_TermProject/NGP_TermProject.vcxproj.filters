@@ -58,6 +58,9 @@
     <ClCompile Include="CastleInteraction.cpp">
       <Filter>2019180016\Interaction</Filter>
     </ClCompile>
+    <ClCompile Include="SkillObject.cpp">
+      <Filter>2019182009\소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Bat.h">
@@ -131,6 +134,9 @@
     </ClInclude>
     <ClInclude Include="CastleInteraction.h">
       <Filter>2019180016\Interaction</Filter>
+    </ClInclude>
+    <ClInclude Include="SkillObject.h">
+      <Filter>2019182009\헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
