@@ -9,14 +9,14 @@ class GameRoom
 	enum PhaseEnum {WolfPhase, BatPhase, BossPhase};
 
 public:
-	GameRoom();
+	GameRoom(array<SOCKET, MAX_ROOMS>);
 	~GameRoom();
 public:
 	void SetElapsedTime();
 	void Update(array<StateMsgInfo, MAX_CLIENTS> StateMsg);
 
 	void SpawnEnemy();
-	void UpdateEnemyUseStateMsg(array<StateMsgInfo, MAX_CLIENTS> StateMsg);
+	void UpdateUseStateMsg(array<StateMsgInfo, MAX_CLIENTS> StateMsg);
 	void UpdateEnemy();
 
 	void ProcessMonsterHpMsg(StateMsgArgu* Arg);
@@ -27,9 +27,16 @@ public:
 	bool IsCollision(const RECT& a, const RECT& b);
 	void IsCollisionMonsterWithCastle();
 
+	// 송수신 관련 함수
 	void WriteMonsterState(MonsterType, BYTE, MonsterStateType);
+	void WritePlayerLocation();
+	void WriteMonsterSpawn(MonsterType, BYTE);
 
+	void ReadPlayerLocation(StateMsgArgu*);
 private:
+	// 방에 연결된 클라 소켓
+	array<SOCKET, MAX_ROOMS> m_ClientSockets;
+
 	std::chrono::time_point<std::chrono::system_clock> m_tPreviousTime;
 	float m_fElapsedTime;
 

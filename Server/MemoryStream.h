@@ -8,7 +8,7 @@ public:
 	// Mem Stream
 	template<typename Type>
 	void Write(const Type&, int bytes = -1);
-	void Send();
+	void Send(const array<SOCKET, MAX_ROOMS>&);
 
 private:
 	// 원시 자료형인지 확인
@@ -20,6 +20,9 @@ private:
 
 	// 스트림 Write에 적을 인덱스 위치
 	int m_iNowWriteIndex;
+
+	// 보낼 소켓들
+	array<SOCKET, MAX_ROOMS> m_Sockets;
 };
 
 template<typename Type>
@@ -39,7 +42,8 @@ void MemoryStream::Write(const Type& data, int bytes)
 
 	if (m_iNowWriteIndex + size > SENDBUFFERSIZE)
 	{
-		Send();
+		//TODO: 고쳐야함
+		//Send();
 	}
 
 	memcpy_s(buf + m_iNowWriteIndex, SENDBUFFERSIZE - (m_iNowWriteIndex + size), &data, size);

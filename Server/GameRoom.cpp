@@ -7,7 +7,7 @@
 #include "MonsterState.h"
 #include "MemoryStream.h"
 
-GameRoom::GameRoom()
+GameRoom::GameRoom(array<SOCKET, MAX_ROOMS> ClientSocket)
 {
 	m_iWolfSN = m_iBatSN = 0;
 	m_pCastle = new Castle();
@@ -34,10 +34,10 @@ void GameRoom::SetElapsedTime()
 void GameRoom::Update(array<StateMsgInfo, MAX_CLIENTS> StateMsg)
 {
 	SetElapsedTime();
-	UpdateEnemyUseStateMsg(StateMsg);
+	UpdateUseStateMsg(StateMsg);
 	UpdateEnemy();
 	SpawnEnemy();
-
+	m_pStream->Send(m_ClientSockets);
 }
 
 void GameRoom::SpawnEnemy()
@@ -49,9 +49,7 @@ void GameRoom::SpawnEnemy()
 
 		if (m_fWolfSpawnTimer >= 3.f)
 		{
-			// TODO: Wolf Spawn Code
-			MonsterSpawnStateMsg* SpawnMsg;
-			StateMsgByte SMB = MakeStateMsgByte(StateMsgType::MonsterSpawn);
+			WriteMonsterSpawn(MonsterType::Wolf, m_iBatSN);
 
 			m_WolfMap.insert({ m_iWolfSN, new Wolf(m_iWolfSN)});
 			m_iWolfSN++;
@@ -63,10 +61,7 @@ void GameRoom::SpawnEnemy()
 
 		if (m_fBatSpawnTimer >= 3.f)
 		{
-			// TODO: Bat Spawn 메세지 전송
-			MonsterSpawnStateMsg* SpawnMsg;
-			StateMsgByte SMB = 0;
-			MakeStateMsgByte(StateMsgType::MonsterSpawn);
+			WriteMonsterSpawn(MonsterType::Bat, m_iBatSN);
 
 			m_BatMap.insert({ m_iBatSN, new Bat(m_iBatSN) });
 			m_iBatSN++;
@@ -161,7 +156,7 @@ StateMsgByte GameRoom::MakeStateMsgByte(StateMsgType SMT)
 	return ReturnValue;
 }
 
-void GameRoom::UpdateEnemyUseStateMsg(array<StateMsgInfo, MAX_CLIENTS> StateMsg)
+void GameRoom::UpdateUseStateMsg(array<StateMsgInfo, MAX_CLIENTS> StateMsg)
 {
 	for (int i = 0; i < MAX_CLIENTS; i++)
 	{
@@ -170,8 +165,8 @@ void GameRoom::UpdateEnemyUseStateMsg(array<StateMsgInfo, MAX_CLIENTS> StateMsg)
 		case (int)StateMsgType::MonsterHp:
 			ProcessMonsterHpMsg(StateMsg[i].pStateMsgArgu);
 			break;
-		case (int)StateMsgType::PlayerMove:
-
+		case (int)StateMsgType::PlayerLocation:
+			ReadPlayerLocation(StateMsg[i].pStateMsgArgu);
 			break;
 		case (int)StateMsgType::CastleHp:
 
@@ -198,4 +193,39 @@ void GameRoom::WriteMonsterState(MonsterType MT, BYTE id, MonsterStateType MST)
 
 	m_pStream->Write(StateMsgType::MonsterState);
 	m_pStream->Write(MSM);
+}
+
+void GameRoom::WritePlayerLocation()
+{
+	PlayerLocationMsg PLM;
+
+	for (int i = 0; i < MAX_CLIENTS; i++)
+	{
+		PLM.PlayerId = i;
+		PLM.Location.x = m_PlayerLocations[i].x;
+		PLM.Location.y = m_PlayerLocations[i].y;
+
+		m_pStream->Write(StateMsgType::PlayerLocation);
+		m_pStream->Write(PLM);
+	}
+}
+
+void GameRoom::WriteMonsterSpawn(MonsterType MT, BYTE id)
+{
+	MonsterSpawnStateMsg MSSM;
+	MSSM.Type = MT;
+	MSSM.SerialId = id;
+
+	m_pStream->Write(StateMsgType::MonsterSpawn);
+	m_pStream->Write(MSSM);
+}
+
+void GameRoom::ReadPlayerLocation(StateMsgArgu* SMA)
+{
+	PlayerLocationMsg* PLM = dynamic_cast<PlayerLocationMsg*>(SMA);
+	int ClientNum = PLM->PlayerId;
+	POINT Location = PLM->Location;
+
+	m_PlayerLocations[ClientNum].x = Location.x;
+	m_PlayerLocations[ClientNum].y = Location.y;
 }

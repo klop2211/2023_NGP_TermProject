@@ -53,7 +53,7 @@ int GetStateMsgType(BYTE LowerBits)
 	{
 	case (int)StateMsgType::MonsterSpawn:	return sizeof(MonsterSpawnStateMsg);
 	case (int)StateMsgType::MonsterHp:		return sizeof(MonsterHpStateMsg);
-	case  (int)StateMsgType::PlayerMove:	return sizeof(PlayerMoveStateMsg);
+	case  (int)StateMsgType::PlayerLocation:return sizeof(PlayerLocationMsg);
 	case (int)StateMsgType::UseCard:		return sizeof(UseCardStateMsg);
 	case  (int)StateMsgType::CastleHp:		return sizeof(CastleHpStateMsg);
 	default:
@@ -203,10 +203,10 @@ DWORD WINAPI ProcessRoom(LPVOID arg)
 	array<HANDLE, MAX_CLIENTS> hClients;
 
 	// Array는 Vector와 다르게 Move의 효율이 좋지 않다.
-	//TODO: 실행되는지 확인
-	memcpy(hClients.data(), Arg->Client.data(), sizeof(HANDLE) * MAX_CLIENTS);
+	//TODO: 실행되는지 확인S
+	//memcpy(hClients.data(), Arg->Client.data(), sizeof(HANDLE) * MAX_CLIENTS);
 
-	GameRoom* pGameRoom = new GameRoom;
+	GameRoom* pGameRoom = new GameRoom(Arg->Clients);
 	// Main Game Room 로직
 	while (true)
 	{
@@ -316,7 +316,7 @@ int main(int argc, char* argv[])
 
 			for (int i = 0; i < MAX_CLIENTS; i++)
 			{
-				arg.Client[i] = hClientArrToMakeRoom[i];
+				arg.Clients[i] = client_sockets[i];
 			}
 			arg.RoomNumber = RoomNum;
 			hThread = CreateThread(NULL, 0, ProcessRoom, &arg, 0, NULL);
@@ -336,8 +336,6 @@ int main(int argc, char* argv[])
 			// 클라1 신호 on
 			SetEvent(events[RoomNum++].hClient1Event);
 
-			// 더이상 접속 받지 않음
-			break;
 		}
 		else
 		{
