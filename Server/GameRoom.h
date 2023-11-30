@@ -45,11 +45,11 @@ private:
 	class Castle* m_pCastle;
 
 	// 현재 몇 페이즈 인지
-	int Phase;
+	int m_iPhase;
 
 	// 스폰 타이머
-	float BatSpawnTimer;
-	float WolfSpawnTimer;
+	float m_fBatSpawnTimer;
+	float m_fWolfSpawnTimer;
 
-	class MemoryStream* stream;
+	class MemoryStream* m_pStream;
 };

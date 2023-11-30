@@ -1,7 +1,9 @@
 #include "Monster.h"
 #include "MonsterState.h"
 
-Monster::Monster(int SerialNum) : m_iSerialNum(SerialNum)
+Monster::Monster(int SerialNum) :
+	m_iSerialNum(SerialNum),
+	m_bCanAttack(false)
 {
 }
 

@@ -2,7 +2,7 @@
 enum class MonsterType : BYTE { Wolf, Bat, Papyrus };
 enum class PlayerMove : BYTE {};
 enum class CardType : BYTE {};
-enum class StateMsgType : BYTE {MonsterSpawn, MonsterHp, MonsterState, PlayerMove, CastleHp, UseCard};
+enum class StateMsgType : BYTE {MonsterSpawn, MonsterHp, MonsterState, PlayerMove, CastleHp, UseCard, GameStart};
 enum class MonsterStateType : BYTE {Move, Attack, Ice, Fire};
 
 // StateMsg 로직 처리

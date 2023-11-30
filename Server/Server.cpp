@@ -9,7 +9,7 @@
 array<Events, MAX_ROOMS> events;
 
 // 최대 방 개수만큼 소켓 보유
-SOCKET client_sockets[MAX_CLIENTS];
+array<SOCKET, MAX_CLIENTS> client_sockets;
 
 // 상태 메세지를 저장할 공유 버퍼
 array<array<StateMsgInfo, MAX_CLIENTS>, MAX_ROOMS> SharedBuffer;
@@ -299,6 +299,7 @@ int main(int argc, char* argv[])
 		// 대기중인 인원이 2명인가?
 		// no->반복, yes -> 방 처리 스레드 생성
 		if (ClientNum == MAX_CLIENTS) {
+
 			RoomArg arg;
 
 			for (int i = 0; i < MAX_CLIENTS; i++)
@@ -309,10 +310,15 @@ int main(int argc, char* argv[])
 			hThread = CreateThread(NULL, 0, ProcessRoom, &arg, 0, NULL);
 
 			// 준비 완료 메시지 보내기
-			for (int i = 0; i < MAX_CLIENTS; ++i) {
-				char buffer[100];
-				sprintf(buffer, "Game is ready for Client %d.", ClientNum);
-				send(client_sockets[i], buffer, strlen(buffer), 0);
+			//for (int i = 0; i < MAX_CLIENTS; ++i) {
+			//	char buffer[100];
+			//	sprintf(buffer, "Game is ready for Client %d.", ClientNum);
+			//	send(client_sockets[i], buffer, strlen(buffer), 0);
+			//}
+
+			for (const auto& s : client_sockets)
+			{
+				retval = send(s, (char*)StateMsgType::GameStart, sizeof(StateMsgType), 0);
 			}
 
 			// 클라1 신호 on
