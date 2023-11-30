@@ -1,10 +1,12 @@
 #pragma once
-#include "Monster.h"
+#include "CommonMonster.h"
 
-class Wolf : public Monster
+class Wolf : public CommonMonster
 {
 public:
-	virtual void Update(float ElaspedTime);
+	Wolf(int SN);
+	~Wolf() {};
 
+	virtual void Update(float ElaspedTime);
 };
 

@@ -128,18 +128,24 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Bat.cpp" />
+    <ClCompile Include="Castle.cpp" />
     <ClCompile Include="Common.cpp" />
+    <ClCompile Include="CommonMonster.cpp" />
     <ClCompile Include="GameRoom.cpp" />
     <ClCompile Include="Monster.cpp" />
+    <ClCompile Include="MonsterState.cpp" />
     <ClCompile Include="MsgInstence.cpp" />
     <ClCompile Include="Server.cpp" />
     <ClCompile Include="Wolf.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Bat.h" />
+    <ClInclude Include="Castle.h" />
     <ClInclude Include="Common.h" />
+    <ClInclude Include="CommonMonster.h" />
     <ClInclude Include="GameRoom.h" />
     <ClInclude Include="Monster.h" />
+    <ClInclude Include="MonsterState.h" />
     <ClInclude Include="MsgInstence.h" />
     <ClInclude Include="StateMessage.h" />
     <ClInclude Include="Wolf.h" />

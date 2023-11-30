@@ -3,14 +3,17 @@
 
 #include "Wolf.h"
 #include "Bat.h"
+#include "Castle.h"
 
 GameRoom::GameRoom()
 {
 	m_iWolfSN = m_iBatSN = 0;
+	m_pCastle = new Castle();
 }
 
 GameRoom::~GameRoom()
 {
+	delete m_pCastle;
 }
 
 void GameRoom::SetElapsedTime()
@@ -46,7 +49,9 @@ void GameRoom::SpawnEnemy()
 			MonsterSpawnStateMsg* SpawnMsg;
 			StateMsgByte SMB = 0;
 			MakeStateMsgByte(StateMsgType::MonsterSpawn);
-			m_WolfMap.insert({ m_iWolfSN++, new Wolf()});
+
+			m_WolfMap.insert({ m_iWolfSN, new Wolf(m_iWolfSN)});
+			m_iWolfSN ++;
 			WolfSpawnTimer = 0.f;
 		}
 		break;

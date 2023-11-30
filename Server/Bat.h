@@ -1,9 +1,12 @@
 #pragma once
-#include "Monster.h"
+#include "CommonMonster.h"
 
-class Bat : public Monster
+class Bat : public CommonMonster
 {
 public:
+	Bat(int SN);
+	~Bat() {};
+
 	virtual void Update(float ElaspedTime);
 };
 

@@ -32,10 +32,14 @@ private:
 	std::map<int, class Bat*> m_BatMap;
 	std::map<int, class Wolf*> m_WolfMap;
 
+	// 플레이어의 위치 리스트
+	std::array<FPOINT, MAX_CLIENTS> m_PlayerLocations;
+
 	// 몬스터의 일련 번호
 	BYTE m_iWolfSN, m_iBatSN;
 
-
+	// 성
+	class Castle* m_pCastle;
 
 	// 현재 몇 페이즈 인지
 	int Phase;

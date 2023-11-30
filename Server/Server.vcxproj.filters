@@ -16,11 +16,14 @@
     <Filter Include="Monster">
       <UniqueIdentifier>{ac2ab363-56b8-45ec-a7ba-0eb9aaadb35c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Monster\Source">
-      <UniqueIdentifier>{eac29aa7-006d-4c02-908f-dc854cff9415}</UniqueIdentifier>
+    <Filter Include="2019180016">
+      <UniqueIdentifier>{41651d7c-09d9-4485-8fb3-b21aa0b7caa2}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Monster\Header">
+    <Filter Include="2019180016\Header">
       <UniqueIdentifier>{ae427565-bd91-4c6c-ad6b-bba765b5b494}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="2019180016\Source">
+      <UniqueIdentifier>{eac29aa7-006d-4c02-908f-dc854cff9415}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -37,13 +40,22 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Monster.cpp">
-      <Filter>Monster\Source</Filter>
+      <Filter>2019180016\Source</Filter>
     </ClCompile>
     <ClCompile Include="Bat.cpp">
-      <Filter>Monster\Source</Filter>
+      <Filter>2019180016\Source</Filter>
     </ClCompile>
     <ClCompile Include="Wolf.cpp">
-      <Filter>Monster\Source</Filter>
+      <Filter>2019180016\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Castle.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="MonsterState.cpp">
+      <Filter>2019180016\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="CommonMonster.cpp">
+      <Filter>2019180016\Source</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -60,13 +72,22 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Monster.h">
-      <Filter>Monster\Header</Filter>
+      <Filter>2019180016\Header</Filter>
     </ClInclude>
     <ClInclude Include="Bat.h">
-      <Filter>Monster\Header</Filter>
+      <Filter>2019180016\Header</Filter>
     </ClInclude>
     <ClInclude Include="Wolf.h">
-      <Filter>Monster\Header</Filter>
+      <Filter>2019180016\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Castle.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="MonsterState.h">
+      <Filter>2019180016\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="CommonMonster.h">
+      <Filter>2019180016\Header</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

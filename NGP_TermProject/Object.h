@@ -31,7 +31,7 @@ protected:
 	// 메인 이미지
 	// CImage* m_cImg;
 
-	//충돌 처리 사각형
+	//충돌 처리 사각형, 위치
 	RECT m_rRect;
 
 	// 텍스쳐 위치

@@ -11,8 +11,11 @@
 #include <string.h> // strncpy(), ...
 
 #include <array>
+#include <iostream>
 
 #pragma comment(lib, "ws2_32") // ws2_32.lib 링크
+
+#include <windef.h>
 
 #define SERVERPORT 9000
 #define MAX_CLIENTS 2
@@ -20,6 +23,9 @@
 #define Client1 0
 #define Client2 1
 #define StateMsgNone 0
+
+#define CLIENTWINWIDTH	1600
+#define CLIENTWINHEIGHT	900
 
 using std::array;
 
@@ -47,6 +53,15 @@ public:
 	HANDLE hRoomEvent;
 	HANDLE hClient1Event;
 	HANDLE hClient2Event;
+};
+
+struct FPOINT
+{
+	FPOINT() {}
+	FPOINT(float x, float y) { this->x = x; this->y = y; }
+
+	float x;
+	float y;
 };
 
 // 소켓 함수 오류 출력 후 종료
