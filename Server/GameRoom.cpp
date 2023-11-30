@@ -243,6 +243,11 @@ void GameRoom::ReadPlayerLocation(StateMsgArgu* SMA)
 	int ClientNum = PLM->PlayerId;
 	POINT Location = PLM->Location;
 
+	if (ClientNum == -1)
+	{
+		return;
+	}
+
 	m_PlayerLocations[ClientNum].x = Location.x;
 	m_PlayerLocations[ClientNum].y = Location.y;
 }
