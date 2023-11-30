@@ -2,7 +2,6 @@
 #include "Monster.h"
 
 #include "StateMessage.h"
-#include "MemoryStream.h"
 
 MonsterMoveState* MonsterMoveState::Instance()
 {
@@ -40,7 +39,9 @@ void MonsterAttackState::Enter(Monster* monster)
 
 void MonsterAttackState::Execute(Monster* monster, float ElapsedTime)
 {
-	// TODO: 공격 메세지
+	//monster->AddElapsedTime(ElapsedTime);
+	//if(monster->GetAttackTimer())
+	//monster->SetCanAttack(true);
 }
 
 void MonsterAttackState::Exit(Monster* monster)

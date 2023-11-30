@@ -8,6 +8,7 @@ Bat::Bat(int SN) : CommonMonster(SN)
 	m_iCurrentHp = 10;
 	m_iDamage = 15;
 	m_iExperi = 15;
+	m_fAttackCoolTime = 3.f;
 }
 
 void Bat::Update(float ElapsedTime)

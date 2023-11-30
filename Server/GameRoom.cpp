@@ -5,16 +5,19 @@
 #include "Bat.h"
 #include "Castle.h"
 #include "MonsterState.h"
+#include "MemoryStream.h"
 
 GameRoom::GameRoom()
 {
 	m_iWolfSN = m_iBatSN = 0;
 	m_pCastle = new Castle();
+	m_pStream = new MemoryStream();
 }
 
 GameRoom::~GameRoom()
 {
 	delete m_pCastle;
+	delete m_pStream;
 }
 
 void GameRoom::SetElapsedTime()
@@ -26,7 +29,6 @@ void GameRoom::SetElapsedTime()
 	m_tPreviousTime = currentTime;
 
 	m_fElapsedTime = elapsedSeconds.count();
-
 }
 
 void GameRoom::Update(array<StateMsgInfo, MAX_CLIENTS> StateMsg)
@@ -35,16 +37,17 @@ void GameRoom::Update(array<StateMsgInfo, MAX_CLIENTS> StateMsg)
 	UpdateEnemyUseStateMsg(StateMsg);
 	UpdateEnemy();
 	SpawnEnemy();
+
 }
 
 void GameRoom::SpawnEnemy()
 {
-	switch (Phase)
+	switch (m_iPhase)
 	{
 	case WolfPhase:
-		WolfSpawnTimer += m_fElapsedTime;
+		m_fWolfSpawnTimer += m_fElapsedTime;
 
-		if (WolfSpawnTimer >= 3.f)
+		if (m_fWolfSpawnTimer >= 3.f)
 		{
 			// TODO: Wolf Spawn Code
 			MonsterSpawnStateMsg* SpawnMsg;
@@ -52,13 +55,13 @@ void GameRoom::SpawnEnemy()
 
 			m_WolfMap.insert({ m_iWolfSN, new Wolf(m_iWolfSN)});
 			m_iWolfSN++;
-			WolfSpawnTimer = 0.f;
+			m_fWolfSpawnTimer = 0.f;
 		}
 		break;
 	case BatPhase:
-		BatSpawnTimer += m_fElapsedTime;
+		m_fBatSpawnTimer += m_fElapsedTime;
 
-		if (BatSpawnTimer >= 3.f)
+		if (m_fBatSpawnTimer >= 3.f)
 		{
 			// TODO: Bat Spawn 메세지 전송
 			MonsterSpawnStateMsg* SpawnMsg;
@@ -67,7 +70,7 @@ void GameRoom::SpawnEnemy()
 
 			m_BatMap.insert({ m_iBatSN, new Bat(m_iBatSN) });
 			m_iBatSN++;
-			BatSpawnTimer = 0.f;
+			m_fBatSpawnTimer = 0.f;
 		}
 		break;
 	case BossPhase:
@@ -83,10 +86,20 @@ void GameRoom::UpdateEnemy()
 	for (auto it : m_BatMap)
 	{
 		it.second->Update(m_fElapsedTime);
+		if (it.second->GetCanAttack())
+		{
+			// TODO: 공격 메세지
+			//m_pStream->Write();
+		}
 	}
 	for (auto it : m_WolfMap)
 	{
 		it.second->Update(m_fElapsedTime);
+		if (it.second->GetCanAttack())
+		{
+			// TODO: 공격 메세지
+			//m_pStream->Write();
+		}
 	}
 }
 
