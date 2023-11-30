@@ -90,6 +90,30 @@ void Player::ChangeState(State<Player>* cState)
 	m_pStateMachine->ChangeState(cState);
 }
 
+void Player::ChangeState(PStateName ps)
+{
+	switch (ps)
+	{
+	case PStateName::Move:
+		ChangeState(PMove::Instance());
+		break;
+	case PStateName::Stay:
+		ChangeState(PStay::Instance());
+
+		break;
+	case PStateName::Stun:
+		ChangeState(PStun::Instance());
+
+		break;
+	case PStateName::Skill:
+		ChangeState(PSkill::Instance());
+
+		break;
+	default:
+		break;
+	}
+}
+
 void Player::OnProcessingMouseMessage(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	int mx = LOWORD(lParam);

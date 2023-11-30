@@ -138,6 +138,7 @@
     <ClInclude Include="SkillObject.h">
       <Filter>2019182009\헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="..\Server\StateMessage.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="NGP_TermProject.rc" />

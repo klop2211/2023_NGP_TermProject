@@ -1,4 +1,5 @@
 #pragma once
+#include "../Server/StateMessage.h"
 
 template <class entity_type>
 class State
@@ -6,6 +7,8 @@ class State
 public:
 
 	virtual ~State() {}
+
+	virtual PStateName GetName() = 0;
 
 	//this will execute when the state is entered
 	virtual void Enter(entity_type*) = 0;

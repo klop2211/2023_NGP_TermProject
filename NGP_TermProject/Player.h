@@ -22,6 +22,7 @@ public:
 	void Draw(HDC& memDc);
 
 	void ChangeState(State<Player>* cState);
+	void ChangeState(PStateName ps);
 
 	void OnProcessingMouseMessage(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 	void OnProcessingKeyboardMessage(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
@@ -45,6 +46,7 @@ public:
 	int GetDestruction() const { return m_iDestruction; }
 	int GetNamedDamage() const { return m_iNamedDamage; }
 	int GetType() const { return m_iType; }
+	PStateName GetStateName() const { return m_pStateMachine->CurrentState()->GetName(); }
 
 	void SetDir(Direction dir) { m_dDir = dir; }
 	void SetImg(const TCHAR* str);
@@ -54,6 +56,10 @@ public:
 	void SetDestruction(const int destruction) { m_iDestruction = destruction; }
 	void SetNamedDamage(const int NamedDamage) { m_iNamedDamage = NamedDamage; }
 	void SetType(const int type) { m_iType = type; }
+	void SetLocation(const POINT point) {
+		m_Location.x = point.x;
+		m_Location.y = point.y;
+	}
 	void SetRectByLocation() {
 		m_rRect.left = (int)m_Location.x;
 		m_rRect.top = (int)m_Location.y;
@@ -68,7 +74,7 @@ private:
 	int			m_iStunDamage;	// 무력화 수치(기존에는 Neutralization이라 표기했지만 생소한 영단어보다는 이해가 편하게 바꿈
 	int			m_iDestruction;	// 부위파괴 수치
 	int			m_iNamedDamage; // 네임드 추가데미지 기존 데미지에 이 수치를 + 하여 계산
-	int			m_iType;			// 현재 속성 타입
+	int			m_iType;		// 현재 속성 타입
 
 	CImage*		m_pImg;			// 그릴 이미지
 

@@ -1,6 +1,7 @@
 #pragma once
 #include "Player.h"
 
+struct StateMsgArgu;
 
 class Scene
 {
@@ -39,6 +40,7 @@ private:
 
 private:
 	Player* m_pPlayer;
+	Player* m_pPlayer2; // 2P
 	std::list<Object*> m_lObjectList;
 
 	class Castle* m_pCastle;
@@ -67,9 +69,14 @@ private:
 	// 드래그 시 시작 마우스 좌표 저장
 	int m_iStartX, m_iStartY;
 
+
 	static SOCKET* m_pSock;
 	static HANDLE* m_pReadEvent;
 	static HANDLE* m_pWriteEvent;
+
+	static int m_iClientNum;
+	static int m_iMsgSize;
+	static StateMsgArgu* m_pStateMsgArgu;
 
 };
 

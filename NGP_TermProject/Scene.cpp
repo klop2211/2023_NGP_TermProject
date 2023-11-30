@@ -5,9 +5,12 @@
 #include "Castle.h"
 #include "../Server/StateMessage.h"
 
-SOCKET* Scene::m_pSock;
-HANDLE* Scene::m_pReadEvent;
-HANDLE* Scene::m_pWriteEvent;
+SOCKET*			Scene::m_pSock;
+HANDLE*			Scene::m_pReadEvent;
+HANDLE*			Scene::m_pWriteEvent;
+int				Scene::m_iClientNum;
+int				Scene::m_iMsgSize;
+StateMsgArgu*	Scene::m_pStateMsgArgu;
 
 Scene::Scene()
 {
@@ -52,11 +55,16 @@ void Scene::Update(float elapsed)
 		else
 		{
 			UpdateGameStart(elapsed);		//메인 게임화면
+			
 			StateMsgType smt = StateMsgType::PlayerLocation;
 			send(*m_pSock, (char*)&smt, sizeof(StateMsgType), 0);
 
-			StateMsgArgu* sma = new PlayerLocationMsg;
-			send(*m_pSock, (char*)sma, sizeof(PlayerLocationMsg), 0);
+			PlayerLocationMsg sma;
+			sma.Location.x = (int)m_pPlayer->GetLocation().x;
+			sma.Location.y = (int)m_pPlayer->GetLocation().y;
+			sma.PlayerId = m_iClientNum;
+			sma.State = m_pPlayer->GetStateName();
+			send(*m_pSock, (char*)&sma, sizeof(PlayerLocationMsg), 0);
 
 			//TODO: 게임종료
 		}
@@ -64,6 +72,15 @@ void Scene::Update(float elapsed)
 	else {
 		if (m_bChanging)
 			UpdateChangeLoading(elapsed);	// 게임 시작전 유사 페이드아웃
+	}
+
+
+	if (m_pStateMsgArgu != NULL) {
+		PlayerLocationMsg* temp = dynamic_cast<PlayerLocationMsg*>(m_pStateMsgArgu);
+		if (temp->PlayerId != m_iClientNum) {
+			m_pPlayer2->SetLocation(temp->Location);
+			m_pPlayer2->ChangeState(temp->State);
+		}
 	}
 
 	for (auto object : m_lObjectList) {
@@ -306,8 +323,10 @@ void Scene::UpdateChangeStart(float elapsed)
 		m_fChangeCount = 0;
 		m_bChanging = false;
 		m_pPlayer = new Player;
+		m_pPlayer2 = new Player;
 		m_lObjectList.push_back(m_pPlayer);
-		
+		m_lObjectList.push_back(m_pPlayer2);
+
 	}
 }
 
@@ -335,15 +354,30 @@ DWORD WINAPI Scene::ReceiveThread(LPVOID arg)
 	
 	retval = recv(*m_pSock, (char*)&typeBuf, sizeof(BYTE), 0);
 
+	retval = recv(*m_pSock, (char*)&m_iClientNum, sizeof(int), 0);
+
+
+	StateMsgType smt = StateMsgType::PlayerLocation;
+	send(*m_pSock, (char*)&smt, sizeof(StateMsgType), 0);
+
+	PlayerLocationMsg temp;
+	temp.Location = POINT{ 0,0 };
+	temp.PlayerId = -1;
+	temp.State = PStateName::Move;
+	send(*m_pSock, (char*)&temp, sizeof(PlayerLocationMsg), 0);
+
+
 	while (1) {
 		WaitForSingleObject(*m_pWriteEvent, INFINITE);   // 쓰기 완료 대기
 
 		BYTE StateMsg;
 		BYTE upper2Bits = 0;
 		BYTE lower6Bits = 0;
-		StateMsgArgu* StateMsgArg = nullptr;
 
 		retval = recv(*m_pSock, (char*)&StateMsg, sizeof(BYTE), 0);
+		if (retval == SOCKET_ERROR) {
+			PostQuitMessage(0);
+		}
 
 		// 상위 2비트 추출
 		upper2Bits = StateMsg >> 6;
@@ -352,29 +386,31 @@ DWORD WINAPI Scene::ReceiveThread(LPVOID arg)
 		lower6Bits = StateMsg & 0x3F;
 
 		// 추가로 읽을 바이트 사이즈
-		int MsgSize;
-		switch (StateMsg)
+		switch (lower6Bits)
 		{
-		case (int)StateMsgType::MonsterSpawn:	MsgSize = sizeof(MonsterSpawnStateMsg); break;
-		case (int)StateMsgType::MonsterHp:		MsgSize = sizeof(MonsterHpStateMsg);break;
-		case  (int)StateMsgType::PlayerLocation:MsgSize = sizeof(PlayerLocationMsg);break;
-		case (int)StateMsgType::UseCard:		MsgSize = sizeof(UseCardStateMsg);	break;
-		case  (int)StateMsgType::CastleHp:		MsgSize = sizeof(CastleHpStateMsg);	break;
+		case (int)StateMsgType::MonsterSpawn:	m_iMsgSize = sizeof(MonsterSpawnStateMsg); break;
+		case (int)StateMsgType::MonsterHp:		m_iMsgSize = sizeof(MonsterHpStateMsg);break;
+		case  (int)StateMsgType::PlayerLocation:m_iMsgSize = sizeof(PlayerLocationMsg);break;
+		case (int)StateMsgType::UseCard:		m_iMsgSize = sizeof(UseCardStateMsg);	break;
+		case  (int)StateMsgType::CastleHp:		m_iMsgSize = sizeof(CastleHpStateMsg);	break;
 		default:
 			break;
 		}
 
-		switch (StateMsg)
+		switch (lower6Bits)
 		{
-		case	(int)StateMsgType::MonsterSpawn:	StateMsgArg = new MonsterSpawnStateMsg; break;
-		case	(int)StateMsgType::MonsterHp:		StateMsgArg = new MonsterHpStateMsg;	break;
-		case	(int)StateMsgType::PlayerLocation:	StateMsgArg = new PlayerLocationMsg;	break;
-		case	(int)StateMsgType::UseCard:			StateMsgArg = new UseCardStateMsg;		break;
-		case	(int)StateMsgType::CastleHp:		StateMsgArg = new CastleHpStateMsg;		break;
+		case	(int)StateMsgType::MonsterSpawn:	m_pStateMsgArgu = new MonsterSpawnStateMsg; break;
+		case	(int)StateMsgType::MonsterHp:		m_pStateMsgArgu = new MonsterHpStateMsg;	break;
+		case	(int)StateMsgType::PlayerLocation:	m_pStateMsgArgu = new PlayerLocationMsg;	break;
+		case	(int)StateMsgType::UseCard:			m_pStateMsgArgu = new UseCardStateMsg;		break;
+		case	(int)StateMsgType::CastleHp:		m_pStateMsgArgu = new CastleHpStateMsg;		break;
 		default:
 			break;
 		}
-		retval = recv(*m_pSock, (char*)StateMsgArg, MsgSize, 0);
+		retval = recv(*m_pSock, (char*)m_pStateMsgArgu, m_iMsgSize, 0);
+		if (retval == SOCKET_ERROR) {
+			PostQuitMessage(0);
+		}
 
 		SetEvent(*m_pReadEvent);
 	}

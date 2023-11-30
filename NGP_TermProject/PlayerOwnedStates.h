@@ -3,6 +3,7 @@
 
 class Player;
 
+
 class PMove :
     public State<Player>
 {
@@ -16,6 +17,8 @@ public:
     static PMove* Instance();
 
 public:
+
+    PStateName GetName() { return PStateName::Move; }
 
     virtual void Enter(Player* player);
 
@@ -39,6 +42,8 @@ public:
 
 public:
 
+    PStateName GetName() { return PStateName::Stay; }
+
     virtual void Enter(Player* player);
 
     virtual void Execute(Player* player, float elapsed);
@@ -60,6 +65,8 @@ public:
     static PStun* Instance();
 
 public:
+
+    PStateName GetName() { return PStateName::Stun; }
 
     virtual void Enter(Player* player);
 
@@ -84,6 +91,8 @@ public:
     static PSkill* Instance();
 
 public:
+
+    PStateName GetName() { return PStateName::Skill; }
 
     virtual void Enter(Player* player);
 

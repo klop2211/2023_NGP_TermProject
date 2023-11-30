@@ -4,6 +4,7 @@ enum class PlayerMove : BYTE {};
 enum class CardType : BYTE {};
 enum class StateMsgType : BYTE {MonsterSpawn, MonsterHp, MonsterState, PlayerLocation, CastleHp, UseCard, GameStart};
 enum class MonsterStateType : BYTE {Move, Attack, Ice, Fire};
+enum class PStateName { Move, Stay, Stun, Skill };
 
 // 메세지의 헤더 역할, 이거보고 다음에 뭐가 올지 알 수 있음
 typedef BYTE StateMsgByte;
@@ -46,6 +47,7 @@ struct PlayerLocationMsg : StateMsgArgu
 {
 	BYTE PlayerId;
 	POINT Location;
+	PStateName State;
 };
 
 // 서버 <-> 클라
