@@ -1,7 +1,13 @@
 #include "stdafx.h"
+#include "Common.h"
 #include "PlayerOwnedStates.h"
 #include "Scene.h"
 #include "Castle.h"
+#include "../Server/StateMessage.h"
+
+SOCKET* Scene::m_pSock;
+HANDLE* Scene::m_pReadEvent;
+HANDLE* Scene::m_pWriteEvent;
 
 Scene::Scene()
 {
@@ -28,6 +34,10 @@ Scene::~Scene()
 	m_cLoadBit.Destroy();
 	m_cStartBit.Destroy();
 	m_cQuitBit.Destroy();
+	delete m_pSock;
+	delete m_pReadEvent;
+	delete m_pWriteEvent;
+
 }
 
 void Scene::Update(float elapsed)
@@ -102,6 +112,11 @@ void Scene::OnProcessingMouseMessage(HWND hWnd, UINT message, WPARAM wParam, LPA
 				// GameStart 버튼
 				if (m_iMy >= 550 && m_iMy <= 650)
 				{
+					m_pReadEvent = new HANDLE;
+					m_pWriteEvent = new HANDLE;
+					*m_pReadEvent = CreateEvent(NULL, FALSE, FALSE, NULL);
+					*m_pWriteEvent = CreateEvent(NULL, FALSE, TRUE, NULL);
+					CreateThread(NULL, 0, ReceiveThread, NULL, 0, NULL);
 					m_bChanging = true;
 				}
 				// Quit 버튼
@@ -286,6 +301,41 @@ void Scene::UpdateChangeStart(float elapsed)
 		m_bChanging = false;
 		m_pPlayer = new Player;
 		m_lObjectList.push_back(m_pPlayer);
-
+		
 	}
 }
+
+DWORD WINAPI Scene::ReceiveThread(LPVOID arg)
+{
+	int retval;
+	char* SERVERIP = (char*)"127.0.0.1";
+
+
+	// 소켓 생성
+	m_pSock = new SOCKET;
+	*m_pSock = socket(AF_INET, SOCK_STREAM, 0);
+	//if (sock == INVALID_SOCKET) err_quit("socket()");
+
+	// connect()
+	struct sockaddr_in serveraddr;
+	memset(&serveraddr, 0, sizeof(serveraddr));
+	serveraddr.sin_family = AF_INET;
+	inet_pton(AF_INET, SERVERIP, &serveraddr.sin_addr);
+	serveraddr.sin_port = htons(SERVERPORT);
+	retval = connect(*m_pSock, (struct sockaddr*)&serveraddr, sizeof(serveraddr));
+	//if (retval == SOCKET_ERROR) err_quit("connect()");
+
+	StateMsgType* typeBuf;
+	typeBuf = new StateMsgType;
+
+	while (1) {
+		WaitForSingleObject(*m_pWriteEvent, INFINITE);   // 쓰기 완료 대기
+
+		retval = recv(*m_pSock, (char*)typeBuf, sizeof(StateMsgType), 0);
+
+		SetEvent(*m_pReadEvent);
+	}
+
+	return 0;
+}
+

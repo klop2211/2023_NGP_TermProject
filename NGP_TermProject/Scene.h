@@ -27,6 +27,15 @@ public:
 	// 게임 시작전 페이드인
 	void DrawChangeStart(HDC& memDc);
 	void UpdateChangeStart(float elapsed);
+
+
+	HANDLE GetReadEvent() const { return m_pReadEvent; }
+	bool IsGameStart() const { return m_bStart; }
+
+private:
+	static DWORD WINAPI ReceiveThread(LPVOID arg);
+
+
 private:
 	Player* m_pPlayer;
 	std::list<Object*> m_lObjectList;
@@ -56,5 +65,10 @@ private:
 	int m_iMx, m_iMy;
 	// 드래그 시 시작 마우스 좌표 저장
 	int m_iStartX, m_iStartY;
+
+	static SOCKET* m_pSock;
+	static HANDLE* m_pReadEvent;
+	static HANDLE* m_pWriteEvent;
+
 };
 

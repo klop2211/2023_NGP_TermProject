@@ -21,6 +21,8 @@
 #include <random>
 #include <list>
 
+
+
 #define WINWIDTH 1600		//윈도우 가로
 #define WINHEIGHT 900		//윈도우 세로
 
@@ -55,3 +57,5 @@
 enum class CardName : int8_t { N_rhlddufvk, N_sktjsckd, N_dbtjdrkdcjs, N_wjrfydvh, N_aodfyddufvk, N_qksdnjftja, N_dusghkstja, N_cjdfydwls, N_cjdfydcnftn, N_ghltjsckd, N_dmsgkdbtjdxks };
 enum class CardRect : int8_t { R_main, R_tier1, R_tier2, R_tier3 };
 enum class TriIndex : int8_t { I_Tier1, I_Tier2, I_Tier3, I_selected };
+
+
