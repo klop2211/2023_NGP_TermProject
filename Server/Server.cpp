@@ -74,7 +74,7 @@ DWORD WINAPI ProcessClient1(LPVOID arg)
 	while (true)
 	{
 		retval = WaitForSingleObject(events[RoomNum].hClient1Event, INFINITE);
-		printf("hClient1Event Run\n");
+		//printf("hClient1Event Run\n");
 
 		// 클라이언트 처리 로직
 
@@ -149,7 +149,7 @@ DWORD WINAPI ProcessClient2(LPVOID arg)
 	while (true)
 	{
 		retval = WaitForSingleObject(events[RoomNum].hClient2Event, INFINITE);
-		printf("hClient2Event Run\n");
+		//printf("hClient2Event Run\n");
 
 		// 클라이언트 처리 로직
 
@@ -224,7 +224,7 @@ DWORD WINAPI ProcessRoom(LPVOID arg)
 	while (true)
 	{
 		retval = WaitForSingleObject(events[RoomNum].hRoomEvent, INFINITE);
-		printf("server Run\n");
+		//printf("server Run\n");
 
 		pGameRoom->Update(SharedBuffer[RoomNum]);
 

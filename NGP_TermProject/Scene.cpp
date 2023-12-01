@@ -428,6 +428,11 @@ DWORD WINAPI Scene::ReceiveThread(LPVOID arg)
 				PostQuitMessage(0);
 			}
 
+			PlayerLocationMsg* temp = (PlayerLocationMsg*)m_pStateMsgArgu;
+			if (temp->PlayerId != m_iClientNum)
+			{
+				break;
+			}
 		}
 		SetEvent(*m_pReadEvent);
 	}
