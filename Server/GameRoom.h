@@ -9,7 +9,7 @@ class GameRoom
 	enum PhaseEnum {WolfPhase, BatPhase, BossPhase};
 
 public:
-	GameRoom(array<SOCKET, MAX_ROOMS>&);
+	GameRoom(array<SOCKET, MAX_CLIENTS>&);
 	~GameRoom();
 public:
 	void SetElapsedTime();
@@ -44,6 +44,8 @@ private:
 
 	// 플레이어의 위치 리스트
 	std::array<FPOINT, MAX_CLIENTS> m_PlayerLocations;
+	// 플레이어의 상태 리스트
+	std::array< PStateName, MAX_CLIENTS> m_PlayerState;
 
 	// 몬스터의 일련 번호
 	BYTE m_iWolfSN, m_iBatSN;

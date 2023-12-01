@@ -7,7 +7,7 @@
 #include "MonsterState.h"
 #include "MemoryStream.h"
 
-GameRoom::GameRoom(array<SOCKET, MAX_ROOMS>& ClientSocket)
+GameRoom::GameRoom(array<SOCKET, MAX_CLIENTS>& ClientSocket)
 {
 	m_iWolfSN = m_iBatSN = 0;
 	m_pCastle = new Castle();
@@ -35,11 +35,12 @@ void GameRoom::Update(array<StateMsgInfo, MAX_CLIENTS> StateMsg)
 {
 	SetElapsedTime();
 	UpdateUseStateMsg(StateMsg);
-	UpdateEnemy();
-	SpawnEnemy();
+	WritePlayerLocation();
+	//UpdateEnemy();
+	//SpawnEnemy();
 
 
-	// m_pStream->Send();
+	//m_pStream->Send();
 }
 
 void GameRoom::SpawnEnemy()
@@ -210,6 +211,7 @@ void GameRoom::WritePlayerLocation()
 		PLM.PlayerId = i;
 		PLM.Location.x = m_PlayerLocations[i].x;
 		PLM.Location.y = m_PlayerLocations[i].y;
+		PLM.State = m_PlayerState[i];
 
 		// TODO: »èÁ¦
 		m_pStream->Init();
@@ -239,15 +241,19 @@ void GameRoom::WriteCastleHp()
 //
 void GameRoom::ReadPlayerLocation(StateMsgArgu* SMA)
 {
-	PlayerLocationMsg* PLM = dynamic_cast<PlayerLocationMsg*>(SMA);
+	PlayerLocationMsg* PLM = new PlayerLocationMsg();
+	memcpy(PLM, SMA, sizeof(PlayerLocationMsg));
+
 	int ClientNum = PLM->PlayerId;
 	POINT Location = PLM->Location;
+	PStateName PSN = PLM->State;
 
-	if (ClientNum == -1)
+	if (ClientNum == 255)
 	{
 		return;
 	}
 
 	m_PlayerLocations[ClientNum].x = Location.x;
 	m_PlayerLocations[ClientNum].y = Location.y;
+	m_PlayerState[ClientNum] = PSN;
 }

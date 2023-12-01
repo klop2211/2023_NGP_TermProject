@@ -32,7 +32,7 @@ using std::array;
 struct RoomArg
 {
 	//array<HANDLE, MAX_ROOMS> Client;
-	array<SOCKET, MAX_ROOMS> Clients;
+	array<SOCKET, MAX_CLIENTS> Clients;
 	BYTE RoomNumber;
 };
 

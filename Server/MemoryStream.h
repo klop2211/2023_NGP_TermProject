@@ -5,8 +5,12 @@
 class MemoryStream
 {
 public:
-	MemoryStream(array<SOCKET, MAX_ROOMS>& sockets)
-		: m_Sockets(sockets) {};
+	MemoryStream(array<SOCKET, MAX_CLIENTS>& sockets)
+		: m_Sockets(sockets),
+		m_iNowWriteIndex(0)
+	{
+		Init();
+	};
 
 	template<typename Type>
 	void Write(const Type&, int bytes = -1);
@@ -24,7 +28,7 @@ private:
 	int m_iNowWriteIndex;
 
 	// 보낼 소켓들
-	array<SOCKET, MAX_ROOMS> m_Sockets;
+	array<SOCKET, MAX_CLIENTS> m_Sockets;
 };
 
 template<typename Type>
@@ -49,6 +53,7 @@ void MemoryStream::Write(const Type& data, int bytes)
 
 	memcpy_s(buf + m_iNowWriteIndex, SENDBUFFERSIZE - (m_iNowWriteIndex + size), &data, size);
 	m_iNowWriteIndex += size;
+	buf[m_iNowWriteIndex] = '\0';
 }
  
 template<typename Type>

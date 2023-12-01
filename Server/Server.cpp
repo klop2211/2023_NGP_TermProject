@@ -84,7 +84,7 @@ DWORD WINAPI ProcessClient1(LPVOID arg)
 		BYTE lower6Bits = 0;
 		StateMsgArgu* StateMsgArg = nullptr;
 
-		int ReceiveStateMsg = recv(client_sockets[Client1], (char*)&StateMsg, sizeof(BYTE), 0);
+		int ReceiveStateMsg = recv(client_sockets[Client1], (char*)&StateMsg, sizeof(BYTE), MSG_WAITALL);
 		if (ReceiveStateMsg == SOCKET_ERROR) {
 			err_quit("ReceiveStateMsg Err");
 		}
@@ -125,10 +125,6 @@ DWORD WINAPI ProcessClient1(LPVOID arg)
 		//StateMsg 구체화되면 수정 예정
 		bool isGameOver = IsGameOver(lower6Bits, StateMsgArg);
 	
-		// 받은 내용 그대로 공유 버퍼에 쓰기
-		SharedBuffer[RoomNum][0].StateMsg = StateMsg;
-		SharedBuffer[RoomNum][0].pStateMsgArgu = StateMsgArg;
-	
 		if (isGameOver)
 		{
 			CloseHandle(GetCurrentThread());
@@ -163,16 +159,16 @@ DWORD WINAPI ProcessClient2(LPVOID arg)
 		BYTE lower6Bits = 0;
 		StateMsgArgu * StateMsgArg = nullptr;
 
-		int ReceiveStateMsg = recv(client_sockets[Client2], (char*)&StateMsg, sizeof(BYTE), 0);
+		int ReceiveStateMsg = recv(client_sockets[Client2], (char*)&StateMsg, sizeof(BYTE), MSG_WAITALL);
 		if (ReceiveStateMsg == SOCKET_ERROR) {
 			err_quit("ReceiveStateMsg Err");
 		}
 		else {
 			// 상위 2비트 추출
-			upper2Bits = ReceiveStateMsg >> 6;
+			upper2Bits = StateMsg >> 6;
 
 			// 하위 6비트 추출
-			lower6Bits = ReceiveStateMsg & 0x3F;
+			lower6Bits = StateMsg & 0x3F;
 
 			// 추가로 읽을 바이트 사이즈
 			int MsgSize = GetStateMsgType(lower6Bits);
@@ -198,9 +194,6 @@ DWORD WINAPI ProcessClient2(LPVOID arg)
 
 		// 하위 6비트를 통해 게임오버 판별
 		bool isGameOver = IsGameOver(lower6Bits, StateMsgArg);
-
-		SharedBuffer[RoomNum][1].StateMsg = StateMsg;
-		SharedBuffer[RoomNum][1].pStateMsgArgu = StateMsgArg;
 
 		if (isGameOver)
 		{
