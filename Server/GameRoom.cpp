@@ -216,6 +216,7 @@ void GameRoom::WritePlayerLocation()
 		// TODO: »èÁ¦
 		m_pStream->Init();
 		m_pStream->Write(StateMsgType::PlayerLocation);
+		m_pStream->Send();
 		m_pStream->Write(PLM);
 		m_pStream->Send();
 	}

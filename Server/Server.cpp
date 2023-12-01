@@ -359,7 +359,6 @@ int main(int argc, char* argv[])
 
 			// 클라1 신호 on
 			SetEvent(events[RoomNum++].hClient1Event);
-			printf("hClient1Event On\n");
 
 		}
 		else
