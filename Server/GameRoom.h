@@ -46,6 +46,8 @@ private:
 	std::array<FPOINT, MAX_CLIENTS> m_PlayerLocations;
 	// 플레이어의 상태 리스트
 	std::array< PStateName, MAX_CLIENTS> m_PlayerState;
+	// 플레이어 방향 리스트
+	std::array<BYTE, MAX_CLIENTS> m_PlayerDirection;
 
 	// 몬스터의 일련 번호
 	BYTE m_iWolfSN, m_iBatSN;

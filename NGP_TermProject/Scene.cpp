@@ -67,12 +67,14 @@ void Scene::Update(float elapsed)
 			sma.Location.x = (int)m_pPlayer->GetLocation().x;
 			sma.Location.y = (int)m_pPlayer->GetLocation().y;
 			sma.PlayerId = m_iClientNum;
+			sma.Direction = m_pPlayer->GetDir();
 			sma.State = m_pPlayer->GetStateName();
 		}
 		else {
 			sma.Location.x = 100;
 			sma.Location.y = 200;
 			sma.PlayerId = m_iClientNum;
+			sma.Direction = 0;
 			sma.State = PStateName::Move;
 		}
 		send(*m_pSock, (char*)&sma, sizeof(PlayerLocationMsg), 0);
@@ -88,6 +90,7 @@ void Scene::Update(float elapsed)
 		PlayerLocationMsg* temp = (PlayerLocationMsg*)m_pStateMsgArgu;
 		if (temp->PlayerId != m_iClientNum && m_pPlayer2 != NULL) {
 			m_pPlayer2->SetLocation(temp->Location);
+			m_pPlayer2->SetDir((Direction)temp->Direction);
 			if(m_pPlayer2->GetStateName() != temp->State)
 				m_pPlayer2->ChangeState(temp->State);
 		}
@@ -374,6 +377,7 @@ DWORD WINAPI Scene::ReceiveThread(LPVOID arg)
 	temp.Location = POINT{ 0,0 };
 	temp.PlayerId = -1;
 	temp.State = PStateName::Move;
+	temp.Direction = 0;
 	send(*m_pSock, (char*)&temp, sizeof(PlayerLocationMsg), 0);
 
 	m_pStateMsgArgu = NULL;

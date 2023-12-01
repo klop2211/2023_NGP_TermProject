@@ -212,6 +212,7 @@ void GameRoom::WritePlayerLocation()
 		PLM.Location.x = m_PlayerLocations[i].x;
 		PLM.Location.y = m_PlayerLocations[i].y;
 		PLM.State = m_PlayerState[i];
+		PLM.Direction = m_PlayerDirection[i];
 
 		// TODO: »èÁ¦
 		m_pStream->Init();
@@ -248,6 +249,7 @@ void GameRoom::ReadPlayerLocation(StateMsgArgu* SMA)
 	int ClientNum = PLM->PlayerId;
 	POINT Location = PLM->Location;
 	PStateName PSN = PLM->State;
+	int dirction = PLM->Direction;
 
 	if (ClientNum == 255)
 	{
@@ -257,4 +259,5 @@ void GameRoom::ReadPlayerLocation(StateMsgArgu* SMA)
 	m_PlayerLocations[ClientNum].x = Location.x;
 	m_PlayerLocations[ClientNum].y = Location.y;
 	m_PlayerState[ClientNum] = PSN;
+	m_PlayerDirection[ClientNum] = dirction;
 }

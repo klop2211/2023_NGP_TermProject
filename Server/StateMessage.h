@@ -48,6 +48,7 @@ struct PlayerLocationMsg : StateMsgArgu
 	BYTE PlayerId;
 	POINT Location;
 	PStateName State;
+	BYTE Direction;
 };
 
 // 서버 <-> 클라

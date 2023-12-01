@@ -43,7 +43,7 @@ void GameFramework::Draw()
 
 void GameFramework::FrameAdvance()
 {
-	auto interval = std::chrono::milliseconds(33);
+	auto interval = std::chrono::milliseconds(16);
 	auto currentTime = std::chrono::system_clock::now();
 	if (currentTime - m_tPreviousTime >= interval) {
 		if (m_pScene->IsGameStart()) {
