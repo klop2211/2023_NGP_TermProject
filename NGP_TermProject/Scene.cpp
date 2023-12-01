@@ -15,7 +15,7 @@ StateMsgArgu*	Scene::m_pStateMsgArgu;
 Scene::Scene()
 {
 	m_pPlayer = NULL;
-
+	m_pPlayer2 = NULL;
 	m_pCastle = new Castle;
 
 	m_fChangeCount = 0;
@@ -77,7 +77,7 @@ void Scene::Update(float elapsed)
 
 	if (m_pStateMsgArgu != NULL) {
 		PlayerLocationMsg* temp = (PlayerLocationMsg*)(m_pStateMsgArgu);
-		if (temp->PlayerId != m_iClientNum) {
+		if (temp->PlayerId != m_iClientNum && m_pPlayer2 != NULL) {
 			m_pPlayer2->SetLocation(temp->Location);
 			m_pPlayer2->ChangeState(temp->State);
 		}
