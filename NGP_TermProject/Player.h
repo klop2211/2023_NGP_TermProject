@@ -7,7 +7,7 @@
 #define FRAME_SPEED 6
 #define PLAYER_MOVE_SPEED 170
 
-enum Direction{ Left, Right };
+enum Direction : BYTE { Left, Right };
 
 class Card;
 
