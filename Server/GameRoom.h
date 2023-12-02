@@ -53,8 +53,7 @@ private:
 	int m_iPhase;
 
 	// 스폰 타이머
-	float m_fBatSpawnTimer;
-	float m_fWolfSpawnTimer;
+	float m_fBatSpawnTimer, m_fWolfSpawnTimer;
 
 	class MemoryStream* m_pStream;
 };

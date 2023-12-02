@@ -109,7 +109,7 @@ DWORD WINAPI ProcessClient1(LPVOID arg)
 				// 추가로 받을 인수 동적할당
 				// TODO: 적당한 시점에 해제하거나 스마트 포인터 사용해야함
 				StateMsgArg = MsgInstence::GetStateMsgArguType(lower6Bits);
-				ReceiveStateMsg = recv(client_sockets[Client1], (char*)StateMsgArg, MsgSize, 0);
+				ReceiveStateMsg = recv(client_sockets[Client1], (char*)StateMsgArg, MsgSize, MSG_WAITALL);
 				if (ReceiveStateMsg == SOCKET_ERROR) {
 					err_quit("ReceiveStateMsgArg Err");
 				}
@@ -180,7 +180,7 @@ DWORD WINAPI ProcessClient2(LPVOID arg)
 				// 추가로 받을 인수 동적할당
 				// TODO: 적당한 시점에 해제하거나 스마트 포인터 사용해야함
 				StateMsgArg = MsgInstence::GetStateMsgArguType(lower6Bits);
-				ReceiveStateMsg = recv(client_sockets[Client2], (char*)StateMsgArg, MsgSize, 0);
+				ReceiveStateMsg = recv(client_sockets[Client2], (char*)StateMsgArg, MsgSize, MSG_WAITALL);
 				if (ReceiveStateMsg == SOCKET_ERROR) {
 					err_quit("ReceiveStateMsgArg Err");
 				}
@@ -236,15 +236,6 @@ DWORD WINAPI ProcessRoom(LPVOID arg)
 
 int main(int argc, char* argv[])
 {
-	// 방 로직 확인용 코드
-	//{
-	//	GameRoom* pGameRoom = new GameRoom;
-	//	while (true)
-	//	{
-	//		pGameRoom->Update(SharedBuffer[0]);
-	//		pGameRoom->WriteMonsterState(MonsterType::Wolf, 0, MonsterStateType::Attack);
-	//	}
-	//}
 	int retval;
 	
 	// 윈속 초기화
