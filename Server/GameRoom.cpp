@@ -6,13 +6,13 @@
 #include "Castle.h"
 #include "MonsterState.h"
 #include "PlayerInfo.h"
-#include "MemoryStream.h"
+#include "MemoryWriteStream.h"
 
 GameRoom::GameRoom(array<SOCKET, MAX_CLIENTS>& ClientSocket)
 {
 	m_iWolfSN = m_iBatSN = 0;
 	m_pCastle = new Castle();
-	m_pStream = new MemoryStream(ClientSocket);
+	m_pStream = new MemoryWriteStream(ClientSocket);
 	for (auto& p : m_pPlayerList)
 	{
 		p = new PlayerInfo();

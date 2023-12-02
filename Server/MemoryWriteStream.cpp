@@ -1,8 +1,8 @@
 #include "Common.h"
-#include "MemoryStream.h"
+#include "MemoryWriteStream.h"
 #include "StateMessage.h"
 
-void MemoryStream::Send()
+void MemoryWriteStream::Send()
 {
 	int retval;
 	for (const auto& s : m_Sockets)
@@ -15,7 +15,7 @@ void MemoryStream::Send()
 	Init();
 }
 
-void MemoryStream::Init()
+void MemoryWriteStream::Init()
 {
 	m_iNowWriteIndex = 0;
 	memset(buf, 0, SENDBUFFERSIZE);

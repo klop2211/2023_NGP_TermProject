@@ -132,7 +132,7 @@
     <ClCompile Include="Common.cpp" />
     <ClCompile Include="CommonMonster.cpp" />
     <ClCompile Include="GameRoom.cpp" />
-    <ClCompile Include="MemoryStream.cpp" />
+    <ClCompile Include="MemoryWriteStream.cpp" />
     <ClCompile Include="Monster.cpp" />
     <ClCompile Include="MonsterState.cpp" />
     <ClCompile Include="MsgInstence.cpp" />
@@ -147,7 +147,7 @@
     <ClInclude Include="Common.h" />
     <ClInclude Include="CommonMonster.h" />
     <ClInclude Include="GameRoom.h" />
-    <ClInclude Include="MemoryStream.h" />
+    <ClInclude Include="MemoryWriteStream.h" />
     <ClInclude Include="Monster.h" />
     <ClInclude Include="MonsterState.h" />
     <ClInclude Include="MsgInstence.h" />

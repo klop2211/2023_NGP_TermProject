@@ -2,10 +2,10 @@
 
 #define SENDBUFFERSIZE 1024
 
-class MemoryStream
+class MemoryWriteStream
 {
 public:
-	MemoryStream(array<SOCKET, MAX_CLIENTS>& sockets)
+	MemoryWriteStream(array<SOCKET, MAX_CLIENTS>& sockets)
 		: m_Sockets(sockets),
 		m_iNowWriteIndex(0)
 	{
@@ -14,6 +14,7 @@ public:
 
 	template<typename Type>
 	void Write(const Type&, int bytes = -1);
+
 	void Send();
 	void Init();
 private:
@@ -27,12 +28,12 @@ private:
 	// 스트림 Write에 적을 인덱스 위치
 	int m_iNowWriteIndex;
 
-	// 보낼 소켓들
+	// 소켓들
 	array<SOCKET, MAX_CLIENTS> m_Sockets;
 };
 
 template<typename Type>
-void MemoryStream::Write(const Type& data, int bytes)
+void MemoryWriteStream::Write(const Type& data, int bytes)
 {
 	//CheckArithmetic(data);
 
@@ -57,7 +58,7 @@ void MemoryStream::Write(const Type& data, int bytes)
 }
  
 template<typename Type>
-void MemoryStream::CheckArithmetic(const Type& data)
+void MemoryWriteStream::CheckArithmetic(const Type& data)
 {
 	static_assert(
 		std::is_arithmetic<Type>::value ||

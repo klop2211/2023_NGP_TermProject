@@ -55,5 +55,5 @@ private:
 	// 스폰 타이머
 	float m_fBatSpawnTimer, m_fWolfSpawnTimer;
 
-	class MemoryStream* m_pStream;
+	class MemoryWriteStream* m_pStream;
 };
