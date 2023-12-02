@@ -29,9 +29,6 @@ public:
 	void DrawChangeStart(HDC& memDc);
 	void UpdateChangeStart(float elapsed);
 
-
-	void WaitReadEvent() const { WaitForSingleObject(*m_pReadEvent, INFINITE); }
-	void SetWriteEvent() { SetEvent(*m_pWriteEvent); }
 	bool IsGameStart() const { return m_bStart; }
 
 

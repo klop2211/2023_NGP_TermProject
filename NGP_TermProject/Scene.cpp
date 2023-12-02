@@ -5,6 +5,8 @@
 #include "Castle.h"
 #include "../Server/StateMessage.h"
 
+#define MULTI_PLAY
+
 SOCKET*			Scene::m_pSock;
 HANDLE*			Scene::m_pReadEvent;
 HANDLE*			Scene::m_pWriteEvent;
@@ -60,6 +62,8 @@ void Scene::Update(float elapsed)
 
 			//TODO: 게임종료
 		}
+
+#ifdef MULTI_PLAY
 		WaitForSingleObject(*m_pReadEvent, INFINITE);
 
 		if (m_pStateMsgArgu != NULL) {
@@ -93,6 +97,9 @@ void Scene::Update(float elapsed)
 		send(*m_pSock, (char*)&sma, sizeof(PlayerLocationMsg), 0);
 
 		SetEvent(*m_pWriteEvent);
+
+#endif // STAND_ALONE
+
 	}
 	else {
 		if (m_bChanging)
@@ -153,11 +160,16 @@ void Scene::OnProcessingMouseMessage(HWND hWnd, UINT message, WPARAM wParam, LPA
 				// GameStart 버튼
 				if (m_iMy >= 550 && m_iMy <= 650)
 				{
+#ifdef MULTI_PLAY
 					m_pReadEvent = new HANDLE;
 					m_pWriteEvent = new HANDLE;
 					*m_pReadEvent = CreateEvent(NULL, FALSE, FALSE, NULL);
 					*m_pWriteEvent = CreateEvent(NULL, FALSE, TRUE, NULL);
 					CreateThread(NULL, 0, ReceiveThread, NULL, 0, NULL);
+
+#endif // DEBUG
+
+
 					m_bChanging = true;
 				}
 				// Quit 버튼
