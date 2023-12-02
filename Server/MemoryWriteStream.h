@@ -1,7 +1,5 @@
 #pragma once
 
-#define SENDBUFFERSIZE 1024
-
 class MemoryWriteStream
 {
 public:
@@ -23,7 +21,7 @@ private:
 	void CheckArithmetic(const Type&);
 
 	// 송신용 버퍼
-	char buf[SENDBUFFERSIZE];
+	char buf[STREAMBUFFERSIZE];
 
 	// 스트림 Write에 적을 인덱스 위치
 	int m_iNowWriteIndex;
@@ -47,12 +45,12 @@ void MemoryWriteStream::Write(const Type& data, int bytes)
 		size = bytes;
 	}
 
-	if (m_iNowWriteIndex + size > SENDBUFFERSIZE)
+	if (m_iNowWriteIndex + size > BUFFERSIZE)
 	{
 		Send();
 	}
 
-	memcpy_s(buf + m_iNowWriteIndex, SENDBUFFERSIZE - (m_iNowWriteIndex + size), &data, size);
+	memcpy_s(buf + m_iNowWriteIndex, BUFFERSIZE - (m_iNowWriteIndex + size), &data, size);
 	m_iNowWriteIndex += size;
 	buf[m_iNowWriteIndex] = '\0';
 }

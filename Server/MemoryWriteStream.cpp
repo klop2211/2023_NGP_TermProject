@@ -18,5 +18,5 @@ void MemoryWriteStream::Send()
 void MemoryWriteStream::Init()
 {
 	m_iNowWriteIndex = 0;
-	memset(buf, 0, SENDBUFFERSIZE);
+	memset(buf, 0, STREAMBUFFERSIZE);
 }

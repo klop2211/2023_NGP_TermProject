@@ -27,6 +27,8 @@
 #define CLIENTWINWIDTH	1600
 #define CLIENTWINHEIGHT	900
 
+#define STREAMBUFFERSIZE 1024
+
 using std::array;
 
 struct RoomArg
