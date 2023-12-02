@@ -1,4 +1,6 @@
 #pragma once
+#include "StateMessage.h"
+
 class MemoryReadStream
 {
 public:
@@ -10,7 +12,9 @@ public:
 	};
 
 	template<typename Type>
-	void Read(const Type&, int bytes = -1);
+	void Read(Type*, int bytes = -1);
+
+	StateMsgArgu* GetStateMsg(StateMsgType, int*);
 
 	void Init();
 private:
@@ -20,30 +24,43 @@ private:
 	// 스트림 Write에 적을 인덱스 위치
 	int m_iNowReadIndex;
 
+	// buf에 담긴 바이트 수
+	int m_iBufSize;
+
 	// 소켓
 	SOCKET m_Socket;
 };
 
 template<typename Type>
-inline void MemoryReadStream::Read(const Type&, int bytes)
+inline void MemoryReadStream::Read(Type* data, int bytes)
 {
 	int retval;
 	// 0이라면 통으로 읽을 차례
-	if (m_iNowReadIndex == 0)
+	if (m_iNowReadIndex == -1)
 	{
-		retval = recv(socket, (char*)&m_iNowReadIndex, sizeof(int), MSG_WAITALL);
+		retval = recv(socket, (char*)&m_iBufSize, sizeof(int), MSG_WAITALL);
 		if (retval == SOCKET_ERROR) {
 			err_quit("MemoryReadStream::Read bufsize Err");
 		}
 
-		retval = recv(socket, (char*)buf, m_iNowReadIndex, MSG_WAITALL);
+		retval = recv(socket, (char*)buf, m_iBufSize, MSG_WAITALL);
 		if (retval == SOCKET_ERROR) {
 			err_quit("MemoryReadStream::Read buf Err");
 		}
 	}
 	else
 	{
-		int ReadSize = sizeof(Type);
+		StateMsgType SMT;
+		int Size;
 
+		memcpy(&SMT, buf + m_iNowReadIndex, sizeof(StateMsgType));
+		data = GetStateMsg(SMT, &Size);
+
+		m_iNowReadIndex += sizeof(Size);
+
+		if (m_iNowReadIndex >= m_iBufSize)
+		{
+			m_iNowReadIndex = -1;
+		}
 	}
 }
