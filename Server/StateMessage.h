@@ -56,6 +56,8 @@ struct UseCardStateMsg : StateMsgArgu
 {
 	BYTE PlayerId;
 	CardType card;
+	//int Tripord[][4];
+	//BYTE damage;
 };
 
 // 서버 -> 클라 /

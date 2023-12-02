@@ -5,6 +5,7 @@
 #include "Bat.h"
 #include "Castle.h"
 #include "MonsterState.h"
+#include "PlayerInfo.h"
 #include "MemoryStream.h"
 
 GameRoom::GameRoom(array<SOCKET, MAX_CLIENTS>& ClientSocket)
@@ -12,12 +13,21 @@ GameRoom::GameRoom(array<SOCKET, MAX_CLIENTS>& ClientSocket)
 	m_iWolfSN = m_iBatSN = 0;
 	m_pCastle = new Castle();
 	m_pStream = new MemoryStream(ClientSocket);
+	for (auto& p : m_pPlayerList)
+	{
+		p = new PlayerInfo();
+	}
 }
 
 GameRoom::~GameRoom()
 {
 	delete m_pCastle;
 	delete m_pStream;
+	for (auto& p : m_pPlayerList)
+	{
+		delete p;
+		p = nullptr;
+	}
 }
 
 void GameRoom::SetElapsedTime()
@@ -36,11 +46,11 @@ void GameRoom::Update(array<StateMsgInfo, MAX_CLIENTS> StateMsg)
 	SetElapsedTime();
 	UpdateUseStateMsg(StateMsg);
 	WritePlayerLocation();
-	//UpdateEnemy();
 	//SpawnEnemy();
+	//UpdateEnemy();
 
 
-	//m_pStream->Send();
+	m_pStream->Send();
 }
 
 void GameRoom::SpawnEnemy()
@@ -154,30 +164,15 @@ void GameRoom::ProcessMonsterHpMsg(StateMsgArgu* Arg)
 	}
 }
 
-StateMsgByte GameRoom::MakeStateMsgByte(StateMsgType SMT)
-{
-	// 
-	StateMsgByte ReturnValue = 0;
-	ReturnValue = (StateMsgByte)SMT;
-
-	return ReturnValue;
-}
-
 void GameRoom::UpdateUseStateMsg(array<StateMsgInfo, MAX_CLIENTS> StateMsg)
 {
 	for (int i = 0; i < MAX_CLIENTS; i++)
 	{
 		switch (StateMsg[i].StateMsg)
 		{
-		//case (int)StateMsgType::MonsterHp:
-		//	ProcessMonsterHpMsg(StateMsg[i].pStateMsgArgu);
-		//	break;
 		case (int)StateMsgType::PlayerLocation:
 			ReadPlayerLocation(StateMsg[i].pStateMsgArgu);
 			break;
-		//case (int)StateMsgType::CastleHp:
-
-		//	break;
 		case (int)StateMsgType::UseCard:
 
 			break;
@@ -209,17 +204,13 @@ void GameRoom::WritePlayerLocation()
 	for (int i = 0; i < MAX_CLIENTS; i++)
 	{
 		PLM.PlayerId = i;
-		PLM.Location.x = m_PlayerLocations[i].x;
-		PLM.Location.y = m_PlayerLocations[i].y;
-		PLM.State = m_PlayerState[i];
-		PLM.Direction = m_PlayerDirection[i];
+		PLM.Location.x = m_pPlayerList[i]->GetLocation().x;
+		PLM.Location.y = m_pPlayerList[i]->GetLocation().y;
+		PLM.State = m_pPlayerList[i]->GetState();
+		PLM.Direction = m_pPlayerList[i]->GetDirection();
 
-		// TODO: »èÁ¦
-		m_pStream->Init();
 		m_pStream->Write(StateMsgType::PlayerLocation);
-		m_pStream->Send();
 		m_pStream->Write(PLM);
-		m_pStream->Send();
 	}
 }
 
@@ -256,8 +247,7 @@ void GameRoom::ReadPlayerLocation(StateMsgArgu* SMA)
 		return;
 	}
 
-	m_PlayerLocations[ClientNum].x = Location.x;
-	m_PlayerLocations[ClientNum].y = Location.y;
-	m_PlayerState[ClientNum] = PSN;
-	m_PlayerDirection[ClientNum] = dirction;
+	m_pPlayerList[ClientNum]->SetLocation(FPOINT(Location.x, Location.y));
+	m_pPlayerList[ClientNum]->SetState(PSN);
+	m_pPlayerList[ClientNum]->SetDirection(dirction);
 }
