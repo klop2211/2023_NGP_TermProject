@@ -395,11 +395,11 @@ DWORD WINAPI Scene::ReceiveThread(LPVOID arg)
 	m_pStateMsgArgu = NULL;
 	while (1) {
 		WaitForSingleObject(*m_pWriteEvent, INFINITE);   // 쓰기 완료 대기
-		if (m_pStateMsgArgu != NULL)
-			delete m_pStateMsgArgu;
 
 
 		for (int i = 0; i < 2; ++i) {
+			if (m_pStateMsgArgu != NULL)
+				delete m_pStateMsgArgu;
 			BYTE StateMsg;
 			BYTE upper2Bits = 0;
 			BYTE lower6Bits = 0;
