@@ -4,7 +4,7 @@ enum class PlayerMove : BYTE {};
 enum class CardType : BYTE {};
 enum class StateMsgType : BYTE {MonsterSpawn, MonsterHp, MonsterState, PlayerLocation, CastleHp, UseCard, GameStart};
 enum class MonsterStateType : BYTE {Move, Attack, Ice, Fire};
-enum class PStateName { Move, Stay, Stun, Skill };
+enum class PStateName : BYTE { Move, Stay, Stun, Skill };
 
 // 메세지의 헤더 역할, 이거보고 다음에 뭐가 올지 알 수 있음
 typedef BYTE StateMsgByte;
@@ -13,7 +13,7 @@ typedef BYTE StateMsgByte;
 struct StateMsgArgu
 {
 	// dynamic cast를 위해
-	virtual void Func() {};
+	//virtual void Func() {};
 };
 
 // 수신 구현 : *
