@@ -60,6 +60,18 @@ void Scene::Update(float elapsed)
 
 			//TODO: 霸烙辆丰
 		}
+		WaitForSingleObject(*m_pReadEvent, INFINITE);
+
+		if (m_pStateMsgArgu != NULL) {
+			PlayerLocationMsg* temp = (PlayerLocationMsg*)m_pStateMsgArgu;
+			if (temp->PlayerId != m_iClientNum && m_pPlayer2 != NULL) {
+				m_pPlayer2->SetLocation(temp->Location);
+				m_pPlayer2->SetDir((Direction)temp->Direction);
+				if (m_pPlayer2->GetStateName() != temp->State)
+					m_pPlayer2->ChangeState(temp->State);
+			}
+		}
+
 		StateMsgType smt = StateMsgType::PlayerLocation;
 		send(*m_pSock, (char*)&smt, sizeof(StateMsgType), 0);
 
@@ -74,12 +86,13 @@ void Scene::Update(float elapsed)
 		else {
 			sma.Location.x = 100;
 			sma.Location.y = 200;
-			sma.PlayerId = m_iClientNum;
+			sma.PlayerId = -1;
 			sma.Direction = 0;
 			sma.State = PStateName::Move;
 		}
 		send(*m_pSock, (char*)&sma, sizeof(PlayerLocationMsg), 0);
 
+		SetEvent(*m_pWriteEvent);
 	}
 	else {
 		if (m_bChanging)
@@ -87,15 +100,6 @@ void Scene::Update(float elapsed)
 	}
 
 
-	if (m_pStateMsgArgu != NULL) {
-		PlayerLocationMsg* temp = (PlayerLocationMsg*)m_pStateMsgArgu;
-		if (temp->PlayerId != m_iClientNum && m_pPlayer2 != NULL) {
-			m_pPlayer2->SetLocation(temp->Location);
-			m_pPlayer2->SetDir((Direction)temp->Direction);
-			if(m_pPlayer2->GetStateName() != temp->State)
-				m_pPlayer2->ChangeState(temp->State);
-		}
-	}
 
 	for (auto object : m_lObjectList) {
 		object->Update(elapsed);
@@ -354,7 +358,7 @@ void Scene::UpdateChangeStart(float elapsed)
 DWORD WINAPI Scene::ReceiveThread(LPVOID arg)
 {
 	int retval;
-	char* SERVERIP = (char*)"127.0.0.1";
+	char* SERVERIP = (char*)"1.242.205.234";
 
 
 	// 家南 积己
@@ -373,9 +377,9 @@ DWORD WINAPI Scene::ReceiveThread(LPVOID arg)
 
 	StateMsgType typeBuf;
 	
-	retval = recv(*m_pSock, (char*)&typeBuf, sizeof(BYTE), 0);
+	retval = recv(*m_pSock, (char*)&typeBuf, sizeof(BYTE), MSG_WAITALL);
 
-	retval = recv(*m_pSock, (char*)&m_iClientNum, sizeof(int), 0);
+	retval = recv(*m_pSock, (char*)&m_iClientNum, sizeof(int), MSG_WAITALL);
 
 
 	StateMsgType smt = StateMsgType::PlayerLocation;
@@ -400,7 +404,7 @@ DWORD WINAPI Scene::ReceiveThread(LPVOID arg)
 			BYTE upper2Bits = 0;
 			BYTE lower6Bits = 0;
 
-			retval = recv(*m_pSock, (char*)&StateMsg, sizeof(BYTE), 0);
+			retval = recv(*m_pSock, (char*)&StateMsg, sizeof(BYTE), MSG_WAITALL);
 			if (retval == SOCKET_ERROR) {
 				PostQuitMessage(0);
 			}
@@ -435,7 +439,7 @@ DWORD WINAPI Scene::ReceiveThread(LPVOID arg)
 				break;
 			}
 
-			retval = recv(*m_pSock, (char*)m_pStateMsgArgu, m_iMsgSize, 0);
+			retval = recv(*m_pSock, (char*)m_pStateMsgArgu, m_iMsgSize, MSG_WAITALL);
 			if (retval == SOCKET_ERROR) {
 				PostQuitMessage(0);
 			}
