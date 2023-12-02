@@ -51,3 +51,37 @@ void MonsterAttackState::Exit(Monster* monster)
 {
 	std::cout << typeid(monster).name() << "ÀÇ " << monster->GetSerialNum() << "¹ø °´Ã¼: Attack EXIT" << std::endl;
 }
+
+BossMoveState* BossMoveState::Instance()
+{
+	return nullptr;
+}
+
+void BossMoveState::Enter(Monster*)
+{
+}
+
+void BossMoveState::Execute(Monster*, float)
+{
+}
+
+void BossMoveState::Exit(Monster*)
+{
+}
+
+BossUnBreakPatternState* BossUnBreakPatternState::Instance()
+{
+	return nullptr;
+}
+
+void BossUnBreakPatternState::Enter(Monster*)
+{
+}
+
+void BossUnBreakPatternState::Execute(Monster*, float)
+{
+}
+
+void BossUnBreakPatternState::Exit(Monster*)
+{
+}

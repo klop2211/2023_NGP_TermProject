@@ -136,6 +136,7 @@
     <ClCompile Include="Monster.cpp" />
     <ClCompile Include="MonsterState.cpp" />
     <ClCompile Include="MsgInstence.cpp" />
+    <ClCompile Include="Papyrus.cpp" />
     <ClCompile Include="PlayerInfo.cpp" />
     <ClCompile Include="Server.cpp" />
     <ClCompile Include="Wolf.cpp" />
@@ -150,6 +151,7 @@
     <ClInclude Include="Monster.h" />
     <ClInclude Include="MonsterState.h" />
     <ClInclude Include="MsgInstence.h" />
+    <ClInclude Include="Papyrus.h" />
     <ClInclude Include="PlayerInfo.h" />
     <ClInclude Include="StateMessage.h" />
     <ClInclude Include="Wolf.h" />

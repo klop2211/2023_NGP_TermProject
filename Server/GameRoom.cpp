@@ -60,7 +60,7 @@ void GameRoom::SpawnEnemy()
 	case WolfPhase:
 		m_fWolfSpawnTimer += m_fElapsedTime;
 
-		if (m_fWolfSpawnTimer >= 3.f)
+		if (m_fWolfSpawnTimer >= 5.f)
 		{
 			WriteMonsterSpawn(MonsterType::Wolf, m_iBatSN);
 
@@ -72,7 +72,7 @@ void GameRoom::SpawnEnemy()
 	case BatPhase:
 		m_fBatSpawnTimer += m_fElapsedTime;
 
-		if (m_fBatSpawnTimer >= 3.f)
+		if (m_fBatSpawnTimer >= 5.f)
 		{
 			WriteMonsterSpawn(MonsterType::Bat, m_iBatSN);
 
@@ -93,21 +93,27 @@ void GameRoom::UpdateEnemy()
 {
 	for (auto it : m_BatMap)
 	{
-		it.second->Update(m_fElapsedTime);
-		if (it.second->GetCanAttack())
+		int MonNum = it.first;
+		Bat* bat = it.second;
+
+		bat->Update(m_fElapsedTime);
+		if (bat->GetCanAttack())
 		{
-			WriteMonsterState(MonsterType::Bat, it.first, MonsterStateType::Attack);
-			m_pCastle->GetDamage(it.second->GetDamage());
+			WriteMonsterState(MonsterType::Bat, MonNum, MonsterStateType::Attack);
+			m_pCastle->GetDamage(bat->GetDamage());
 			WriteCastleHp();
 		}
 	}
 	for (auto it : m_WolfMap)
 	{
-		it.second->Update(m_fElapsedTime);
-		if (it.second->GetCanAttack())
+		int MonNum = it.first;
+		Wolf* wolf = it.second;
+
+		wolf->Update(m_fElapsedTime);
+		if (wolf->GetCanAttack())
 		{
 			WriteMonsterState(MonsterType::Wolf, it.first, MonsterStateType::Attack);
-			m_pCastle->GetDamage(it.second->GetDamage());
+			m_pCastle->GetDamage(wolf->GetDamage());
 			WriteCastleHp();
 		}
 	}
@@ -234,14 +240,15 @@ void GameRoom::WriteCastleHp()
 //
 void GameRoom::ReadPlayerLocation(StateMsgArgu* SMA)
 {
-	PlayerLocationMsg* PLM = new PlayerLocationMsg();
-	memcpy(PLM, SMA, sizeof(PlayerLocationMsg));
+	PlayerLocationMsg* PLM = (PlayerLocationMsg*)SMA;
+	//memcpy(PLM, SMA, sizeof(PlayerLocationMsg));
 
 	int ClientNum = PLM->PlayerId;
 	POINT Location = PLM->Location;
 	PStateName PSN = PLM->State;
 	int dirction = PLM->Direction;
 
+	// Dummy Data 무시 (클라측에선 -1)
 	if (ClientNum == 255)
 	{
 		return;

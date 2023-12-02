@@ -63,6 +63,9 @@
     <ClCompile Include="PlayerInfo.cpp">
       <Filter>2019180016\Source</Filter>
     </ClCompile>
+    <ClCompile Include="Papyrus.cpp">
+      <Filter>2019180016\Source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Common.h">
@@ -99,6 +102,9 @@
       <Filter>2019180016\Header</Filter>
     </ClInclude>
     <ClInclude Include="PlayerInfo.h">
+      <Filter>2019180016\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Papyrus.h">
       <Filter>2019180016\Header</Filter>
     </ClInclude>
   </ItemGroup>

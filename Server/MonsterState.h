@@ -39,3 +39,28 @@ public:
 
 	virtual void Exit(Monster*);
 };
+
+// ================PAPYRUS==================
+class BossMoveState :public MonsterState
+{
+public:
+	static BossMoveState* Instance();
+
+	virtual void Enter(Monster*);
+
+	virtual void Execute(Monster*, float);
+
+	virtual void Exit(Monster*);
+};
+
+class BossUnBreakPatternState :public MonsterState
+{
+public:
+	static BossUnBreakPatternState* Instance();
+
+	virtual void Enter(Monster*);
+
+	virtual void Execute(Monster*, float);
+
+	virtual void Exit(Monster*);
+};
