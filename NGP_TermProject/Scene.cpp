@@ -24,6 +24,7 @@ Scene::Scene()
 	m_cLoadBit.Load(TEXT("윈플 텀프 이미지\\레온하트성.png"));
 	m_cStartBit.Load(TEXT("윈플 텀프 이미지\\Start.png"));
 	m_cQuitBit.Load(TEXT("윈플 텀프 이미지\\Quit.png"));
+	m_cArrowImg.Load(L"./윈플 텀프 이미지/화살표.png");
 
 	m_bStart = false, m_bChanging = false; 				//원래 시작용
 	//m_bStart = true, changing = false;				//화면바뀌는거 귀찮아서 만든거
@@ -276,6 +277,13 @@ void Scene::DrawGameStart(HDC& memdc)
 		0, 0, m_cBackGround.GetWidth(), m_cBackGround.GetHeight());
 
 	m_pCastle->Draw(memdc);
+
+	// 플레이어 화살표 UI
+	int x, y;
+	x = (int)m_pPlayer->GetLocation().x;
+	y = (int)m_pPlayer->GetLocation().y;
+	m_cArrowImg.Draw(memdc, RECT{ x, y - 50, x + 100, y });
+	
 }
 
 void Scene::UpdateGameStart(float elapsed)
