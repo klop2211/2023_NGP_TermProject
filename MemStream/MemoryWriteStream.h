@@ -6,9 +6,18 @@ class MemoryWriteStream
 {
 public:
 	MemoryWriteStream(array<SOCKET, MAX_CLIENTS>& sockets)
-		: m_Sockets(sockets),
+		: m_iNowWriteIndex(0)
+	{
+		for (const auto& s : sockets)
+		{
+			m_Sockets.push_back(s);
+		}
+		Init();
+	};
+	MemoryWriteStream(SOCKET& sockets):
 		m_iNowWriteIndex(0)
 	{
+		m_Sockets.push_back(sockets);
 		Init();
 	};
 
@@ -29,7 +38,7 @@ private:
 	int m_iNowWriteIndex;
 
 	// ╪рдо╣И
-	array<SOCKET, MAX_CLIENTS> m_Sockets;
+	vector<SOCKET> m_Sockets;
 };
 
 template<typename Type>

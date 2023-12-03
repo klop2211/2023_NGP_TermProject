@@ -1,6 +1,8 @@
 #pragma once
 #include "Player.h"
 
+#include <queue>
+
 struct StateMsgArgu;
 
 class Scene
@@ -68,6 +70,9 @@ private:
 	// 드래그 시 시작 마우스 좌표 저장
 	int m_iStartX, m_iStartY;
 
+	static std::queue<StateMsgInfo> m_StateMsgQueue;
+	static class MemoryReadStream*	m_ReadStream;
+	static class MemoryWriteStream* m_WriteStream;
 
 	static SOCKET* m_pSock;
 	static HANDLE* m_pReadEvent;

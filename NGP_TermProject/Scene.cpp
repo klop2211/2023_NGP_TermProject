@@ -5,6 +5,9 @@
 #include "Castle.h"
 #include "../Server/StateMessage.h"
 
+#include "../MemStream/MemoryReadStream.h"
+#include "../MemStream/MemoryWriteStream.h"
+
 #define MULTI_PLAY
 
 SOCKET*			Scene::m_pSock;
@@ -13,6 +16,10 @@ HANDLE*			Scene::m_pWriteEvent;
 int				Scene::m_iClientNum;
 int				Scene::m_iMsgSize;
 StateMsgArgu*	Scene::m_pStateMsgArgu;
+
+std::queue<StateMsgInfo>	Scene::m_StateMsgQueue;
+MemoryReadStream*			Scene::m_ReadStream;
+MemoryWriteStream*			Scene::m_WriteStream;
 
 Scene::Scene()
 {
@@ -65,9 +72,12 @@ void Scene::Update(float elapsed)
 
 #ifdef MULTI_PLAY
 		WaitForSingleObject(*m_pReadEvent, INFINITE);
+		while (!m_StateMsgQueue.empty())
+		{
+			StateMsgInfo SMI = m_StateMsgQueue.front();
+			m_StateMsgQueue.pop();
 
-		if (m_pStateMsgArgu != NULL) {
-			PlayerLocationMsg* temp = (PlayerLocationMsg*)m_pStateMsgArgu;
+			PlayerLocationMsg* temp = (PlayerLocationMsg*)SMI.pStateMsgArgu;
 			if (temp->PlayerId != m_iClientNum && m_pPlayer2 != NULL) {
 				m_pPlayer2->SetLocation(temp->Location);
 				m_pPlayer2->SetDir((Direction)temp->Direction);
@@ -75,10 +85,17 @@ void Scene::Update(float elapsed)
 					m_pPlayer2->ChangeState(temp->State);
 			}
 		}
+		//if (m_pStateMsgArgu != NULL) {
+		//	PlayerLocationMsg* temp = (PlayerLocationMsg*)m_pStateMsgArgu;
+		//	if (temp->PlayerId != m_iClientNum && m_pPlayer2 != NULL) {
+		//		m_pPlayer2->SetLocation(temp->Location);
+		//		m_pPlayer2->SetDir((Direction)temp->Direction);
+		//		if (m_pPlayer2->GetStateName() != temp->State)
+		//			m_pPlayer2->ChangeState(temp->State);
+		//	}
+		//}
 
 		StateMsgType smt = StateMsgType::PlayerLocation;
-		send(*m_pSock, (char*)&smt, sizeof(StateMsgType), 0);
-
 		PlayerLocationMsg sma;
 		if (m_pPlayer != NULL) {
 			sma.Location.x = (int)m_pPlayer->GetLocation().x;
@@ -94,8 +111,29 @@ void Scene::Update(float elapsed)
 			sma.Direction = 0;
 			sma.State = PStateName::Move;
 		}
-		send(*m_pSock, (char*)&sma, sizeof(PlayerLocationMsg), 0);
+		m_WriteStream->Write(smt);
+		m_WriteStream->Write(sma);
 
+		//StateMsgType smt = StateMsgType::PlayerLocation;
+		//send(*m_pSock, (char*)&smt, sizeof(StateMsgType), 0);
+
+		//PlayerLocationMsg sma;
+		//if (m_pPlayer != NULL) {
+		//	sma.Location.x = (int)m_pPlayer->GetLocation().x;
+		//	sma.Location.y = (int)m_pPlayer->GetLocation().y;
+		//	sma.PlayerId = m_iClientNum;
+		//	sma.Direction = m_pPlayer->GetDir();
+		//	sma.State = m_pPlayer->GetStateName();
+		//}
+		//else {
+		//	sma.Location.x = 100;
+		//	sma.Location.y = 200;
+		//	sma.PlayerId = -1;
+		//	sma.Direction = 0;
+		//	sma.State = PStateName::Move;
+		//}
+		//send(*m_pSock, (char*)&sma, sizeof(PlayerLocationMsg), 0);
+		m_WriteStream->Send();
 		SetEvent(*m_pWriteEvent);
 
 #endif // STAND_ALONE
@@ -378,6 +416,10 @@ DWORD WINAPI Scene::ReceiveThread(LPVOID arg)
 	*m_pSock = socket(AF_INET, SOCK_STREAM, 0);
 	//if (sock == INVALID_SOCKET) err_quit("socket()");
 
+	// 스트림 생성
+	m_ReadStream = new MemoryReadStream(*m_pSock);
+	m_WriteStream = new MemoryWriteStream(*m_pSock);
+
 	// connect()
 	struct sockaddr_in serveraddr;
 	memset(&serveraddr, 0, sizeof(serveraddr));
@@ -387,81 +429,91 @@ DWORD WINAPI Scene::ReceiveThread(LPVOID arg)
 	retval = connect(*m_pSock, (struct sockaddr*)&serveraddr, sizeof(serveraddr));
 	//if (retval == SOCKET_ERROR) err_quit("connect()");
 
-	StateMsgType typeBuf;
-	
+	StateMsgType typeBuf;	
 	retval = recv(*m_pSock, (char*)&typeBuf, sizeof(BYTE), MSG_WAITALL);
-
 	retval = recv(*m_pSock, (char*)&m_iClientNum, sizeof(int), MSG_WAITALL);
 
-
 	StateMsgType smt = StateMsgType::PlayerLocation;
-	send(*m_pSock, (char*)&smt, sizeof(StateMsgType), 0);
-
 	PlayerLocationMsg temp;
 	temp.Location = POINT{ 0,0 };
 	temp.PlayerId = -1;
 	temp.State = PStateName::Move;
 	temp.Direction = 0;
-	send(*m_pSock, (char*)&temp, sizeof(PlayerLocationMsg), 0);
+	m_WriteStream->Write(smt);
+	m_WriteStream->Write(temp);
+	m_WriteStream->Send();
+
+	//StateMsgType smt = StateMsgType::PlayerLocation;
+	//send(*m_pSock, (char*)&smt, sizeof(StateMsgType), 0);
+
+	//PlayerLocationMsg temp;
+	//temp.Location = POINT{ 0,0 };
+	//temp.PlayerId = -1;
+	//temp.State = PStateName::Move;
+	//temp.Direction = 0;
+	//send(*m_pSock, (char*)&temp, sizeof(PlayerLocationMsg), 0);
 
 	m_pStateMsgArgu = NULL;
 	while (1) {
 		WaitForSingleObject(*m_pWriteEvent, INFINITE);   // 쓰기 완료 대기
 
 
-		for (int i = 0; i < 2; ++i) {
+		//for (int i = 0; i < 2; ++i) {
 			if (m_pStateMsgArgu != NULL)
 				delete m_pStateMsgArgu;
 			BYTE StateMsg;
 			BYTE upper2Bits = 0;
 			BYTE lower6Bits = 0;
 
-			retval = recv(*m_pSock, (char*)&StateMsg, sizeof(BYTE), MSG_WAITALL);
-			if (retval == SOCKET_ERROR) {
-				PostQuitMessage(0);
-			}
+			bool IsOver = false;
+			m_ReadStream->Read(m_StateMsgQueue, IsOver);
 
-			// 상위 2비트 추출
-			upper2Bits = StateMsg >> 6;
+			//retval = recv(*m_pSock, (char*)&StateMsg, sizeof(BYTE), MSG_WAITALL);
+			//if (retval == SOCKET_ERROR) {
+			//	PostQuitMessage(0);
+			//}
 
-			// 하위 6비트 추출
-			lower6Bits = StateMsg & 0x3F;
+			//// 상위 2비트 추출
+			//upper2Bits = StateMsg >> 6;
 
-			// 추가로 읽을 바이트 사이즈
-			switch (lower6Bits)
-			{
-			case (int)StateMsgType::MonsterSpawn:	m_iMsgSize = sizeof(MonsterSpawnStateMsg); break;
-			case (int)StateMsgType::MonsterHp:		m_iMsgSize = sizeof(MonsterHpStateMsg); break;
-			case  (int)StateMsgType::PlayerLocation:m_iMsgSize = sizeof(PlayerLocationMsg); break;
-			case (int)StateMsgType::UseCard:		m_iMsgSize = sizeof(UseCardStateMsg);	break;
-			case  (int)StateMsgType::CastleHp:		m_iMsgSize = sizeof(CastleHpStateMsg);	break;
-			default:
-				break;
-			}
+			//// 하위 6비트 추출
+			//lower6Bits = StateMsg & 0x3F;
+
+			//// 추가로 읽을 바이트 사이즈
+			//switch (lower6Bits)
+			//{
+			//case (int)StateMsgType::MonsterSpawn:	m_iMsgSize = sizeof(MonsterSpawnStateMsg); break;
+			//case (int)StateMsgType::MonsterHp:		m_iMsgSize = sizeof(MonsterHpStateMsg); break;
+			//case  (int)StateMsgType::PlayerLocation:m_iMsgSize = sizeof(PlayerLocationMsg); break;
+			//case (int)StateMsgType::UseCard:		m_iMsgSize = sizeof(UseCardStateMsg);	break;
+			//case  (int)StateMsgType::CastleHp:		m_iMsgSize = sizeof(CastleHpStateMsg);	break;
+			//default:
+			//	break;
+			//}
 
 
-			switch (lower6Bits)
-			{
-			case	(int)StateMsgType::MonsterSpawn:	m_pStateMsgArgu = new MonsterSpawnStateMsg; break;
-			case	(int)StateMsgType::MonsterHp:		m_pStateMsgArgu = new MonsterHpStateMsg;	break;
-			case	(int)StateMsgType::PlayerLocation:	m_pStateMsgArgu = new PlayerLocationMsg;	break;
-			case	(int)StateMsgType::UseCard:			m_pStateMsgArgu = new UseCardStateMsg;		break;
-			case	(int)StateMsgType::CastleHp:		m_pStateMsgArgu = new CastleHpStateMsg;		break;
-			default:
-				break;
-			}
+			//switch (lower6Bits)
+			//{
+			//case	(int)StateMsgType::MonsterSpawn:	m_pStateMsgArgu = new MonsterSpawnStateMsg; break;
+			//case	(int)StateMsgType::MonsterHp:		m_pStateMsgArgu = new MonsterHpStateMsg;	break;
+			//case	(int)StateMsgType::PlayerLocation:	m_pStateMsgArgu = new PlayerLocationMsg;	break;
+			//case	(int)StateMsgType::UseCard:			m_pStateMsgArgu = new UseCardStateMsg;		break;
+			//case	(int)StateMsgType::CastleHp:		m_pStateMsgArgu = new CastleHpStateMsg;		break;
+			//default:
+			//	break;
+			//}
 
-			retval = recv(*m_pSock, (char*)m_pStateMsgArgu, m_iMsgSize, MSG_WAITALL);
-			if (retval == SOCKET_ERROR) {
-				PostQuitMessage(0);
-			}
+			//retval = recv(*m_pSock, (char*)m_pStateMsgArgu, m_iMsgSize, MSG_WAITALL);
+			//if (retval == SOCKET_ERROR) {
+			//	PostQuitMessage(0);
+			//}
 
-			PlayerLocationMsg* temp = (PlayerLocationMsg*)m_pStateMsgArgu;
-			if (temp->PlayerId != m_iClientNum)
-			{
-				break;
-			}
-		}
+			//PlayerLocationMsg* temp = (PlayerLocationMsg*)m_pStateMsgArgu;
+			//if (temp->PlayerId != m_iClientNum)
+			//{
+			//	break;
+			//}
+		//}
 		SetEvent(*m_pReadEvent);
 	}
 

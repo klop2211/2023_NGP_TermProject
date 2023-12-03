@@ -5,12 +5,11 @@
 void MemoryWriteStream::Send()
 {
 	int retval;
+	memmove(buf + sizeof(int), buf, m_iNowWriteIndex);
+	memcpy(buf, &m_iNowWriteIndex, sizeof(int));
 	for (const auto& s : m_Sockets)
 	{
-		memmove(buf + sizeof(int), buf, m_iNowWriteIndex);
-		memcpy(buf, &m_iNowWriteIndex, sizeof(int));
-
-		retval = send(s, buf, m_iNowWriteIndex, 0);
+		retval = send(s, buf, m_iNowWriteIndex + sizeof(int), 0);
 		if (retval == SOCKET_ERROR) {
 			err_display("send()");
 		}

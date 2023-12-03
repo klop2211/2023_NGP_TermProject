@@ -18,48 +18,54 @@ void MemoryReadStream::Read(std::queue<StateMsgInfo>& q, bool& OverCheck)
 
 	while (m_iNowReadIndex < BufSize)
 	{
+		int Size = 0;
 		StateMsgType SMT = GetMsgType();
-		StateMsgArgu* pSMA = GetStateMsg(SMT);
+		m_iNowReadIndex += sizeof(StateMsgType);
+
+		StateMsgArgu* pSMA = GetStateMsg(SMT, Size);
+		memcpy(pSMA, buf + m_iNowReadIndex, Size);
+		m_iNowReadIndex += Size;
 
 		q.push(StateMsgInfo( SMT, pSMA ));
 	}
+
+	Init();
 }
 
 StateMsgType MemoryReadStream::GetMsgType()
 {
 	StateMsgType SMT;
 	memcpy(&SMT, buf + m_iNowReadIndex, sizeof(StateMsgType));
-	m_iNowReadIndex += sizeof(StateMsgType);
 
 	return SMT;
 }
 
-StateMsgArgu* MemoryReadStream::GetStateMsg(StateMsgType smt)
+StateMsgArgu* MemoryReadStream::GetStateMsg(StateMsgType smt, int& size)
 {
 	switch (smt)
 	{
 	case StateMsgType::MonsterSpawn:
-		m_iNowReadIndex += sizeof(MonsterSpawnStateMsg);
+		size = sizeof(MonsterSpawnStateMsg);
 		return new MonsterSpawnStateMsg();
 
 	case StateMsgType::MonsterHp:
-		m_iNowReadIndex += sizeof(MonsterHpStateMsg);
+		size = sizeof(MonsterHpStateMsg);
 		return new MonsterHpStateMsg();
 
 	case StateMsgType::MonsterState:
-		m_iNowReadIndex += sizeof(MonsterStateMsg);
+		size= sizeof(MonsterStateMsg);
 		return new MonsterStateMsg();
 
 	case StateMsgType::PlayerLocation:
-		m_iNowReadIndex += sizeof(PlayerLocationMsg);
+		size= sizeof(PlayerLocationMsg);
 		return new PlayerLocationMsg();
 
 	case StateMsgType::CastleHp:
-		m_iNowReadIndex += sizeof(CastleHpStateMsg);
+		size= sizeof(CastleHpStateMsg);
 		return new CastleHpStateMsg();
 
 	case StateMsgType::UseCard:
-		m_iNowReadIndex += sizeof(UseCardStateMsg);
+		size= sizeof(UseCardStateMsg);
 		return new UseCardStateMsg();
 	default:
 		std::cout << "MemoryReadStream::GetStateMsg Err\n";
