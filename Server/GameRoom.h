@@ -13,10 +13,10 @@ public:
 	~GameRoom();
 public:
 	void SetElapsedTime();
-	void Update(array<StateMsgInfo, MAX_CLIENTS> StateMsg);
+	void Update(array<queue<StateMsgInfo>, MAX_CLIENTS> StateMsg);
 
 	void SpawnEnemy();
-	void UpdateUseStateMsg(array<StateMsgInfo, MAX_CLIENTS> StateMsg);
+	void UpdateUseStateMsg(array<queue<StateMsgInfo>, MAX_CLIENTS> StateMsg);
 	void UpdateEnemy();
 
 	void ProcessMonsterHpMsg(StateMsgArgu* Arg);

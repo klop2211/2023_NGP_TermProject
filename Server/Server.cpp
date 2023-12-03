@@ -1,9 +1,9 @@
 #define _CRT_SECURE_NO_WARNINGS
-#include <queue>
 #include "Common.h"
 #include "GameRoom.h"
 #include "StateMessage.h"
 #include "MsgInstence.h"
+#include "MemoryReadStream.h"
 
 // 최대 방 개수만큼 이벤트 생성
 array<Events, MAX_ROOMS> events;
@@ -12,7 +12,7 @@ array<Events, MAX_ROOMS> events;
 array<SOCKET, MAX_CLIENTS> client_sockets;
 
 // 상태 메세지를 저장할 공유 버퍼
-array<array<StateMsgInfo, MAX_CLIENTS>, MAX_ROOMS> SharedBuffer;
+array<array<queue<StateMsgInfo>, MAX_CLIENTS>, MAX_ROOMS> SharedBuffer;
 
 bool IsGameOver(BYTE StateMsg, StateMsgArgu* arg)
 {
@@ -71,61 +71,17 @@ DWORD WINAPI ProcessClient1(LPVOID arg)
 
 	DWORD retval;
 
+	MemoryReadStream* pStream = new MemoryReadStream(client_sock);
+
 	while (true)
 	{
 		retval = WaitForSingleObject(events[RoomNum].hClient1Event, INFINITE);
 		//printf("hClient1Event Run\n");
 
 		// 클라이언트 처리 로직
-
-		// 상태 메시지 수신
-		BYTE StateMsg;
-		BYTE upper2Bits = 0;
-		BYTE lower6Bits = 0;
-		StateMsgArgu* StateMsgArg = nullptr;
-
-		int ReceiveStateMsg = recv(client_sockets[Client1], (char*)&StateMsg, sizeof(BYTE), MSG_WAITALL);
-		if (ReceiveStateMsg == SOCKET_ERROR) {
-			err_quit("ReceiveStateMsg Err");
-		}
-		else {
-			// 상위 2비트 추출
-			upper2Bits = StateMsg >> 6;
-
-			// 하위 6비트 추출
-			lower6Bits = StateMsg & 0x3F;
-
-			// 추가로 읽을 바이트 사이즈
-			int MsgSize = GetStateMsgType(lower6Bits);
-
-			//클라에서 주기적으로 상태 메시지 보내기
-			//보낼 메시지가 없으면 0을 보내기
-			//상태메시지가 0일떄는 StateMsgArg 수신받지 않기 & 클라에서 수신하지 않기
-
-			// 상태메시지가 0이 아닐 떄
-			//0일 때는 StateMsgArg == nullptr 그대로
-			if (ReceiveStateMsg != StateMsgNone)
-			{
-				// 추가로 받을 인수 동적할당
-				// TODO: 적당한 시점에 해제하거나 스마트 포인터 사용해야함
-				StateMsgArg = MsgInstence::GetStateMsgArguType(lower6Bits);
-				ReceiveStateMsg = recv(client_sockets[Client1], (char*)StateMsgArg, MsgSize, MSG_WAITALL);
-				if (ReceiveStateMsg == SOCKET_ERROR) {
-					err_quit("ReceiveStateMsgArg Err");
-				}
-
-				StateMsgInfo SMI;
-				SMI.StateMsg = lower6Bits;
-				SMI.pStateMsgArgu = StateMsgArg;
-				SharedBuffer[RoomNum][0] = SMI;
-			}
-		}
-
-		// 하위 6비트를 통해 게임오버 판별
-		//StateMsg 구체화되면 수정 예정
-		bool isGameOver = IsGameOver(lower6Bits, StateMsgArg);
-	
-		if (isGameOver)
+		bool bIsGameOver = false;
+		pStream->Read(SharedBuffer[RoomNum][0], bIsGameOver);
+		if (bIsGameOver)
 		{
 			CloseHandle(GetCurrentThread());
 		}
@@ -134,8 +90,67 @@ DWORD WINAPI ProcessClient1(LPVOID arg)
 			SetEvent(events[RoomNum].hClient2Event);
 		}
 
+		//// 상태 메시지 수신
+		//BYTE StateMsg;
+		//BYTE upper2Bits = 0;
+		//BYTE lower6Bits = 0;
+		//StateMsgArgu* StateMsgArg = nullptr;
+
+
+
+		//int ReceiveStateMsg = recv(client_sockets[Client1], (char*)&StateMsg, sizeof(BYTE), MSG_WAITALL);
+		//if (ReceiveStateMsg == SOCKET_ERROR) {
+		//	err_quit("ReceiveStateMsg Err");
+		//}
+		//else {
+		//	// 상위 2비트 추출
+		//	upper2Bits = StateMsg >> 6;
+
+		//	// 하위 6비트 추출
+		//	lower6Bits = StateMsg & 0x3F;
+
+		//	// 추가로 읽을 바이트 사이즈
+		//	int MsgSize = GetStateMsgType(lower6Bits);
+
+		//	//클라에서 주기적으로 상태 메시지 보내기
+		//	//보낼 메시지가 없으면 0을 보내기
+		//	//상태메시지가 0일떄는 StateMsgArg 수신받지 않기 & 클라에서 수신하지 않기
+
+		//	// 상태메시지가 0이 아닐 떄
+		//	//0일 때는 StateMsgArg == nullptr 그대로
+		//	if (ReceiveStateMsg != StateMsgNone)
+		//	{
+		//		// 추가로 받을 인수 동적할당
+		//		// TODO: 적당한 시점에 해제하거나 스마트 포인터 사용해야함
+		//		StateMsgArg = MsgInstence::GetStateMsgArguType(lower6Bits);
+		//		ReceiveStateMsg = recv(client_sockets[Client1], (char*)StateMsgArg, MsgSize, MSG_WAITALL);
+		//		if (ReceiveStateMsg == SOCKET_ERROR) {
+		//			err_quit("ReceiveStateMsgArg Err");
+		//		}
+
+		//		StateMsgInfo SMI;
+		//		SMI.StateMsg = lower6Bits;
+		//		SMI.pStateMsgArgu = StateMsgArg;
+		//		SharedBuffer[RoomNum][0] = SMI;
+		//	}
+		//}
+
+		//// 하위 6비트를 통해 게임오버 판별
+		////StateMsg 구체화되면 수정 예정
+		//bool isGameOver = IsGameOver(lower6Bits, StateMsgArg);
+	
+		//if (isGameOver)
+		//{
+		//	CloseHandle(GetCurrentThread());
+		//}
+		//else
+		//{
+		//	SetEvent(events[RoomNum].hClient2Event);
+		//}
+
 	}
-		
+	
+	delete pStream;
 	return NULL;
 }
 
@@ -145,6 +160,8 @@ DWORD WINAPI ProcessClient2(LPVOID arg)
 	SOCKET client_sock = Arg->sock;
 	int RoomNum = Arg->RoomNumber;
 
+	MemoryReadStream* pStream = new MemoryReadStream(client_sock);
+
 	DWORD retval;
 	while (true)
 	{
@@ -152,50 +169,9 @@ DWORD WINAPI ProcessClient2(LPVOID arg)
 		//printf("hClient2Event Run\n");
 
 		// 클라이언트 처리 로직
-
-		// 상태 메시지 수신
-		BYTE StateMsg;
-		BYTE upper2Bits = 0;
-		BYTE lower6Bits = 0;
-		StateMsgArgu * StateMsgArg = nullptr;
-
-		int ReceiveStateMsg = recv(client_sockets[Client2], (char*)&StateMsg, sizeof(BYTE), MSG_WAITALL);
-		if (ReceiveStateMsg == SOCKET_ERROR) {
-			err_quit("ReceiveStateMsg Err");
-		}
-		else {
-			// 상위 2비트 추출
-			upper2Bits = StateMsg >> 6;
-
-			// 하위 6비트 추출
-			lower6Bits = StateMsg & 0x3F;
-
-			// 추가로 읽을 바이트 사이즈
-			int MsgSize = GetStateMsgType(lower6Bits);
-
-			// 상태메시지가 0이 아닐 떄
-			//0일 때는 StateMsgArg == nullptr 그대로
-			if (ReceiveStateMsg != StateMsgNone)
-			{
-				// 추가로 받을 인수 동적할당
-				// TODO: 적당한 시점에 해제하거나 스마트 포인터 사용해야함
-				StateMsgArg = MsgInstence::GetStateMsgArguType(lower6Bits);
-				ReceiveStateMsg = recv(client_sockets[Client2], (char*)StateMsgArg, MsgSize, MSG_WAITALL);
-				if (ReceiveStateMsg == SOCKET_ERROR) {
-					err_quit("ReceiveStateMsgArg Err");
-				}
-
-				StateMsgInfo SMI;
-				SMI.StateMsg = lower6Bits;
-				SMI.pStateMsgArgu = StateMsgArg;
-				SharedBuffer[RoomNum][1] = SMI;
-			}
-		}
-
-		// 하위 6비트를 통해 게임오버 판별
-		bool isGameOver = IsGameOver(lower6Bits, StateMsgArg);
-
-		if (isGameOver)
+		bool bIsGameOver = false;
+		pStream->Read(SharedBuffer[RoomNum][1], bIsGameOver);
+		if (bIsGameOver)
 		{
 			CloseHandle(GetCurrentThread());
 		}
@@ -203,6 +179,57 @@ DWORD WINAPI ProcessClient2(LPVOID arg)
 		{
 			SetEvent(events[RoomNum].hRoomEvent);
 		}
+
+		//// 상태 메시지 수신
+		//BYTE StateMsg;
+		//BYTE upper2Bits = 0;
+		//BYTE lower6Bits = 0;
+		//StateMsgArgu * StateMsgArg = nullptr;
+
+		//int ReceiveStateMsg = recv(client_sockets[Client2], (char*)&StateMsg, sizeof(BYTE), MSG_WAITALL);
+		//if (ReceiveStateMsg == SOCKET_ERROR) {
+		//	err_quit("ReceiveStateMsg Err");
+		//}
+		//else {
+		//	// 상위 2비트 추출
+		//	upper2Bits = StateMsg >> 6;
+
+		//	// 하위 6비트 추출
+		//	lower6Bits = StateMsg & 0x3F;
+
+		//	// 추가로 읽을 바이트 사이즈
+		//	int MsgSize = GetStateMsgType(lower6Bits);
+
+		//	// 상태메시지가 0이 아닐 떄
+		//	//0일 때는 StateMsgArg == nullptr 그대로
+		//	if (ReceiveStateMsg != StateMsgNone)
+		//	{
+		//		// 추가로 받을 인수 동적할당
+		//		// TODO: 적당한 시점에 해제하거나 스마트 포인터 사용해야함
+		//		StateMsgArg = MsgInstence::GetStateMsgArguType(lower6Bits);
+		//		ReceiveStateMsg = recv(client_sockets[Client2], (char*)StateMsgArg, MsgSize, MSG_WAITALL);
+		//		if (ReceiveStateMsg == SOCKET_ERROR) {
+		//			err_quit("ReceiveStateMsgArg Err");
+		//		}
+
+		//		StateMsgInfo SMI;
+		//		SMI.StateMsg = lower6Bits;
+		//		SMI.pStateMsgArgu = StateMsgArg;
+		//		SharedBuffer[RoomNum][1] = SMI;
+		//	}
+		//}
+
+		//// 하위 6비트를 통해 게임오버 판별
+		//bool isGameOver = IsGameOver(lower6Bits, StateMsgArg);
+
+		//if (isGameOver)
+		//{
+		//	CloseHandle(GetCurrentThread());
+		//}
+		//else
+		//{
+		//	SetEvent(events[RoomNum].hRoomEvent);
+		//}
 	}
 		
 	return NULL;
@@ -347,6 +374,15 @@ int main(int argc, char* argv[])
 				}
 				i++;
 			}
+
+			//{
+			//	GameRoom* pGameRoom = new GameRoom(arg.Clients);
+			//	while (true)
+			//	{
+			//		pGameRoom->Update(SharedBuffer[0]);
+			//		pGameRoom->WriteMonsterState(MonsterType::Wolf, 0, MonsterStateType::Attack);
+			//	}
+			//}
 
 			// 클라1 신호 on
 			SetEvent(events[RoomNum++].hClient1Event);

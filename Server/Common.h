@@ -11,6 +11,7 @@
 #include <string.h> // strncpy(), ...
 
 #include <array>
+#include <queue>
 #include <iostream>
 
 #pragma comment(lib, "ws2_32") // ws2_32.lib ¸µÅ©
@@ -30,6 +31,7 @@
 #define STREAMBUFFERSIZE 1024
 
 using std::array;
+using std::queue;
 
 struct RoomArg
 {

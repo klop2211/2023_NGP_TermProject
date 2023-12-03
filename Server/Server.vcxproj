@@ -70,6 +70,22 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <IncludePath>D:\23_2\네트워크게임프로그래밍\2023_NGP_TermProject\MemStream;$(IncludePath)</IncludePath>
+    <SourcePath>D:\23_2\네트워크게임프로그래밍\2023_NGP_TermProject\MemStream;$(SourcePath)</SourcePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <IncludePath>D:\23_2\네트워크게임프로그래밍\2023_NGP_TermProject\MemStream;$(IncludePath)</IncludePath>
+    <SourcePath>D:\23_2\네트워크게임프로그래밍\2023_NGP_TermProject\MemStream;$(SourcePath)</SourcePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <IncludePath>D:\23_2\네트워크게임프로그래밍\2023_NGP_TermProject\MemStream;$(IncludePath)</IncludePath>
+    <SourcePath>D:\23_2\네트워크게임프로그래밍\2023_NGP_TermProject\MemStream;$(SourcePath)</SourcePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <IncludePath>D:\23_2\네트워크게임프로그래밍\2023_NGP_TermProject\MemStream;$(IncludePath)</IncludePath>
+    <SourcePath>D:\23_2\네트워크게임프로그래밍\2023_NGP_TermProject\MemStream;$(SourcePath)</SourcePath>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
@@ -127,13 +143,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\MemStream\MemoryReadStream.cpp" />
+    <ClCompile Include="..\MemStream\MemoryWriteStream.cpp" />
     <ClCompile Include="Bat.cpp" />
     <ClCompile Include="Castle.cpp" />
     <ClCompile Include="Common.cpp" />
     <ClCompile Include="CommonMonster.cpp" />
     <ClCompile Include="GameRoom.cpp" />
-    <ClCompile Include="MemoryReadStream.cpp" />
-    <ClCompile Include="MemoryWriteStream.cpp" />
     <ClCompile Include="Monster.cpp" />
     <ClCompile Include="MonsterState.cpp" />
     <ClCompile Include="MsgInstence.cpp" />
@@ -143,13 +159,13 @@
     <ClCompile Include="Wolf.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\MemStream\MemoryReadStream.h" />
+    <ClInclude Include="..\MemStream\MemoryWriteStream.h" />
     <ClInclude Include="Bat.h" />
     <ClInclude Include="Castle.h" />
     <ClInclude Include="Common.h" />
     <ClInclude Include="CommonMonster.h" />
     <ClInclude Include="GameRoom.h" />
-    <ClInclude Include="MemoryReadStream.h" />
-    <ClInclude Include="MemoryWriteStream.h" />
     <ClInclude Include="Monster.h" />
     <ClInclude Include="MonsterState.h" />
     <ClInclude Include="MsgInstence.h" />

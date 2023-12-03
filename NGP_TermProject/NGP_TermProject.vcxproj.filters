@@ -61,6 +61,12 @@
     <ClCompile Include="SkillObject.cpp">
       <Filter>2019182009\소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="..\MemStream\MemoryReadStream.cpp">
+      <Filter>2019180016\Stream</Filter>
+    </ClCompile>
+    <ClCompile Include="..\MemStream\MemoryWriteStream.cpp">
+      <Filter>2019180016\Stream</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Bat.h">
@@ -139,6 +145,12 @@
       <Filter>2019182009\헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="..\Server\StateMessage.h" />
+    <ClInclude Include="..\MemStream\MemoryReadStream.h">
+      <Filter>2019180016\Stream</Filter>
+    </ClInclude>
+    <ClInclude Include="..\MemStream\MemoryWriteStream.h">
+      <Filter>2019180016\Stream</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="NGP_TermProject.rc" />
@@ -168,6 +180,9 @@
     </Filter>
     <Filter Include="2019180016\Interaction">
       <UniqueIdentifier>{bfe5255a-35de-4d09-88ec-7c84878dc6cd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="2019180016\Stream">
+      <UniqueIdentifier>{2f651a02-1a8e-46a0-b882-82331f9fbdf7}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

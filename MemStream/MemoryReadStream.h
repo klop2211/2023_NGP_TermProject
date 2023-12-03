@@ -1,5 +1,7 @@
 #pragma once
-#include "StateMessage.h"
+#include "../Server/StateMessage.h"
+
+#include <queue>
 
 class MemoryReadStream
 {
@@ -14,7 +16,10 @@ public:
 	template<typename Type>
 	void Read(Type*, int bytes = -1);
 
-	StateMsgArgu* GetStateMsg(StateMsgType, int*);
+	void Read(std::queue<StateMsgInfo>& q, bool&);
+	StateMsgType GetMsgType();
+
+	StateMsgArgu* GetStateMsg(StateMsgType);
 
 	void Init();
 private:
@@ -38,12 +43,12 @@ inline void MemoryReadStream::Read(Type* data, int bytes)
 	// 0이라면 통으로 읽을 차례
 	if (m_iNowReadIndex == -1)
 	{
-		retval = recv(socket, (char*)&m_iBufSize, sizeof(int), MSG_WAITALL);
+		retval = recv(m_Socket, (char*)&m_iBufSize, sizeof(int), MSG_WAITALL);
 		if (retval == SOCKET_ERROR) {
 			err_quit("MemoryReadStream::Read bufsize Err");
 		}
 
-		retval = recv(socket, (char*)buf, m_iBufSize, MSG_WAITALL);
+		retval = recv(m_Socket, (char*)buf, m_iBufSize, MSG_WAITALL);
 		if (retval == SOCKET_ERROR) {
 			err_quit("MemoryReadStream::Read buf Err");
 		}

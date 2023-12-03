@@ -69,6 +69,13 @@ struct CastleHpStateMsg : StateMsgArgu
 // 서버에서 배열로 관리하기위해
 struct StateMsgInfo
 {
-	StateMsgByte StateMsg;
+	StateMsgInfo() {};
+	StateMsgInfo(StateMsgType smt, StateMsgArgu* sma)
+	{
+		StateMsg = smt;
+		pStateMsgArgu = sma;
+	}
+
+	StateMsgType StateMsg;
 	StateMsgArgu* pStateMsgArgu;
 };

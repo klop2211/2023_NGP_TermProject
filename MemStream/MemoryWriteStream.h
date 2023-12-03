@@ -45,12 +45,13 @@ void MemoryWriteStream::Write(const Type& data, int bytes)
 		size = bytes;
 	}
 
-	if (m_iNowWriteIndex + size > BUFFERSIZE)
+	// 보낼 데이터의 맨 앞에 크기를 나타낼 int가 들어가야하니
+	if (m_iNowWriteIndex + size + sizeof(int) > STREAMBUFFERSIZE)
 	{
 		Send();
 	}
 
-	memcpy_s(buf + m_iNowWriteIndex, BUFFERSIZE - (m_iNowWriteIndex + size), &data, size);
+	memcpy_s(buf + m_iNowWriteIndex, STREAMBUFFERSIZE - (m_iNowWriteIndex + size), &data, size);
 	m_iNowWriteIndex += size;
 	buf[m_iNowWriteIndex] = '\0';
 }

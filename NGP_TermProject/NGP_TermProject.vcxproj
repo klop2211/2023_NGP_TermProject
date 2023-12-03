@@ -127,6 +127,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\MemStream\MemoryReadStream.h" />
+    <ClInclude Include="..\MemStream\MemoryWriteStream.h" />
     <ClInclude Include="..\Server\StateMessage.h" />
     <ClInclude Include="Bat.h" />
     <ClInclude Include="Bone.h" />
@@ -155,6 +157,8 @@
     <ClInclude Include="Wolf.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\MemStream\MemoryReadStream.cpp" />
+    <ClCompile Include="..\MemStream\MemoryWriteStream.cpp" />
     <ClCompile Include="Bat.cpp" />
     <ClCompile Include="Bone.cpp" />
     <ClCompile Include="Castle.cpp" />

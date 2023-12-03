@@ -54,9 +54,6 @@
     <ClCompile Include="CommonMonster.cpp">
       <Filter>2019180016\Source</Filter>
     </ClCompile>
-    <ClCompile Include="MemoryStream.cpp">
-      <Filter>2019180016\Source</Filter>
-    </ClCompile>
     <ClCompile Include="Castle.cpp">
       <Filter>2019180016\Source</Filter>
     </ClCompile>
@@ -64,6 +61,12 @@
       <Filter>2019180016\Source</Filter>
     </ClCompile>
     <ClCompile Include="Papyrus.cpp">
+      <Filter>2019180016\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\MemStream\MemoryReadStream.cpp">
+      <Filter>2019180016\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\MemStream\MemoryWriteStream.cpp">
       <Filter>2019180016\Source</Filter>
     </ClCompile>
   </ItemGroup>
@@ -95,9 +98,6 @@
     <ClInclude Include="CommonMonster.h">
       <Filter>2019180016\Header</Filter>
     </ClInclude>
-    <ClInclude Include="MemoryStream.h">
-      <Filter>2019180016\Header</Filter>
-    </ClInclude>
     <ClInclude Include="Castle.h">
       <Filter>2019180016\Header</Filter>
     </ClInclude>
@@ -105,6 +105,12 @@
       <Filter>2019180016\Header</Filter>
     </ClInclude>
     <ClInclude Include="Papyrus.h">
+      <Filter>2019180016\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\MemStream\MemoryReadStream.h">
+      <Filter>2019180016\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\MemStream\MemoryWriteStream.h">
       <Filter>2019180016\Header</Filter>
     </ClInclude>
   </ItemGroup>

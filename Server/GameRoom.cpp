@@ -41,7 +41,7 @@ void GameRoom::SetElapsedTime()
 	m_fElapsedTime = elapsedSeconds.count();
 }
 
-void GameRoom::Update(array<StateMsgInfo, MAX_CLIENTS> StateMsg)
+void GameRoom::Update(array<queue<StateMsgInfo>, MAX_CLIENTS> StateMsg)
 {
 	SetElapsedTime();
 	UpdateUseStateMsg(StateMsg);
@@ -91,7 +91,7 @@ void GameRoom::SpawnEnemy()
 
 void GameRoom::UpdateEnemy()
 {
-	for (auto it : m_BatMap)
+	for (const auto& it : m_BatMap)
 	{
 		int MonNum = it.first;
 		Bat* bat = it.second;
@@ -104,7 +104,7 @@ void GameRoom::UpdateEnemy()
 			WriteCastleHp();
 		}
 	}
-	for (auto it : m_WolfMap)
+	for (const auto& it : m_WolfMap)
 	{
 		int MonNum = it.first;
 		Wolf* wolf = it.second;
@@ -132,7 +132,7 @@ bool GameRoom::IsCollision(const RECT& a, const RECT& b)
 void GameRoom::IsCollisionMonsterWithCastle()
 {
 	RECT BB;
-	for (auto it : m_BatMap)
+	for (const auto& it : m_BatMap)
 	{
 		if (IsCollision(m_pCastle->GetBB(), it.second->GetBoundingBox()))
 		{
@@ -140,7 +140,7 @@ void GameRoom::IsCollisionMonsterWithCastle()
 
 		}
 	}
-	for (auto it : m_WolfMap)
+	for (const auto& it : m_WolfMap)
 	{
 		if (IsCollision(m_pCastle->GetBB(), it.second->GetBoundingBox()))
 		{
@@ -170,21 +170,28 @@ void GameRoom::ProcessMonsterHpMsg(StateMsgArgu* Arg)
 	}
 }
 
-void GameRoom::UpdateUseStateMsg(array<StateMsgInfo, MAX_CLIENTS> StateMsg)
+void GameRoom::UpdateUseStateMsg(array<queue<StateMsgInfo>, MAX_CLIENTS> StateMsg)
 {
 	for (int i = 0; i < MAX_CLIENTS; i++)
 	{
-		switch (StateMsg[i].StateMsg)
+		while (!StateMsg[i].empty())
 		{
-		case (int)StateMsgType::PlayerLocation:
-			ReadPlayerLocation(StateMsg[i].pStateMsgArgu);
-			break;
-		case (int)StateMsgType::UseCard:
+			StateMsgInfo SMI = StateMsg[i].front();
+			StateMsg[i].pop();
 
-			break;
-		default:
-			printf("GameRoom::UpdateEnemy Error!\n");
-			break;
+			switch (SMI.StateMsg)
+			{
+			case StateMsgType::PlayerLocation:
+				ReadPlayerLocation(SMI.pStateMsgArgu);
+				break;
+			case StateMsgType::UseCard:
+
+				break;
+			default:
+				printf("GameRoom::UpdateEnemy Error!\n");
+				break;
+			}
+
 		}
 	}
 
@@ -201,6 +208,8 @@ void GameRoom::WriteMonsterState(MonsterType MT, BYTE id, MonsterStateType MST)
 
 	m_pStream->Write(StateMsgType::MonsterState);
 	m_pStream->Write(MSM);
+
+	m_pStream->Send();
 }
 
 void GameRoom::WritePlayerLocation()
