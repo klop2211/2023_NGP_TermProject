@@ -1,5 +1,6 @@
 #pragma once
 #include "../Server/StateMessage.h"
+#include "../MemStream/StreamGlobal.h"
 
 #include <queue>
 

@@ -1,5 +1,7 @@
 #pragma once
 
+#include "../MemStream/StreamGlobal.h"
+
 class MemoryWriteStream
 {
 public:

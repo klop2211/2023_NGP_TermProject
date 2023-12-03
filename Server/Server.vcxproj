@@ -172,6 +172,7 @@
     <ClInclude Include="Papyrus.h" />
     <ClInclude Include="PlayerInfo.h" />
     <ClInclude Include="StateMessage.h" />
+    <ClInclude Include="StreamGlobal.h" />
     <ClInclude Include="Wolf.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
