@@ -1,5 +1,6 @@
 #include "MonsterState.h"
 #include "Monster.h"
+#include "Papyrus.h"
 
 #include "StateMessage.h"
 
@@ -9,11 +10,6 @@ MonsterMoveState* MonsterMoveState::Instance()
 	return &instance;
 }
 
-void MonsterMoveState::Enter(Monster* monster)
-{
-	std::cout << typeid(monster).name() << "ÀÇ " << monster->GetSerialNum() << "¹ø °´Ã¼: Move ENTER" << std::endl;
-}
-
 void MonsterMoveState::Execute(Monster* monster, float ElapsedTime)
 {
 	// ÀÌµ¿
@@ -21,20 +17,10 @@ void MonsterMoveState::Execute(Monster* monster, float ElapsedTime)
 	monster->SetLocation(FPOINT(NewLocation, 0));
 }
 
-void MonsterMoveState::Exit(Monster* monster)
-{
-	std::cout << typeid(monster).name() << "ÀÇ " << monster->GetSerialNum() << "¹ø °´Ã¼: Move EXIT" << std::endl;
-}
-
 MonsterAttackState* MonsterAttackState::Instance()
 {
 	static MonsterAttackState instance;
 	return &instance;
-}
-
-void MonsterAttackState::Enter(Monster* monster)
-{
-	std::cout << typeid(monster).name() << "ÀÇ " << monster->GetSerialNum() << "¹ø °´Ã¼: Attack ENTER" << std::endl;
 }
 
 void MonsterAttackState::Execute(Monster* monster, float ElapsedTime)
@@ -47,41 +33,89 @@ void MonsterAttackState::Execute(Monster* monster, float ElapsedTime)
 	}
 }
 
-void MonsterAttackState::Exit(Monster* monster)
-{
-	std::cout << typeid(monster).name() << "ÀÇ " << monster->GetSerialNum() << "¹ø °´Ã¼: Attack EXIT" << std::endl;
-}
-
+//=======================================Papyrus========================================
 BossMoveState* BossMoveState::Instance()
 {
-	return nullptr;
+	static BossMoveState instance;
+	return &instance;
 }
 
-void BossMoveState::Enter(Monster*)
+void BossMoveState::Execute(Papyrus* papyrus, float ElapsedTime)
 {
-}
+	// ÀÌµ¿
+	int NewLocation = papyrus->GetLocation().x + papyrus->GetSpeed() * 20 * ElapsedTime;
+	papyrus->SetLocation(FPOINT(NewLocation, 0));
 
-void BossMoveState::Execute(Monster*, float)
-{
-}
+	papyrus->MinusRemainTimer(ElapsedTime);
+	if (papyrus->GetRemainTimer() < 0.f)
+	{
+		if (papyrus->GetBreaked())
+		{
 
-void BossMoveState::Exit(Monster*)
-{
+		}
+		else
+		{
+			papyrus->ChangeState(Papyrus::UBPattern);
+		}
+	}
 }
 
 BossUnBreakPatternState* BossUnBreakPatternState::Instance()
 {
-	return nullptr;
+	static BossUnBreakPatternState instance;
+	return &instance;
 }
 
-void BossUnBreakPatternState::Enter(Monster*)
+void BossUnBreakPatternState::Execute(Papyrus* papyrus, float ElapsedTime)
 {
+	papyrus->MinusRemainTimer(ElapsedTime);
+	if (papyrus->GetRemainTimer() < 0.f)
+	{
+		papyrus->ChangeState(Papyrus::Move);
+	}
 }
 
-void BossUnBreakPatternState::Execute(Monster*, float)
+BossBreakPattern1State* BossBreakPattern1State::Instance()
 {
+	static BossBreakPattern1State instance;
+	return &instance;
 }
 
-void BossUnBreakPatternState::Exit(Monster*)
+void BossBreakPattern1State::Execute(Papyrus* papyrus, float ElapsedTime)
 {
+	papyrus->MinusRemainTimer(ElapsedTime);
+	if (papyrus->GetRemainTimer() < 0.f)
+	{
+		papyrus->ChangeState(Papyrus::Move);
+	}
+}
+
+BossBreakPattern2State* BossBreakPattern2State::Instance()
+{
+	static BossBreakPattern2State instance;
+	return &instance;
+}
+
+void BossBreakPattern2State::Execute(Papyrus* papyrus, float ElapsedTime)
+{
+	papyrus->MinusRemainTimer(ElapsedTime);
+	if (papyrus->GetRemainTimer() < 0.f)
+	{
+		papyrus->ChangeState(Papyrus::Move);
+	}
+}
+
+BossCantMoveState* BossCantMoveState::Instance()
+{
+	static BossCantMoveState instance;
+	return &instance;
+}
+
+void BossCantMoveState::Execute(Papyrus* papyrus, float ElapsedTime)
+{
+	papyrus->MinusRemainTimer(ElapsedTime);
+	if (papyrus->GetRemainTimer() < 0.f)
+	{
+		papyrus->ChangeState(Papyrus::Move);
+	}
 }

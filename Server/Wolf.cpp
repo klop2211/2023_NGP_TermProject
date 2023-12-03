@@ -16,5 +16,5 @@ Wolf::Wolf(int SN) : CommonMonster(SN)
 
 void Wolf::Update(float ElapsedTime)
 {
-	m_State->Execute(this, ElapsedTime);
+	m_pMonsterState->Execute(this, ElapsedTime);
 }

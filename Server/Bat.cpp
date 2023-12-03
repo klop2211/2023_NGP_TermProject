@@ -13,6 +13,6 @@ Bat::Bat(int SN) : CommonMonster(SN)
 
 void Bat::Update(float ElapsedTime)
 {
-	m_State->Execute(this, ElapsedTime);
+	m_pMonsterState->Execute(this, ElapsedTime);
 }
 

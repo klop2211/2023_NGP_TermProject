@@ -18,15 +18,6 @@ bool Monster::IsDead(int Damage)
 	return false;
 }
 
-void Monster::ChangeState(MonsterState* pNewState)
-{
-	m_State->Exit(this);
-
-	m_State = pNewState;
-
-	m_State->Enter(this);
-}
-
 RECT Monster::GetBoundingBox()
 {
 	RECT ReturnValue;

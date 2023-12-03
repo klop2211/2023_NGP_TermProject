@@ -1,8 +1,6 @@
 #pragma once
 #include "Common.h"
 
-class MonsterState;
-
 class Monster
 {
 public:
@@ -10,8 +8,6 @@ public:
 
 	virtual void Update(float ElaspedTime) = 0;
 	virtual bool IsDead(int Damage);
-
-	virtual void ChangeState(MonsterState* pNewState);
 
 	RECT GetBoundingBox();
 
@@ -42,7 +38,6 @@ public:
 	void MinusElapsedTime(float time)	{ m_fAttackTimer -= time; }
 	void InitAttackCoolTime()			{ m_fAttackTimer = m_fAttackCoolTime;	}
 protected:
-	MonsterState* m_State;
 	BYTE	m_iSerialNum;
 
 	int		m_iMaxHp;
