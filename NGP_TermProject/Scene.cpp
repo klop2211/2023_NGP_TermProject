@@ -443,77 +443,22 @@ DWORD WINAPI Scene::ReceiveThread(LPVOID arg)
 	m_WriteStream->Write(temp);
 	m_WriteStream->Send();
 
-	//StateMsgType smt = StateMsgType::PlayerLocation;
-	//send(*m_pSock, (char*)&smt, sizeof(StateMsgType), 0);
-
-	//PlayerLocationMsg temp;
-	//temp.Location = POINT{ 0,0 };
-	//temp.PlayerId = -1;
-	//temp.State = PStateName::Move;
-	//temp.Direction = 0;
-	//send(*m_pSock, (char*)&temp, sizeof(PlayerLocationMsg), 0);
 
 	m_pStateMsgArgu = NULL;
 	while (1) {
 		WaitForSingleObject(*m_pWriteEvent, INFINITE);   // 쓰기 완료 대기
 
+		if (m_pStateMsgArgu != NULL)
+			delete m_pStateMsgArgu;
 
-		//for (int i = 0; i < 2; ++i) {
-			if (m_pStateMsgArgu != NULL)
-				delete m_pStateMsgArgu;
-			BYTE StateMsg;
-			BYTE upper2Bits = 0;
-			BYTE lower6Bits = 0;
+		BYTE StateMsg;
+		BYTE upper2Bits = 0;
+		BYTE lower6Bits = 0;
 
-			bool IsOver = false;
-			m_ReadStream->Read(*m_pSock, m_StateMsgQueue, IsOver);
+		bool IsOver = false;
 
-			//retval = recv(*m_pSock, (char*)&StateMsg, sizeof(BYTE), MSG_WAITALL);
-			//if (retval == SOCKET_ERROR) {
-			//	PostQuitMessage(0);
-			//}
+		m_ReadStream->Read(*m_pSock, m_StateMsgQueue, IsOver);
 
-			//// 상위 2비트 추출
-			//upper2Bits = StateMsg >> 6;
-
-			//// 하위 6비트 추출
-			//lower6Bits = StateMsg & 0x3F;
-
-			//// 추가로 읽을 바이트 사이즈
-			//switch (lower6Bits)
-			//{
-			//case (int)StateMsgType::MonsterSpawn:	m_iMsgSize = sizeof(MonsterSpawnStateMsg); break;
-			//case (int)StateMsgType::MonsterHp:		m_iMsgSize = sizeof(MonsterHpStateMsg); break;
-			//case  (int)StateMsgType::PlayerLocation:m_iMsgSize = sizeof(PlayerLocationMsg); break;
-			//case (int)StateMsgType::UseCard:		m_iMsgSize = sizeof(UseCardStateMsg);	break;
-			//case  (int)StateMsgType::CastleHp:		m_iMsgSize = sizeof(CastleHpStateMsg);	break;
-			//default:
-			//	break;
-			//}
-
-
-			//switch (lower6Bits)
-			//{
-			//case	(int)StateMsgType::MonsterSpawn:	m_pStateMsgArgu = new MonsterSpawnStateMsg; break;
-			//case	(int)StateMsgType::MonsterHp:		m_pStateMsgArgu = new MonsterHpStateMsg;	break;
-			//case	(int)StateMsgType::PlayerLocation:	m_pStateMsgArgu = new PlayerLocationMsg;	break;
-			//case	(int)StateMsgType::UseCard:			m_pStateMsgArgu = new UseCardStateMsg;		break;
-			//case	(int)StateMsgType::CastleHp:		m_pStateMsgArgu = new CastleHpStateMsg;		break;
-			//default:
-			//	break;
-			//}
-
-			//retval = recv(*m_pSock, (char*)m_pStateMsgArgu, m_iMsgSize, MSG_WAITALL);
-			//if (retval == SOCKET_ERROR) {
-			//	PostQuitMessage(0);
-			//}
-
-			//PlayerLocationMsg* temp = (PlayerLocationMsg*)m_pStateMsgArgu;
-			//if (temp->PlayerId != m_iClientNum)
-			//{
-			//	break;
-			//}
-		//}
 		SetEvent(*m_pReadEvent);
 	}
 

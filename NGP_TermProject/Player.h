@@ -87,7 +87,7 @@ private:
 	CImage* m_pDeck;		// 카드 뒷면 이미지
 	CImage* m_pManaImg[2];	// 마나 이미지
 
-	int**		m_ppTripord;		// 트라이포드
+	int			m_ppTripord[10][4];		// 트라이포드
 		
 	int			m_iUltimate;		// 궁극기 게이지
 	int			m_iCardCount;		// 덱 카드개수 

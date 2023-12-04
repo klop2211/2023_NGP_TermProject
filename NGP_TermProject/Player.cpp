@@ -38,6 +38,8 @@ Player::Player()
 		m_iExperienceBar[i] = (i + 1) * (i + 1) * 2 + 30 / (i + 2);
 	}
 
+	memset(m_ppTripord, 0, sizeof(int) * 40);
+
 	m_bIsClick = false;
 	m_iStartX, m_iStartY = 0;
 	m_iClickSelect = -1;
@@ -73,6 +75,8 @@ void Player::Update(float elapsed)
 	m_fFrameTime += FRAME_SPEED * elapsed;
 	m_iFrameIdx = (int)m_fFrameTime;
 	if (m_fFrameTime > m_iFrameMax) {
+		if (m_pStateMachine->isInState(*PSkill::Instance()))
+			ChangeState(PStateName::Stay);
 		m_fFrameTime = 0.f;
 		m_iFrameIdx = 0;
 	}
@@ -107,7 +111,6 @@ void Player::ChangeState(PStateName ps)
 		break;
 	case PStateName::Skill:
 		ChangeState(PSkill::Instance());
-
 		break;
 	default:
 		break;
@@ -198,7 +201,13 @@ void Player::OnProcessingKeyboardMessage(HWND hWnd, UINT message, WPARAM wParam,
 				ChangeState(PMove::Instance());
 			if (GetAsyncKeyState(0x44) & 0x8000 && m_pStateMachine->isInState(*PMove::Instance()))
 				ChangeState(PStay::Instance());
+			break;
 
+		case 't':
+		case 'T':
+
+
+			ChangeState(PSkill::Instance());
 			break;
 		default:
 			break;
@@ -291,145 +300,6 @@ void Player::UseCard()
 		ChangeState(PSkill::Instance());
 		//switch (m_pHandCard[m_iClickSelect]->GetCardName())
 		//{
-		//case CardName::N_ghltjsckd: // 회선창
-		//	if (player.GetDirection() == Left)
-		//		player.SetImage(L"./\\윈플 텀프 이미지\\창술사_회선창_이펙트(left).png");
-		//	else
-		//		player.SetImage(L"./\\윈플 텀프 이미지\\창술사_회선창_이펙트.png");
-		//	for (int i = 0; i < player.GetFrame_Max(); i++) {
-		//		if (i < 2) {
-		//			if (player.GetDirection() == Left)
-		//				player.SetOder(i, { -15,10 }, -1);
-		//			else
-		//				player.SetOder(i, { 15,10 }, -1);
-		//		}
-		//		else {
-		//			if (player.GetDirection() == Left)
-		//				player.SetOder(i, { -15,-10 }, -1);
-		//			else
-		//				player.SetOder(i, { 15,-10 }, -1);
-		//		}
-		//	}
-		//	m_bOnemore = true;
-		//	player.SetBaseDelay(3);
-		//	player.SetSpeed(player.GetOder(0).speed.x, player.GetOder(0).speed.y);
-		//	player.SetDamage(9);
-		//	player.SetNeutralization(10);
-		//	player.SetDestruction(0);
-		//	if (m_ppTripord[(int)CardName::N_ghltjsckd][0] == 1) {
-		//		for (int i = 0; i < player.GetFrame_Max(); i++) {
-		//			if (i < 2) {
-		//				if (player.GetDirection() == Left)
-		//					player.SetOder(i, { -20,10 }, -1);
-		//				else
-		//					player.SetOder(i, { 20,10 }, -1);
-		//			}
-		//			else {
-		//				if (player.GetDirection() == Left)
-		//					player.SetOder(i, { -20,-10 }, -1);
-		//				else
-		//					player.SetOder(i, { 20,-10 }, -1);
-		//			}
-		//		}
-
-		//	}
-		//	else if (m_ppTripord[(int)CardName::N_ghltjsckd][0] == 2) {
-		//		player.SetDamage(player.GetDamage() + 2);
-		//	}
-		//	else if (m_ppTripord[(int)CardName::N_ghltjsckd][0] == 3) {
-		//		m_bOnemore = false;
-		//		player.SetDamage(player.GetDamage() + 4);
-		//	}
-		//	if (m_ppTripord[(int)CardName::N_ghltjsckd][1] == 1) {
-		//		player.SetType(Knockdown);
-		//	}
-		//	else if (m_ppTripord[(int)CardName::N_ghltjsckd][1] == 2) {
-		//		player.SetNamed_Damage(3);
-		//	}
-		//	else if (m_ppTripord[(int)CardName::N_ghltjsckd][(int)TriIndex::I_Tier2] == 3) {
-		//		PlusUltimate();
-		//	}
-
-		//	if (m_ppTripord[(int)CardName::N_ghltjsckd][(int)TriIndex::I_Tier3] == 1) {
-		//		if (!m_pHandCard[m_iClickSelect]->GetOnce()) {//찐카드
-		//			Ghltjsckd* temp = new Ghltjsckd(m_ppTripord, true);
-		//			m_pHandCard[m_iClickSelect] = temp;
-		//			canNull = false;
-		//		}
-		//	}
-		//	else if (m_ppTripord[(int)CardName::N_ghltjsckd][(int)TriIndex::I_Tier3] == 2) {
-		//		DrawCard(true);
-		//	}
-		//	break;
-		//case CardName::N_dusghkstja: // 연환섬
-		//	if (player.GetDirection() == Left)
-		//		player.SetImage(L"./\\윈플 텀프 이미지\\창술사_연환섬_이펙트_돌진추가(left).png");
-		//	else
-		//		player.SetImage(L"./\\윈플 텀프 이미지\\창술사_연환섬_이펙트_돌진추가.png");
-		//	for (int i = 0; i < player.GetFrame_Max(); i++) {
-		//		if (i < 3) {
-		//			if (player.GetDirection() == Left)
-		//				player.SetOder(i, { -20,0 }, -1);
-		//			else
-		//				player.SetOder(i, { 20,0 }, -1);
-		//		}
-		//		else {
-		//			player.SetOder(i, { 0,0 }, -1);
-		//		}
-		//	}
-		//	player.SetBaseDelay(3);
-		//	player.SetSpeed(player.GetOder(0).speed.x, player.GetOder(0).speed.y);
-		//	player.SetDamage(6);
-		//	player.SetNeutralization(5);
-		//	player.SetDestruction(1);
-		//	if (m_ppTripord[(int)CardName::N_dusghkstja][0] == 1) {
-		//		player.SetFrame_Now(3);
-		//		player.SetDamage(6 + 1);
-		//	}
-		//	else if (m_ppTripord[(int)CardName::N_dusghkstja][0] == 2) {
-		//		for (int i = 0; i < player.GetFrame_Max(); i++) {
-		//			if (i < 3) {
-		//				if (player.GetDirection() == Left)
-		//					player.SetOder(i, { -25,0 }, -1);
-		//				else
-		//					player.SetOder(i, { 25,0 }, -1);
-		//			}
-		//			else {
-		//				player.SetOder(i, { 0,0 }, -1);
-		//			}
-		//		}
-		//	}
-		//	else if (m_ppTripord[(int)CardName::N_dusghkstja][(int)TriIndex::I_Tier1] == 3) {
-		//		PlusUltimate();
-		//	}
-		//	if (m_ppTripord[(int)CardName::N_dusghkstja][1] == 1) {
-		//		player.SetBaseDelay(2);
-		//	}
-		//	else if (m_ppTripord[(int)CardName::N_dusghkstja][1] == 2) {
-		//		player.SetNeutralization(player.GetNeutralization() + 3);
-		//	}
-		//	else if (m_ppTripord[(int)CardName::N_dusghkstja][1] == 3) {
-		//		player.SetDamage(player.GetDamage() + 2);
-		//	}
-		//	if (m_ppTripord[(int)CardName::N_dusghkstja][2] == 1) {
-		//		DrawCard();
-		//	}
-		//	else if (m_ppTripord[(int)CardName::N_dusghkstja][2] == 2) {
-		//		for (int i = 0; i < player.GetFrame_Max(); i++) {
-		//			if (i < 3) {
-		//				if (player.GetDirection() == Left)
-		//					player.SetOder(i, { -25,0 }, -1);
-		//				else
-		//					player.SetOder(i, { 25,0 }, -1);
-		//			}
-		//			else {
-		//				player.SetOder(i, { 0,0 }, SowrdLight);
-		//			}
-		//		}
-
-		//	}
-
-		//	break;
 		//case CardName::N_cjdfydcnftn: // 청룡출수
 		//	if (player.GetDirection() == Left)
 		//		player.SetImage(L"./\\윈플 텀프 이미지\\창술사_청룡출수_이펙트(left).png");

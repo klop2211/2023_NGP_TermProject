@@ -2,6 +2,7 @@
 #include "PlayerOwnedStates.h"
 
 
+
 //-----------------------------------------------------------------------
 // PMove
 //-----------------------------------------------------------------------
@@ -98,11 +99,14 @@ PSkill* PSkill::Instance()
 	return &instance;
 }
 
+#define TEST_CARDNAME CardName::N_dusghkstja
+
 void PSkill::Enter(Player* player)
 {
 	int tripordNum = 0;
 	int dx, dy;
-	switch (player->GetUseCardName())
+	CardName test = TEST_CARDNAME;
+	switch (test)
 	{
 	case CardName::N_cjdfydwls: // 청룡진
 		if (player->GetDir() == Left)
@@ -157,7 +161,7 @@ void PSkill::Enter(Player* player)
 		else
 			player->SetImg(L"./\\윈플 텀프 이미지\\창술사_반월섬_이펙트.png");
 
-		player->SetSpeed(10);
+		player->SetSpeed(320);
 		player->SetDamage(12);
 		player->SetStunDamage(20);
 		player->SetDestruction(2);
@@ -170,7 +174,7 @@ void PSkill::Enter(Player* player)
 			player->SetDamage(player->GetDamage() + 2);
 		}
 		else if (tripordNum == 3) {
-			player->SetSpeed(30);
+			player->SetSpeed(400);
 		}
 
 		tripordNum = player->ActivatedTripordNumber(CardName::N_qksdnjftja, 1);
@@ -190,7 +194,7 @@ void PSkill::Enter(Player* player)
 		else
 			player->SetImg(L"./\\윈플 텀프 이미지\\창술사_맹룡열파2_이펙트.png");
 
-		player->SetSpeed(70);
+		player->SetSpeed(250);
 		player->SetDamage(10);
 		player->SetStunDamage(15);
 		player->SetDestruction(0);
@@ -233,6 +237,52 @@ void PSkill::Enter(Player* player)
 			//TODO:마나감소
 		}
 		break;
+	case CardName::N_dusghkstja:  //연환섬
+		if (player->GetDir() == Left)
+			player->SetImg(L"./\\윈플 텀프 이미지\\창술사_연환섬_이펙트_돌진추가(left).png");
+		else
+			player->SetImg(L"./\\윈플 텀프 이미지\\창술사_연환섬_이펙트_돌진추가.png");
+		player->SetSpeed(200);
+		player->SetDamage(6);
+		player->SetStunDamage(5);
+		player->SetDestruction(1);
+
+		tripordNum = player->ActivatedTripordNumber(CardName::N_dusghkstja, 0);
+		if (tripordNum == 1) {
+			if (player->GetDir() == Left)
+				player->SetImg(L"./\\윈플 텀프 이미지\\창술사_연환섬_이펙트(left).png");
+			else
+				player->SetImg(L"./\\윈플 텀프 이미지\\창술사_연환섬_이펙트.png");
+			player->SetDamage(player->GetDamage() + 4);
+			player->SetSpeed(0);
+		}
+		else if (tripordNum == 2) {
+			player->SetSpeed(300);
+		}
+		else if (tripordNum == 3) {
+			player->PlusUltimate();
+		}
+
+		tripordNum = player->ActivatedTripordNumber(CardName::N_dusghkstja, 1);
+		if (tripordNum == 1) {
+			if (player->GetDir() == Left)
+				player->SetImg(L"./\\윈플 텀프 이미지\\창술사_연환섬_이펙트(left).png");
+			else
+				player->SetImg(L"./\\윈플 텀프 이미지\\창술사_연환섬_이펙트.png");
+			player->SetSpeed(300);
+		}
+		else if (tripordNum == 2) {
+			player->SetStunDamage(player->GetStunDamage() + 3);
+		}
+		else if (tripordNum == 3) {
+			player->SetDamage(player->GetDamage() + 4);
+		}
+
+		tripordNum = player->ActivatedTripordNumber(CardName::N_dusghkstja, 2);
+		if (tripordNum == 1) {
+			player->DrawCard();
+		}
+		break;
 
 
 
@@ -243,6 +293,7 @@ void PSkill::Enter(Player* player)
 
 void PSkill::Execute(Player* player, float elapsed)
 {
+
 }
 
 void PSkill::Exit(Player* player)
@@ -250,7 +301,8 @@ void PSkill::Exit(Player* player)
 	int tripordNum;
 	int dx, dy;
 	int speed;
-	switch (player->GetUseCardName())
+	CardName test = TEST_CARDNAME;
+	switch (test)
 	{
 	case CardName::N_cjdfydwls:
 		tripordNum = player->ActivatedTripordNumber(CardName::N_cjdfydwls, 1); // 청룡진 2트포 체크
@@ -274,19 +326,36 @@ void PSkill::Exit(Player* player)
 		else if (tripordNum == 2) {
 			dx = player->GetDir() == Left ? -100 : 200;
 			dy = 0;
-			speed = player->GetDir() == Left ? -30 : 30;
+			speed = player->GetDir() == Left ? -130 : 130;
 			player->AddSkillObject(SkillObject{ Hurricane,
 				FPOINT{player->GetLocation().x + dx, player->GetLocation().y - dy}, speed,
 				player->GetDamage(), player->GetStunDamage(), player->GetDestruction() });
 		}
 		break;
-
+	case CardName::N_aodfyddufvk:
+		tripordNum = player->ActivatedTripordNumber(CardName::N_aodfyddufvk, 2);
+		if (tripordNum == 1) {
+			m_bOnemore = false;
+			player->ChangeState(PStateName::Skill);
+		}
+		break;
+	case CardName::N_dusghkstja:
+		tripordNum = player->ActivatedTripordNumber(CardName::N_dusghkstja, 2);
+		if (tripordNum == 2) {
+			dx = player->GetDir() == Left ? -100 : 200;
+			dy = 0;
+			speed = 500;
+			player->AddSkillObject(SkillObject{ SowrdLight,
+				FPOINT{player->GetLocation().x + dx, player->GetLocation().y - dy}, speed,
+				player->GetDamage(), player->GetStunDamage(), player->GetDestruction() });
+		}
+		break;
 	default:
 		break;
 	}
-	player->SetSpeed(0);
-	player->SetDamage(0);
-	player->SetStunDamage(0);
-	player->SetDestruction(0);
+	//player->SetSpeed(0);
+	//player->SetDamage(0);
+	//player->SetStunDamage(0);
+	//player->SetDestruction(0);
 
 }
