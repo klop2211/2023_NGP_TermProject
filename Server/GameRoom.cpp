@@ -3,14 +3,19 @@
 
 #include "Wolf.h"
 #include "Bat.h"
-#include "Castle.h"
+#include "Papyrus.h"
 #include "MonsterState.h"
+#include "Castle.h"
+
 #include "PlayerInfo.h"
 #include "MemoryWriteStream.h"
 
-GameRoom::GameRoom(array<SOCKET, MAX_CLIENTS>& ClientSocket)
+GameRoom::GameRoom(array<SOCKET, MAX_CLIENTS>& ClientSocket) :
+	m_iWolfSN(0),
+	m_iBatSN(0),
+	m_iPhase(GameRoom::WolfPhase),
+	m_Papyrus(nullptr)
 {
-	m_iWolfSN = m_iBatSN = 0;
 	m_pCastle = new Castle();
 	m_pStream = new MemoryWriteStream(ClientSocket);
 	for (auto& p : m_pPlayerList)
@@ -26,7 +31,7 @@ GameRoom::~GameRoom()
 	for (auto& p : m_pPlayerList)
 	{
 		delete p;
-		p = nullptr;
+		//p = nullptr;
 	}
 }
 
@@ -82,7 +87,10 @@ void GameRoom::SpawnEnemy()
 		}
 		break;
 	case BossPhase:
-
+		if (!m_Papyrus)
+		{
+			m_Papyrus = new Papyrus();
+		}
 		break;
 	default:
 		break;
@@ -99,6 +107,7 @@ void GameRoom::UpdateEnemy()
 		bat->Update(m_fElapsedTime);
 		if (bat->GetCanAttack())
 		{
+			bat->SetCanAttack(false);
 			WriteMonsterState(MonsterType::Bat, MonNum, MonsterStateType::Attack);
 			m_pCastle->GetDamage(bat->GetDamage());
 			WriteCastleHp();
@@ -112,10 +121,16 @@ void GameRoom::UpdateEnemy()
 		wolf->Update(m_fElapsedTime);
 		if (wolf->GetCanAttack())
 		{
+			wolf->SetCanAttack(false);
 			WriteMonsterState(MonsterType::Wolf, it.first, MonsterStateType::Attack);
 			m_pCastle->GetDamage(wolf->GetDamage());
 			WriteCastleHp();
 		}
+	}
+
+	if (m_Papyrus)
+	{
+		m_Papyrus->Update(m_fElapsedTime);
 	}
 }
 
@@ -147,6 +162,32 @@ void GameRoom::IsCollisionMonsterWithCastle()
 			it.second->ChangeState(MonsterAttackState::Instance());
 		}
 	}
+}
+
+void GameRoom::IsCollisionMonsterWithPlayer(int PlayerIndex)
+{
+	const auto& p = m_pPlayerList[PlayerIndex];
+	for (const auto& it : m_BatMap)
+	{
+		if (IsCollision(p->GetBB(), it.second->GetBoundingBox()))
+		{
+
+		}
+	}
+	for (const auto& it : m_WolfMap)
+	{
+		if (IsCollision(p->GetBB(), it.second->GetBoundingBox()))
+		{
+
+		}
+	}
+}
+
+void GameRoom::DoCollisionCheck()
+{
+	// TODO: Collision Group으로 개선 필요
+	//IsCollisionMonsterWithPlayer();
+	IsCollisionMonsterWithCastle();
 }
 
 void GameRoom::ProcessMonsterHpMsg(StateMsgArgu* Arg)
@@ -185,7 +226,7 @@ void GameRoom::UpdateUseStateMsg(array<queue<StateMsgInfo>, MAX_CLIENTS> StateMs
 				ReadPlayerLocation(SMI.pStateMsgArgu);
 				break;
 			case StateMsgType::UseCard:
-
+				ReadUseCard(SMI.pStateMsgArgu);
 				break;
 			default:
 				printf("GameRoom::UpdateEnemy Error!\n");
@@ -208,6 +249,9 @@ void GameRoom::WriteMonsterState(MonsterType MT, BYTE id, MonsterStateType MST)
 
 	m_pStream->Write(StateMsgType::MonsterState);
 	m_pStream->Write(MSM);
+
+	BYTE a[4]{ 1,2,3,4 };
+	m_pStream->Write(MSM, 4);
 }
 
 void GameRoom::WritePlayerLocation()
@@ -264,4 +308,12 @@ void GameRoom::ReadPlayerLocation(StateMsgArgu* SMA)
 	m_pPlayerList[ClientNum]->SetLocation(FPOINT(Location.x, Location.y));
 	m_pPlayerList[ClientNum]->SetState(PSN);
 	m_pPlayerList[ClientNum]->SetDirection(dirction);
+}
+
+void GameRoom::ReadUseCard(StateMsgArgu* SMA)
+{
+	UseCardStateMsg* UCSM = (UseCardStateMsg*)SMA;
+	int ClientNum = UCSM->PlayerId;
+
+
 }

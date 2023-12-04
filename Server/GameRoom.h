@@ -24,6 +24,8 @@ public:
 	// COllision Fuction
 	bool IsCollision(const RECT& a, const RECT& b);
 	void IsCollisionMonsterWithCastle();
+	void IsCollisionMonsterWithPlayer(int PlayerIndex);
+	void DoCollisionCheck();
 
 	// 송수신 관련 함수
 	void WriteMonsterState(MonsterType, BYTE, MonsterStateType);
@@ -32,6 +34,7 @@ public:
 	void WriteCastleHp();
 
 	void ReadPlayerLocation(StateMsgArgu*);
+	void ReadUseCard(StateMsgArgu*);
 private:
 	std::chrono::time_point<std::chrono::system_clock> m_tPreviousTime;
 	float m_fElapsedTime;
@@ -39,6 +42,7 @@ private:
 	// 현재 가지고 있는 몬스터 리스트
 	std::map<int, class Bat*> m_BatMap;
 	std::map<int, class Wolf*> m_WolfMap;
+	class Papyrus* m_Papyrus;
 
 	// 플레이어 리스트
 	std::array<class PlayerInfo* , MAX_CLIENTS> m_pPlayerList;

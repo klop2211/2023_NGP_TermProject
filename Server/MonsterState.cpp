@@ -1,6 +1,7 @@
 #include "MonsterState.h"
 #include "Monster.h"
 #include "Papyrus.h"
+#include "Random.h"
 
 #include "StateMessage.h"
 
@@ -51,7 +52,14 @@ void BossMoveState::Execute(Papyrus* papyrus, float ElapsedTime)
 	{
 		if (papyrus->GetBreaked())
 		{
-
+			if (Random::GetFRandom() > 0.5)
+			{
+				papyrus->ChangeState(Papyrus::BPattern1);
+			}
+			else
+			{
+				papyrus->ChangeState(Papyrus::BPattern2);
+			}
 		}
 		else
 		{
