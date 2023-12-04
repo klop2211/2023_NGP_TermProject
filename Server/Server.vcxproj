@@ -144,13 +144,13 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\MemStream\MemoryReadStream.cpp" />
+    <ClCompile Include="..\MemStream\MemoryStream.cpp" />
     <ClCompile Include="..\MemStream\MemoryWriteStream.cpp" />
     <ClCompile Include="Bat.cpp" />
     <ClCompile Include="Castle.cpp" />
     <ClCompile Include="Common.cpp" />
     <ClCompile Include="CommonMonster.cpp" />
     <ClCompile Include="GameRoom.cpp" />
-    <ClCompile Include="MemoryStream.cpp" />
     <ClCompile Include="Monster.cpp" />
     <ClCompile Include="MonsterState.cpp" />
     <ClCompile Include="MsgInstence.cpp" />

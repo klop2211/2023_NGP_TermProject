@@ -3,15 +3,16 @@
 
 
 
-void MemoryReadStream::Read(std::queue<StateMsgInfo>& q, bool& OverCheck)
+void MemoryReadStream::Read(const SOCKET& socket, 
+	std::queue<StateMsgInfo>& q, bool& OverCheck)
 {
 	int retval;
 	int BufSize;
-	retval = recv(m_Socket, (char*)&BufSize, sizeof(int), MSG_WAITALL);
+	retval = recv(socket, (char*)&BufSize, sizeof(int), MSG_WAITALL);
 	if (retval == SOCKET_ERROR) {
 		err_quit("MemoryReadStream::Read bufsize Err");
 	}
-	retval = recv(m_Socket, (char*)buf, BufSize, MSG_WAITALL);
+	retval = recv(socket, (char*)buf, BufSize, MSG_WAITALL);
 	if (retval == SOCKET_ERROR) {
 		err_quit("MemoryReadStream::Read buf Err");
 	}

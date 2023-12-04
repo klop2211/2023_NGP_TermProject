@@ -417,7 +417,7 @@ DWORD WINAPI Scene::ReceiveThread(LPVOID arg)
 	//if (sock == INVALID_SOCKET) err_quit("socket()");
 
 	// 스트림 생성
-	m_ReadStream = new MemoryReadStream(*m_pSock);
+	m_ReadStream = new MemoryReadStream();
 	m_WriteStream = new MemoryWriteStream(*m_pSock);
 
 	// connect()
@@ -466,7 +466,7 @@ DWORD WINAPI Scene::ReceiveThread(LPVOID arg)
 			BYTE lower6Bits = 0;
 
 			bool IsOver = false;
-			m_ReadStream->Read(m_StateMsgQueue, IsOver);
+			m_ReadStream->Read(*m_pSock, m_StateMsgQueue, IsOver);
 
 			//retval = recv(*m_pSock, (char*)&StateMsg, sizeof(BYTE), MSG_WAITALL);
 			//if (retval == SOCKET_ERROR) {

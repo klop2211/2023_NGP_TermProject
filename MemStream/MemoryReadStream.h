@@ -7,14 +7,13 @@
 class MemoryReadStream
 {
 public:
-	MemoryReadStream(const SOCKET& socket)
-		: m_Socket(socket),
-		m_iNowReadIndex(0)
+	MemoryReadStream()
+		: m_iNowReadIndex(0)
 	{
 		Init();
 	};
 
-	void Read(std::queue<StateMsgInfo>& q, bool&);
+	void Read(const SOCKET& socket, std::queue<StateMsgInfo>& q, bool&);
 	StateMsgType GetMsgType();
 
 	StateMsgArgu* GetStateMsg(StateMsgType, int&);
@@ -26,10 +25,4 @@ private:
 
 	// 스트림 Write에 적을 인덱스 위치
 	int m_iNowReadIndex;
-
-	// buf에 담긴 바이트 수
-	int m_iBufSize;
-
-	// 소켓
-	SOCKET m_Socket;
 };

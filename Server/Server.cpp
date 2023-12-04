@@ -14,6 +14,8 @@ array<SOCKET, MAX_CLIENTS> client_sockets;
 // 상태 메세지를 저장할 공유 버퍼
 array<array<queue<StateMsgInfo>, MAX_CLIENTS>, MAX_ROOMS> SharedBuffer;
 
+array<MemoryReadStream*, MAX_ROOMS> ReadStreamArr;
+
 bool IsGameOver(BYTE StateMsg, StateMsgArgu* arg)
 {
 	switch (StateMsg)
@@ -71,7 +73,7 @@ DWORD WINAPI ProcessClient1(LPVOID arg)
 
 	DWORD retval;
 
-	MemoryReadStream* pStream = new MemoryReadStream(client_sock);
+	MemoryReadStream* pStream = new MemoryReadStream();
 
 	while (true)
 	{
@@ -80,7 +82,7 @@ DWORD WINAPI ProcessClient1(LPVOID arg)
 
 		// 클라이언트 처리 로직
 		bool bIsGameOver = false;
-		pStream->Read(SharedBuffer[RoomNum][0], bIsGameOver);
+		pStream->Read(client_sock, SharedBuffer[RoomNum][0], bIsGameOver);
 		if (bIsGameOver)
 		{
 			CloseHandle(GetCurrentThread());
@@ -160,7 +162,7 @@ DWORD WINAPI ProcessClient2(LPVOID arg)
 	SOCKET client_sock = Arg->sock;
 	int RoomNum = Arg->RoomNumber;
 
-	MemoryReadStream* pStream = new MemoryReadStream(client_sock);
+	MemoryReadStream* pStream = new MemoryReadStream();
 
 	DWORD retval;
 	while (true)
@@ -170,7 +172,7 @@ DWORD WINAPI ProcessClient2(LPVOID arg)
 
 		// 클라이언트 처리 로직
 		bool bIsGameOver = false;
-		pStream->Read(SharedBuffer[RoomNum][1], bIsGameOver);
+		pStream->Read(client_sock, SharedBuffer[RoomNum][1], bIsGameOver);
 		if (bIsGameOver)
 		{
 			CloseHandle(GetCurrentThread());
@@ -242,6 +244,8 @@ DWORD WINAPI ProcessRoom(LPVOID arg)
 	int RoomNum = Arg->RoomNumber;
 	array<HANDLE, MAX_CLIENTS> hClients;
 
+	ReadStreamArr[RoomNum] = new MemoryReadStream();
+
 	// Array는 Vector와 다르게 Move의 효율이 좋지 않다.
 	//TODO: 실행되는지 확인S
 	//memcpy(hClients.data(), Arg->Client.data(), sizeof(HANDLE) * MAX_CLIENTS);
@@ -257,6 +261,8 @@ DWORD WINAPI ProcessRoom(LPVOID arg)
 
 		SetEvent(events[RoomNum].hClient1Event);
 	}
+
+	delete ReadStreamArr[RoomNum];
 	delete pGameRoom;
 	return NULL;
 }
