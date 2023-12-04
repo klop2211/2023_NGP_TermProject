@@ -25,6 +25,9 @@
     <Filter Include="2019180016\Source">
       <UniqueIdentifier>{eac29aa7-006d-4c02-908f-dc854cff9415}</UniqueIdentifier>
     </Filter>
+    <Filter Include="2019180016\Stream">
+      <UniqueIdentifier>{012aecea-3f7c-496f-b802-53fe2d61a190}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Server.cpp">
@@ -64,10 +67,13 @@
       <Filter>2019180016\Source</Filter>
     </ClCompile>
     <ClCompile Include="..\MemStream\MemoryReadStream.cpp">
-      <Filter>2019180016\Source</Filter>
+      <Filter>2019180016\Stream</Filter>
     </ClCompile>
     <ClCompile Include="..\MemStream\MemoryWriteStream.cpp">
-      <Filter>2019180016\Source</Filter>
+      <Filter>2019180016\Stream</Filter>
+    </ClCompile>
+    <ClCompile Include="MemoryStream.cpp">
+      <Filter>2019180016\Stream</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -107,11 +113,17 @@
     <ClInclude Include="Papyrus.h">
       <Filter>2019180016\Header</Filter>
     </ClInclude>
+    <ClInclude Include="StreamGlobal.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
     <ClInclude Include="..\MemStream\MemoryReadStream.h">
-      <Filter>2019180016\Header</Filter>
+      <Filter>2019180016\Stream</Filter>
     </ClInclude>
     <ClInclude Include="..\MemStream\MemoryWriteStream.h">
-      <Filter>2019180016\Header</Filter>
+      <Filter>2019180016\Stream</Filter>
+    </ClInclude>
+    <ClInclude Include="MemoryStream.h">
+      <Filter>2019180016\Stream</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
