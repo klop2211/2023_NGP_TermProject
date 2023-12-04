@@ -2,7 +2,6 @@
 #include "Common.h"
 #include "GameRoom.h"
 #include "StateMessage.h"
-#include "MsgInstence.h"
 #include "MemoryReadStream.h"
 
 // 최대 방 개수만큼 이벤트 생성
@@ -381,14 +380,14 @@ int main(int argc, char* argv[])
 				i++;
 			}
 
-			//{
-			//	GameRoom* pGameRoom = new GameRoom(arg.Clients);
-			//	while (true)
-			//	{
-			//		pGameRoom->Update(SharedBuffer[0]);
-			//		pGameRoom->WriteMonsterState(MonsterType::Wolf, 0, MonsterStateType::Attack);
-			//	}
-			//}
+			{
+				GameRoom* pGameRoom = new GameRoom(arg.Clients);
+				while (true)
+				{
+					pGameRoom->Update(SharedBuffer[0]);
+					pGameRoom->WriteMonsterState(MonsterType::Wolf, 0, MonsterStateType::Attack);
+				}
+			}
 
 			// 클라1 신호 on
 			SetEvent(events[RoomNum++].hClient1Event);
