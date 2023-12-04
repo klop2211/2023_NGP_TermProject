@@ -47,6 +47,7 @@ void MemoryWriteStream::Write(const Type& data, int bytes)
 	//CheckArithmetic(data);
 
 	int size;
+
 	if (bytes == -1)
 	{
 		size = sizeof(Type);
@@ -64,7 +65,7 @@ void MemoryWriteStream::Write(const Type& data, int bytes)
 
 	memcpy_s(buf + m_iNowWriteIndex, STREAMBUFFERSIZE - (m_iNowWriteIndex + size), &data, size);
 	m_iNowWriteIndex += size;
-	buf[m_iNowWriteIndex] = '\0';
+	// buf[m_iNowWriteIndex] = '\0';
 }
  
 template<typename Type>

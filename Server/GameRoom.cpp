@@ -249,9 +249,6 @@ void GameRoom::WriteMonsterState(MonsterType MT, BYTE id, MonsterStateType MST)
 
 	m_pStream->Write(StateMsgType::MonsterState);
 	m_pStream->Write(MSM);
-
-	BYTE a[4]{ 1,2,3,4 };
-	m_pStream->Write(MSM, 4);
 }
 
 void GameRoom::WritePlayerLocation()
