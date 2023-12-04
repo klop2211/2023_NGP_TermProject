@@ -28,3 +28,13 @@ RECT Monster::GetBoundingBox()
 
 	return ReturnValue;
 }
+
+bool Monster::GetDamageAndIsDead(int Damage, int StunDamage, int Destuction, int NamedDamage, int Type)
+{
+	m_iCurrentHp -= Damage;
+	if (m_iCurrentHp <= 0)
+	{
+		return true;
+	}
+	return false;
+}

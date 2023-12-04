@@ -53,7 +53,7 @@ void GameRoom::Update(array<queue<StateMsgInfo>, MAX_CLIENTS> StateMsg)
 	WritePlayerLocation();
 	//SpawnEnemy();
 	//UpdateEnemy();
-
+	DoCollisionCheck();
 
 	m_pStream->Send();
 }
@@ -164,21 +164,84 @@ void GameRoom::IsCollisionMonsterWithCastle()
 	}
 }
 
-void GameRoom::IsCollisionMonsterWithPlayer(int PlayerIndex)
+void GameRoom::IsCollisionMonsterWithPlayer(PlayerInfo* p)
 {
-	const auto& p = m_pPlayerList[PlayerIndex];
 	for (const auto& it : m_BatMap)
 	{
-		if (IsCollision(p->GetBB(), it.second->GetBoundingBox()))
+		int SN = it.first;
+		Bat* bat = it.second;
+		if (IsCollision(p->GetBB(), bat->GetBoundingBox()))
 		{
+			bool IsDead = bat->GetDamageAndIsDead(
+				p->GetDamage(),
+				0, 0, 0,
+				p->GetType());
 
+			MonsterHpStateMsg MHSM;
+			MHSM.SerialId = SN;
+			MHSM.Type = MonsterType::Bat;
+			MHSM.Hp = bat->GetCurrentHp();
+
+			m_pStream->Write(StateMsgType::MonsterHp);
+			m_pStream->Write(MHSM);
+
+			if (IsDead)
+			{
+				p->AddKillCount(MonsterType::Bat);
+				m_BatMap.erase(SN);
+			}
 		}
 	}
 	for (const auto& it : m_WolfMap)
 	{
-		if (IsCollision(p->GetBB(), it.second->GetBoundingBox()))
+		int SN = it.first;
+		Wolf* wolf = it.second;
+		if (IsCollision(p->GetBB(), wolf->GetBoundingBox()))
 		{
+			bool IsDead = wolf->GetDamageAndIsDead(
+				p->GetDamage(),
+				0, 0, 0,
+				p->GetType());
 
+			MonsterHpStateMsg MHSM;
+			MHSM.SerialId = SN;
+			MHSM.Type = MonsterType::Wolf;
+			MHSM.Hp = wolf->GetCurrentHp();
+
+			m_pStream->Write(StateMsgType::MonsterHp);
+			m_pStream->Write(MHSM);
+
+			if (IsDead)
+			{
+				p->AddKillCount(MonsterType::Wolf);
+				m_WolfMap.erase(SN);
+			}
+		}
+	}
+
+	if (m_Papyrus)
+	{
+		if (IsCollision(p->GetBB(), m_Papyrus->GetBoundingBox()))
+		{
+			bool IsDead = m_Papyrus->GetDamageAndIsDead(
+				p->GetDamage(),
+				p->GetStunDamage(),
+				p->GetDestuction(),
+				p->GetNamedDamage(),
+				p->GetType());
+
+			MonsterHpStateMsg MHSM;
+			MHSM.SerialId = 0;
+			MHSM.Type = MonsterType::Papyrus;
+			MHSM.Hp = m_Papyrus->GetCurrentHp();
+
+			m_pStream->Write(StateMsgType::MonsterHp);
+			m_pStream->Write(MHSM);
+
+			if (IsDead)
+			{
+				// TODO: 게임종료
+			}
 		}
 	}
 }
@@ -186,30 +249,36 @@ void GameRoom::IsCollisionMonsterWithPlayer(int PlayerIndex)
 void GameRoom::DoCollisionCheck()
 {
 	// TODO: Collision Group으로 개선 필요
-	//IsCollisionMonsterWithPlayer();
+	for (const auto& p : m_pPlayerList)
+	{
+		if (p->GetShouldCollisionCheck())
+		{
+			IsCollisionMonsterWithPlayer(p);
+		}
+	}
 	IsCollisionMonsterWithCastle();
 }
 
-void GameRoom::ProcessMonsterHpMsg(StateMsgArgu* Arg)
-{
-	MonsterHpStateMsg* HpMsg = (MonsterHpStateMsg*)Arg;
-	int SerialNum = HpMsg->SerialId;
-	int Damage = HpMsg->Damage;
-
-	switch (HpMsg->Type)
-	{
-	case MonsterType::Wolf:
-		m_WolfMap[SerialNum]->IsDead(Damage);
-		break;
-	case MonsterType::Bat:
-		m_BatMap[SerialNum]->IsDead(Damage);
-		break;
-	case MonsterType::Papyrus:
-		break;
-	default:
-		break;
-	}
-}
+//void GameRoom::ProcessMonsterHpMsg(StateMsgArgu* Arg)
+//{
+//	MonsterHpStateMsg* HpMsg = (MonsterHpStateMsg*)Arg;
+//	int SerialNum = HpMsg->SerialId;
+//	int Damage = HpMsg->Damage;
+//
+//	switch (HpMsg->Type)
+//	{
+//	case MonsterType::Wolf:
+//		m_WolfMap[SerialNum]->IsDead(Damage);
+//		break;
+//	case MonsterType::Bat:
+//		m_BatMap[SerialNum]->IsDead(Damage);
+//		break;
+//	case MonsterType::Papyrus:
+//		break;
+//	default:
+//		break;
+//	}
+//}
 
 void GameRoom::UpdateUseStateMsg(array<queue<StateMsgInfo>, MAX_CLIENTS> StateMsg)
 {
@@ -305,6 +374,10 @@ void GameRoom::ReadPlayerLocation(StateMsgArgu* SMA)
 	m_pPlayerList[ClientNum]->SetLocation(FPOINT(Location.x, Location.y));
 	m_pPlayerList[ClientNum]->SetState(PSN);
 	m_pPlayerList[ClientNum]->SetDirection(dirction);
+
+	// 충돌처리 off
+	m_pPlayerList[ClientNum]->SetShouldCollisionCheck(false);
+	m_pPlayerList[ClientNum]->SetAllCardProperty(0, 0, 0, 0, 0);
 }
 
 void GameRoom::ReadUseCard(StateMsgArgu* SMA)
@@ -312,5 +385,13 @@ void GameRoom::ReadUseCard(StateMsgArgu* SMA)
 	UseCardStateMsg* UCSM = (UseCardStateMsg*)SMA;
 	int ClientNum = UCSM->PlayerId;
 
-
+	// 충돌처리 on
+	m_pPlayerList[ClientNum]->SetShouldCollisionCheck(true);
+	m_pPlayerList[ClientNum]->SetAllCardProperty(
+		UCSM->Damage,
+		UCSM->StunDamage,
+		UCSM->Destuction,
+		UCSM->NamedDamage,
+		UCSM->Type
+	);
 }

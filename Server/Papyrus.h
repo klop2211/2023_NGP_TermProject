@@ -19,6 +19,8 @@ public:
 	void ChangeState(BossState* pNewState);
 	virtual void Update(float ElaspedTime);
 
+	virtual bool GetDamageAndIsDead(int Damage, int StunDamage, int Destuction, int NamedDamage, int Type);
+
 private:
 
 public:

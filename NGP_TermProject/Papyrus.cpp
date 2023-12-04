@@ -18,7 +18,7 @@ Papyrus::Papyrus()
 	m_pPoint = m_pOffset = { 49, 54 };
 	m_iSize = 5;
 	m_Location = { float(WINWIDTH - 300), float(634 - m_iSize * 5) };
-	m_rRect = { WINWIDTH - 300, 634 - m_iSize * 5, WINWIDTH + m_iSize * 5 - 300, 634 };
+	m_rRect = { WINWIDTH - 300, 634 - m_iSize * m_pOffset.x, WINWIDTH + m_iSize * m_pOffset.y - 300, 634 };
 	//img = papyrusImg;
 	//this->m_cBossHpBar = m_cBossHpBar;
 	m_iCount = 0, m_fWait = 0, m_iSpeed = 10;

@@ -13,6 +13,7 @@ Papyrus::Papyrus()
 	m_iBreakCount = 10, m_bBreaked = false;
 	m_iKnockDown = 100, m_bCanDown = true;
 	m_fBreakTimer = 0.f;
+	m_Size = POINT{ 49 * 5, 54 * 5 };
 
 	m_fRemainTimeToChangeState = 0.f;
 	m_State = BossMoveState::Instance();
@@ -63,4 +64,14 @@ void Papyrus::ChangeState(BossState* pNewState)
 void Papyrus::Update(float ElapsedTime)
 {
 	m_State->Execute(this, ElapsedTime);
+}
+
+bool Papyrus::GetDamageAndIsDead(int Damage, int KnockDamage, int Destuction, int NamedDamage, int Type)
+{
+	m_iCurrentHp -= (Damage + NamedDamage);
+	m_iKnockDown -= KnockDamage;
+	m_iBreakCount -= Destuction;
+
+
+	return false;
 }

@@ -4,6 +4,8 @@
 #include <map>
 #include "StateMessage.h"
 
+class PlayerInfo;
+
 class GameRoom
 {
 	enum PhaseEnum {WolfPhase, BatPhase, BossPhase};
@@ -19,12 +21,12 @@ public:
 	void UpdateUseStateMsg(array<queue<StateMsgInfo>, MAX_CLIENTS> StateMsg);
 	void UpdateEnemy();
 
-	void ProcessMonsterHpMsg(StateMsgArgu* Arg);
+	//void ProcessMonsterHpMsg(StateMsgArgu* Arg);
 
 	// COllision Fuction
 	bool IsCollision(const RECT& a, const RECT& b);
 	void IsCollisionMonsterWithCastle();
-	void IsCollisionMonsterWithPlayer(int PlayerIndex);
+	void IsCollisionMonsterWithPlayer(PlayerInfo*);
 	void DoCollisionCheck();
 
 	// 송수신 관련 함수

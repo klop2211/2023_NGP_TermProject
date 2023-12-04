@@ -1,5 +1,5 @@
 #pragma once
-enum class MonsterType : BYTE { Wolf, Bat, Papyrus };
+enum class MonsterType : BYTE { Wolf, Bat, Papyrus, END };
 enum class PlayerMove : BYTE {};
 enum class CardType : BYTE { N_rhlddufvk, N_sktjsckd, N_dbtjdrkdcjs, N_wjrfydvh, N_aodfyddufvk, N_qksdnjftja, N_dusghkstja, N_cjdfydwls, N_cjdfydcnftn, N_ghltjsckd, N_dmsgkdbtjdxks };
 enum class StateMsgType : BYTE {MonsterSpawn, MonsterHp, MonsterState, PlayerLocation, CastleHp, UseCard, GameStart};
@@ -31,7 +31,7 @@ struct MonsterHpStateMsg : StateMsgArgu
 {
 	MonsterType Type;
 	BYTE SerialId;
-	BYTE Damage;
+	BYTE Hp;
 };
 
 // 서버 -> 클라 /

@@ -10,6 +10,7 @@ public:
 	virtual bool IsDead(int Damage);
 
 	RECT GetBoundingBox();
+	virtual bool GetDamageAndIsDead(int Damage, int StunDamage, int Destuction, int NamedDamage, int Type);
 
 public:
 	int GetMaxHp()			{ return m_iMaxHp; }
