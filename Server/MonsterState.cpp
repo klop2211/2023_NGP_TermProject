@@ -54,18 +54,23 @@ void BossMoveState::Execute(Papyrus* papyrus, float ElapsedTime)
 		{
 			if (Random::GetFRandom() > 0.5)
 			{
-				papyrus->ChangeState(Papyrus::BPattern1);
+				papyrus->ChangeState(BossPatternType::BPattern1);
 			}
 			else
 			{
-				papyrus->ChangeState(Papyrus::BPattern2);
+				papyrus->ChangeState(BossPatternType::BPattern2);
 			}
 		}
 		else
 		{
-			papyrus->ChangeState(Papyrus::UBPattern);
+			papyrus->ChangeState(BossPatternType::UBPattern);
 		}
 	}
+}
+
+BossPatternType BossMoveState::GetStateType()
+{
+	return BossPatternType::Move;
 }
 
 BossUnBreakPatternState* BossUnBreakPatternState::Instance()
@@ -79,8 +84,13 @@ void BossUnBreakPatternState::Execute(Papyrus* papyrus, float ElapsedTime)
 	papyrus->MinusRemainTimer(ElapsedTime);
 	if (papyrus->GetRemainTimer() < 0.f)
 	{
-		papyrus->ChangeState(Papyrus::Move);
+		papyrus->ChangeState(BossPatternType::Move);
 	}
+}
+
+BossPatternType BossUnBreakPatternState::GetStateType()
+{
+	return BossPatternType::UBPattern;
 }
 
 BossBreakPattern1State* BossBreakPattern1State::Instance()
@@ -94,8 +104,13 @@ void BossBreakPattern1State::Execute(Papyrus* papyrus, float ElapsedTime)
 	papyrus->MinusRemainTimer(ElapsedTime);
 	if (papyrus->GetRemainTimer() < 0.f)
 	{
-		papyrus->ChangeState(Papyrus::Move);
+		papyrus->ChangeState(BossPatternType::Move);
 	}
+}
+
+BossPatternType BossBreakPattern1State::GetStateType()
+{
+	return BossPatternType::BPattern1;
 }
 
 BossBreakPattern2State* BossBreakPattern2State::Instance()
@@ -109,8 +124,13 @@ void BossBreakPattern2State::Execute(Papyrus* papyrus, float ElapsedTime)
 	papyrus->MinusRemainTimer(ElapsedTime);
 	if (papyrus->GetRemainTimer() < 0.f)
 	{
-		papyrus->ChangeState(Papyrus::Move);
+		papyrus->ChangeState(BossPatternType::Move);
 	}
+}
+
+BossPatternType BossBreakPattern2State::GetStateType()
+{
+	return BossPatternType::BPattern2;
 }
 
 BossCantMoveState* BossCantMoveState::Instance()
@@ -124,6 +144,11 @@ void BossCantMoveState::Execute(Papyrus* papyrus, float ElapsedTime)
 	papyrus->MinusRemainTimer(ElapsedTime);
 	if (papyrus->GetRemainTimer() < 0.f)
 	{
-		papyrus->ChangeState(Papyrus::Move);
+		papyrus->ChangeState(BossPatternType::Move);
 	}
+}
+
+BossPatternType BossCantMoveState::GetStateType()
+{
+	return BossPatternType::CantMove;
 }

@@ -3,6 +3,8 @@
 class Monster;
 class Papyrus;
 
+enum class BossPatternType;
+
 class MonsterState
 {
 public:
@@ -46,6 +48,8 @@ public:
 	virtual void Execute(Papyrus*, float) = 0;
 
 	virtual void Exit(Papyrus*) = 0;
+
+	virtual BossPatternType GetStateType() = 0;
 };
 
 class BossMoveState :public BossState
@@ -58,6 +62,8 @@ public:
 	virtual void Execute(Papyrus*, float);
 
 	virtual void Exit(Papyrus*) {};
+
+	virtual BossPatternType GetStateType();
 };
 
 class BossUnBreakPatternState :public BossState
@@ -70,6 +76,8 @@ public:
 	virtual void Execute(Papyrus*, float);
 
 	virtual void Exit(Papyrus*) {};
+
+	virtual BossPatternType GetStateType();
 };
 
 class BossBreakPattern1State :public BossState
@@ -82,6 +90,8 @@ public:
 	virtual void Execute(Papyrus*, float);
 
 	virtual void Exit(Papyrus*) {};
+
+	virtual BossPatternType GetStateType();
 };
 
 class BossBreakPattern2State :public BossState
@@ -94,6 +104,8 @@ public:
 	virtual void Execute(Papyrus*, float);
 
 	virtual void Exit(Papyrus*) {};
+
+	virtual BossPatternType GetStateType();
 };
 
 class BossCantMoveState :public BossState
@@ -106,4 +118,6 @@ public:
 	virtual void Execute(Papyrus*, float);
 
 	virtual void Exit(Papyrus*) {};
+
+	virtual BossPatternType GetStateType();
 };

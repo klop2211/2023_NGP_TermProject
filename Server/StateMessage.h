@@ -1,13 +1,13 @@
 #pragma once
 enum class MonsterType : BYTE { Wolf, Bat, Papyrus, END };
-enum class BossPatternType : BYTE { Move, UBPattern, BPattern1, BPattern2, CantMove };
 enum class CardType : BYTE { N_rhlddufvk, N_sktjsckd, N_dbtjdrkdcjs, N_wjrfydvh, N_aodfyddufvk, N_qksdnjftja, N_dusghkstja, N_cjdfydwls, N_cjdfydcnftn, N_ghltjsckd, N_dmsgkdbtjdxks };
-enum class StateMsgType : BYTE {MonsterSpawn, MonsterHp, MonsterState, PlayerLocation, CastleHp, UseCard, GameStart};
+enum class StateMsgType : BYTE {MonsterSpawn, MonsterHp, MonsterState, PlayerLocation, CastleHp, UseCard, GameStart, BossState};
 enum class MonsterStateType : BYTE {Move, Attack, Ice, Fire};
+enum class BossPatternType : BYTE { Move, UBPattern, BPattern1, BPattern2, CantMove };
 enum class PStateName : BYTE { Move, Stay, Stun, Skill };
 
 // 메세지의 헤더 역할, 이거보고 다음에 뭐가 올지 알 수 있음
-typedef BYTE StateMsgByte;
+//typedef BYTE StateMsgByte;
 
 // StateMsg 로직 처리
 struct StateMsgArgu
@@ -74,7 +74,7 @@ struct CastleHpStateMsg : StateMsgArgu
 
 struct BossPatternMsg : StateMsgArgu
 {
-
+	BossPatternType Pattern;
 };
 
 // 서버에서 배열로 관리하기위해

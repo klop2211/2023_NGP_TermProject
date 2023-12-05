@@ -134,7 +134,13 @@ void GameRoom::UpdateEnemy()
 		m_Papyrus->Update(m_fElapsedTime);
 		if (m_Papyrus->GetIsStateChanged())
 		{
-			//TODO: 보스 공격 패턴
+			m_Papyrus->SetIsStateChanged(false);
+
+			BossPatternMsg BPM;
+			BPM.Pattern = m_Papyrus->GetStateType();
+
+			m_pStream->Write(StateMsgType::BossState);
+			m_pStream->Write(BPM);
 		}
 	}
 }

@@ -23,33 +23,35 @@ Papyrus::~Papyrus()
 {
 }
 
-void Papyrus::ChangeState(State eState)
+void Papyrus::ChangeState(BossPatternType State)
 {
-	switch (eState)
+	switch (State)
 	{
-	case Papyrus::Move:
+	case BossPatternType::Move:
 		m_fRemainTimeToChangeState = 3.f;
 		ChangeState(BossMoveState::Instance());
 		break;
-	case Papyrus::UBPattern:
+	case BossPatternType::UBPattern:
 		m_fRemainTimeToChangeState = 3.f;
 		ChangeState(BossUnBreakPatternState::Instance());
 		break;
-	case Papyrus::BPattern1:
+	case BossPatternType::BPattern1:
 		m_fRemainTimeToChangeState = 3.f;
 		ChangeState(BossBreakPattern1State::Instance());
 		break;
-	case Papyrus::BPattern2:
+	case BossPatternType::BPattern2:
 		m_fRemainTimeToChangeState = 3.f;
 		ChangeState(BossBreakPattern2State::Instance());
 		break;
-	case Papyrus::CantMove:
+	case BossPatternType::CantMove:
 		// m_fRemainTimeToChangeState = 3.f;
 		ChangeState(BossCantMoveState::Instance());
 		break;
 	default:
 		break;
 	}
+
+	m_bIsStateChanged = true;
 }
 
 void Papyrus::ChangeState(BossState* pNewState)
