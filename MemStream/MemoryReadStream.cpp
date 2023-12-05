@@ -50,8 +50,8 @@ StateMsgArgu* MemoryReadStream::GetStateMsg(StateMsgType smt, int& size)
 		return new MonsterSpawnStateMsg();
 
 	case StateMsgType::MonsterHp:
-		size = sizeof(MonsterHpStateMsg);
-		return new MonsterHpStateMsg();
+		size = sizeof(MonsterHpMsg);
+		return new MonsterHpMsg();
 
 	case StateMsgType::MonsterState:
 		size= sizeof(MonsterStateMsg);

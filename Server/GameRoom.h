@@ -36,6 +36,7 @@ public:
 	void WriteMonsterSpawn(MonsterType, BYTE);
 	void WriteCastleHp();
 	void WriteMonsterHp(MonsterType, BYTE, BYTE);
+	void WriteBossHp();
 
 	void ReadPlayerLocation(StateMsgArgu*);
 	void ReadUseCard(StateMsgArgu*);

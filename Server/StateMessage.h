@@ -3,7 +3,7 @@
 
 enum class MonsterType : BYTE { Wolf, Bat, Papyrus, END };
 enum class CardType : BYTE { N_rhlddufvk, N_sktjsckd, N_dbtjdrkdcjs, N_wjrfydvh, N_aodfyddufvk, N_qksdnjftja, N_dusghkstja, N_cjdfydwls, N_cjdfydcnftn, N_ghltjsckd, N_dmsgkdbtjdxks };
-enum class StateMsgType : BYTE {MonsterSpawn, MonsterHp, MonsterState, PlayerLocation, CastleHp, UseCard, GameStart, BossState};
+enum class StateMsgType : BYTE {MonsterSpawn, MonsterHp, MonsterState, PlayerLocation, CastleHp, UseCard, GameStart, BossState, BossHp};
 enum class MonsterStateType : BYTE {Move, Attack, Ice, Fire};
 enum class BossPatternType : BYTE { Move, UBPattern, BPattern1, BPattern2, CantMove };
 enum class PStateName : BYTE { Move, Stay, Stun, Skill };
@@ -29,7 +29,7 @@ struct MonsterSpawnStateMsg : StateMsgArgu
 };
 
 // 서버 -> 클라 (충돌처리 후 전송)
-struct MonsterHpStateMsg : StateMsgArgu
+struct MonsterHpMsg : StateMsgArgu
 {
 	MonsterType Type;
 	BYTE SerialId;
@@ -72,6 +72,13 @@ struct UseCardStateMsg : StateMsgArgu
 struct CastleHpStateMsg : StateMsgArgu
 {
 	int Hp;
+};
+
+struct BossHpMsg : StateMsgArgu
+{
+	BYTE Hp;
+	BYTE BreakCount;
+	BYTE KnockDown;
 };
 
 struct BossPatternMsg : StateMsgArgu

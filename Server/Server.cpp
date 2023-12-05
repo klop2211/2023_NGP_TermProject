@@ -53,7 +53,7 @@ int GetStateMsgType(BYTE LowerBits)
 	switch (LowerBits)
 	{
 	case (int)StateMsgType::MonsterSpawn:	return sizeof(MonsterSpawnStateMsg);
-	case (int)StateMsgType::MonsterHp:		return sizeof(MonsterHpStateMsg);
+	case (int)StateMsgType::MonsterHp:		return sizeof(MonsterHpMsg);
 	case  (int)StateMsgType::PlayerLocation:return sizeof(PlayerLocationMsg);
 	case (int)StateMsgType::UseCard:		return sizeof(UseCardStateMsg);
 	case  (int)StateMsgType::CastleHp:		return sizeof(CastleHpStateMsg);

@@ -148,7 +148,6 @@ void GameRoom::UpdateEnemy()
 		}
 	}
 
-
 	if (m_pCastle->IsOver())
 	{
 		m_bIsOver = Lose;
@@ -239,7 +238,7 @@ void GameRoom::IsCollisionMonsterWithPlayer(PlayerInfo* p)
 				p->GetNamedDamage(),
 				p->GetType());
 
-			WriteMonsterHp(MonsterType::Papyrus, 0, m_Papyrus->GetCurrentHp());
+			WriteBossHp();
 
 			if (IsDead)
 			{
@@ -359,13 +358,24 @@ void GameRoom::WriteCastleHp()
 
 void GameRoom::WriteMonsterHp(MonsterType MT, BYTE SN, BYTE Hp)
 {
-	MonsterHpStateMsg MHSM;
+	MonsterHpMsg MHSM;
 	MHSM.SerialId = SN;
 	MHSM.Type = MT;
 	MHSM.Hp = Hp;
 
 	m_pStream->Write(StateMsgType::MonsterHp);
 	m_pStream->Write(MHSM);
+}
+
+void GameRoom::WriteBossHp()
+{
+	BossHpMsg BHM;
+	BHM.Hp = m_Papyrus->GetCurrentHp();
+	BHM.BreakCount= m_Papyrus->GetBreakCount();
+	BHM.KnockDown = m_Papyrus->GetKnockDown();
+
+	m_pStream->Write(StateMsgType::BossHp);
+	m_pStream->Write(BHM);
 }
 
 //=========================Read==================================

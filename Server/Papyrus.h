@@ -62,5 +62,3 @@ private:
 	// 상태가 바뀌어서 메세지를 보내야하는가/
 	bool m_bIsStateChanged;
 };
-
-

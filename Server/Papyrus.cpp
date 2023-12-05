@@ -66,6 +66,8 @@ void Papyrus::ChangeState(BossState* pNewState)
 void Papyrus::Update(float ElapsedTime)
 {
 	m_State->Execute(this, ElapsedTime);
+
+
 }
 
 bool Papyrus::GetDamageAndIsDead(int Damage, int KnockDamage, int Destuction, int NamedDamage, int Type)
@@ -74,6 +76,22 @@ bool Papyrus::GetDamageAndIsDead(int Damage, int KnockDamage, int Destuction, in
 	m_iKnockDown -= KnockDamage;
 	m_iBreakCount -= Destuction;
 
+	if (m_iCurrentHp <= 0)
+	{
+		return true;
+	}
+	if (m_iKnockDown <= 0)
+	{
+		m_bCanDown = true;
+		m_fRemainTimeToChangeState = 1.f;
+		ChangeState(BossPatternType::CantMove);
+	}
+	if (m_iBreakCount <= 0)
+	{
+		m_bBreaked = true;
+		m_fRemainTimeToChangeState = 1.f;
+		ChangeState(BossPatternType::CantMove);
+	}
 
 	return false;
 }
