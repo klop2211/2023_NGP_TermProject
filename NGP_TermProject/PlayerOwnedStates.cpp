@@ -99,7 +99,7 @@ PSkill* PSkill::Instance()
 	return &instance;
 }
 
-#define TEST_CARDNAME CardName::N_dusghkstja
+#define TEST_CARDNAME CardName::N_dmsgkdbtjdxks
 
 void PSkill::Enter(Player* player)
 {
@@ -320,6 +320,18 @@ void PSkill::Enter(Player* player)
 		else if (tripordNum == 3) {
 			player->SetDamage(player->GetDamage() + 2);
 		}
+	case CardName::N_dmsgkdbtjdxks: // 은하유성탄
+		if (player->GetDir() == Left)
+			player->SetImg(L"./\\윈플 텀프 이미지\\창술사_은하유성탄_이펙트(left).png");
+		else
+			player->SetImg(L"./\\윈플 텀프 이미지\\창술사_은하유성탄_이펙트.png");
+
+		// 5프레임 동안 하늘로 이동?
+		player->SetDamage(20);
+		player->SetStunDamage(40);
+		player->SetDestruction(2);
+
+
 	break;
 
 	default:
@@ -330,7 +342,15 @@ void PSkill::Enter(Player* player)
 
 void PSkill::Execute(Player* player, float elapsed)
 {
-
+	CardName test = TEST_CARDNAME;
+	if (test == CardName::N_dmsgkdbtjdxks) {
+		if (player->GetFrameIndex() < 4) {
+			player->SetLocation(POINT{ (int)player->GetLocation().x, (int)(player->GetLocation().y + -300 * elapsed) });
+		}
+		if (9 <= player->GetFrameIndex()) {
+			player->SetLocation(POINT{ (int)player->GetLocation().x, (int)(player->GetLocation().y + 430 * elapsed) });
+		}
+	}
 }
 
 void PSkill::Exit(Player* player)
@@ -339,7 +359,7 @@ void PSkill::Exit(Player* player)
 	int dx, dy;
 	int speed;
 	CardName test = TEST_CARDNAME;
-	switch (player->GetUseCardName())
+	switch (test)
 	{
 	case CardName::N_cjdfydwls:
 		tripordNum = player->ActivatedTripordNumber(CardName::N_cjdfydwls, 1); // 청룡진 2트포 체크
@@ -419,7 +439,8 @@ void PSkill::Exit(Player* player)
 				FPOINT{player->GetLocation().x + dx, player->GetLocation().y - dy}, speed,
 				player->GetDamage(), player->GetStunDamage(), player->GetDestruction() });
 		}
-
+	case CardName::N_dmsgkdbtjdxks:
+		player->SetLocation(POINT{ (int)player->GetLocation().x, GROUNDYPOINT - 100 });
 		break;
 	default:
 		break;

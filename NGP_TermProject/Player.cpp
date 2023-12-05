@@ -300,35 +300,6 @@ void Player::UseCard()
 		ChangeState(PSkill::Instance());
 		//switch (m_pHandCard[m_iClickSelect]->GetCardName())
 		//{
-		//case CardName::N_dmsgkdbtjdxks: // 은하유성탄
-		//	if (player.GetDirection() == Left)
-		//		player.SetImage(L"./\\윈플 텀프 이미지\\창술사_은하유성탄_이펙트(left).png");
-		//	else
-		//		player.SetImage(L"./\\윈플 텀프 이미지\\창술사_은하유성탄_이펙트.png");
-		//	for (int i = 0; i < player.GetFrame_Max(); i++) {
-		//		if (i < 4) {
-		//			player.SetOder(i, { 0,15 }, -1);
-		//		}
-		//		else if (i < 9) {
-		//			if (i == 7)
-		//				player.SetOder(i, { 0, 0 }, Meteor_Spear);
-		//			else
-		//				player.SetOder(i, { 0, 0 }, -1);
-		//		}
-		//		else {
-		//			if (player.GetFrame_Max() - 1)
-		//				player.SetOder(i, { 0, -20 }, Explosion);
-		//			else
-		//				player.SetOder(i, { 0, -20 }, -1);
-		//		}
-		//	}
-		//	player.SetBaseDelay(5);
-		//	player.SetSpeed(player.GetOder(0).speed.x, player.GetOder(0).speed.y);
-		//	player.SetDamage(20);
-		//	player.SetNeutralization(40);
-		//	player.SetDestruction(2);
-
-		//	break;
 		//case CardName::N_wjrfydvh: // 적룡포
 		//	if (player.GetDirection() == Left)
 		//		player.SetImage(L"./\\윈플 텀프 이미지\\창술사_적룡포_이펙트(left).png");

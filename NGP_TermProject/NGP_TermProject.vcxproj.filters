@@ -67,6 +67,9 @@
     <ClCompile Include="..\MemStream\MemoryWriteStream.cpp">
       <Filter>2019180016\Stream</Filter>
     </ClCompile>
+    <ClCompile Include="..\Server\Common.cpp">
+      <Filter>2019180016\Stream</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Bat.h">

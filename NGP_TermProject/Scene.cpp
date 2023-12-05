@@ -1,5 +1,4 @@
 #include "stdafx.h"
-#include "Common.h"
 #include "PlayerOwnedStates.h"
 #include "Scene.h"
 #include "Castle.h"
@@ -8,7 +7,7 @@
 #include "../MemStream/MemoryReadStream.h"
 #include "../MemStream/MemoryWriteStream.h"
 
-#define MULTI_PLAY
+//#define MULTI_PLAY
 
 SOCKET*			Scene::m_pSock;
 HANDLE*			Scene::m_pReadEvent;
@@ -87,7 +86,7 @@ void Scene::Update(float elapsed)
 				break;
 			case StateMsgType::MonsterHp:
 			{
-				MonsterHpStateMsg* temp = (MonsterHpStateMsg*)SMI.pStateMsgArgu;
+				MonsterHpMsg* temp = (MonsterHpMsg*)SMI.pStateMsgArgu;
 
 			}
 				break;

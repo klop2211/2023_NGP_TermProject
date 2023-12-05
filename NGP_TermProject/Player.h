@@ -47,6 +47,7 @@ public:
 	int GetDestruction() const { return m_iDestruction; }
 	int GetNamedDamage() const { return m_iNamedDamage; }
 	int GetType() const { return m_iType; }
+	int GetFrameIndex() const { return m_iFrameIdx; }
 	PStateName GetStateName() const { return m_pStateMachine->CurrentState()->GetName(); }
 	
 	void SetDir(Direction dir) { m_dDir = dir; }

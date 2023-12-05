@@ -2,11 +2,11 @@
 
 #include "stdafx.h"
 
-struct FPOINT
-{
-	float x;
-	float y;
-};
+//struct FPOINT
+//{
+//	float x;
+//	float y;
+//};
 
 // 스크린에 그려질 오브젝트를 정의
 class Object

@@ -159,6 +159,7 @@
   <ItemGroup>
     <ClCompile Include="..\MemStream\MemoryReadStream.cpp" />
     <ClCompile Include="..\MemStream\MemoryWriteStream.cpp" />
+    <ClCompile Include="..\Server\Common.cpp" />
     <ClCompile Include="Bat.cpp" />
     <ClCompile Include="Bone.cpp" />
     <ClCompile Include="Castle.cpp" />

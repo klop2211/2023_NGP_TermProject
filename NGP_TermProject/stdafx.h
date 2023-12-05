@@ -21,6 +21,7 @@
 #include <random>
 #include <list>
 
+#include "../Server/Common.h"
 
 
 #define WINWIDTH 1600		//윈도우 가로
