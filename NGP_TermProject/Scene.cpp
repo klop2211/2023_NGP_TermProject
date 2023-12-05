@@ -7,7 +7,11 @@
 #include "../MemStream/MemoryReadStream.h"
 #include "../MemStream/MemoryWriteStream.h"
 
-//#define MULTI_PLAY
+#include "Bat.h"
+#include "Wolf.h"
+#include "Papyrus.h"
+
+#define MULTI_PLAY
 
 SOCKET*			Scene::m_pSock;
 HANDLE*			Scene::m_pReadEvent;
@@ -37,6 +41,8 @@ Scene::Scene()
 	m_bStart = false, m_bChanging = false; 				//원래 시작용
 	//m_bStart = true, changing = false;				//화면바뀌는거 귀찮아서 만든거
 	m_bCardDrawing = true, m_bIsClick = false;
+
+	m_Papyrus = nullptr;
 }
 
 Scene::~Scene()
@@ -82,6 +88,7 @@ void Scene::Update(float elapsed)
 			case StateMsgType::MonsterSpawn:
 			{
 				MonsterSpawnStateMsg* temp = (MonsterSpawnStateMsg*)SMI.pStateMsgArgu;
+				MonsterSpawn(temp->Type, temp->SerialId);
 			}
 				break;
 			case StateMsgType::MonsterHp:
@@ -93,6 +100,7 @@ void Scene::Update(float elapsed)
 			case StateMsgType::MonsterState:
 			{
 				MonsterStateMsg* temp = (MonsterStateMsg*)SMI.pStateMsgArgu;
+				MonsterState(temp->Type, temp->SerialId, temp->State);
 			}
 				break;
 			case StateMsgType::PlayerLocation:
@@ -109,6 +117,7 @@ void Scene::Update(float elapsed)
 			case StateMsgType::CastleHp:
 			{
 				CastleHpStateMsg* temp = (CastleHpStateMsg*)SMI.pStateMsgArgu;
+				CastleHp(temp->Hp);
 			}
 				break;
 			case StateMsgType::UseCard:
@@ -153,9 +162,9 @@ void Scene::Update(float elapsed)
 		m_WriteStream->Write(sma);
 
 		// 스킬을 사용했는가?
-		if (m_pPlayer->IsSkillMsg()) {
+		//if (m_pPlayer->IsSkillMsg()) {
 
-		}
+		//}
 		// 플레이어의 부가정보 Write
 
 
@@ -177,6 +186,18 @@ void Scene::Update(float elapsed)
 
 	for (auto object : m_lObjectList) {
 		object->Update(elapsed);
+	}
+	for (const auto& w : m_WolfMap)
+	{
+		w.second->Update(elapsed);
+	}
+	for (const auto& b : m_BatMap)
+	{
+		b.second->Update(elapsed);
+	}
+	if (m_Papyrus)
+	{
+		m_Papyrus->Update(elapsed);
 	}
 }
 
@@ -203,6 +224,18 @@ void Scene::Draw(HDC& memDc)
 
 	for (auto object : m_lObjectList) {
 		object->Draw(memDc);
+	}
+	for (const auto& w : m_WolfMap)
+	{
+		w.second->Draw(memDc);
+	}
+	for (const auto& b : m_BatMap)
+	{
+		b.second->Draw(memDc);
+	}
+	if (m_Papyrus)
+	{
+		m_Papyrus->Draw(memDc);
 	}
 }
 
@@ -434,6 +467,100 @@ void Scene::UpdateChangeStart(float elapsed)
 	}
 }
 
+//===================Msg 읽어와 상태 적용하는 코드들===========================
+void Scene::MonsterSpawn(MonsterType MT, int SN)
+{
+	switch (MT)
+	{
+	case MonsterType::Wolf:
+	{
+		Wolf* wolf = new Wolf();
+		m_WolfMap.insert({ SN, wolf });
+	}
+		break;
+	case MonsterType::Bat:
+	{
+		Bat* bat = new Bat();
+		m_BatMap.insert({ SN, bat });
+	}
+		break;
+	case MonsterType::Papyrus:
+	{
+		m_Papyrus = new Papyrus();
+	}
+		break;
+	default:
+		break;
+	}
+}
+
+void Scene::MonsterHp(MonsterType MT, int SN, int Hp)
+{
+	switch (MT)
+	{
+	case MonsterType::Wolf:
+	{
+		m_WolfMap[SN]->SetCurrentHp(Hp);
+	}
+	break;
+	case MonsterType::Bat:
+	{
+		m_BatMap[SN]->SetCurrentHp(Hp);
+	}
+	break;
+	case MonsterType::Papyrus:
+	{
+		m_Papyrus->SetCurrentHp(Hp);
+	}
+	break;
+	default:
+		break;
+	}
+}
+
+void Scene::MonsterState(MonsterType MT, int SN, MonsterStateType SMT)
+{
+	MonsterStatus ms = MonsterStatus::Move;
+	switch (SMT)
+	{
+	case MonsterStateType::Move:
+		ms = MonsterStatus::Move;
+		break;
+	case MonsterStateType::Attack:
+		ms = MonsterStatus::Attack;
+		break;
+	case MonsterStateType::Ice:
+		break;
+	case MonsterStateType::Fire:
+		break;
+	default:
+		break;
+	}
+
+	switch (MT)
+	{
+	case MonsterType::Wolf:
+	{
+		m_WolfMap[SN]->SetStatus(ms);
+	}
+	break;
+	case MonsterType::Bat:
+	{
+		m_BatMap[SN]->SetStatus(ms);
+	}
+	break;
+	default:
+		break;
+	}
+}
+
+void Scene::CastleHp(int Hp)
+{
+	m_pCastle->SetCurrentHp(Hp);
+}
+
+
+//=========================================================
 DWORD WINAPI Scene::ReceiveThread(LPVOID arg)
 {
 	int retval;

@@ -2,6 +2,7 @@
 #include "Player.h"
 
 #include <queue>
+#include <map>
 
 struct StateMsgArgu;
 
@@ -33,6 +34,11 @@ public:
 
 	bool IsGameStart() const { return m_bStart; }
 
+	// Msg 읽어와 상태 적용하는 코드들
+	void MonsterSpawn(MonsterType MT, int SN);
+	void MonsterHp(MonsterType MT, int SN, int Hp);
+	void MonsterState(MonsterType MT, int SN, MonsterStateType SMT);
+	void CastleHp(int Hp);
 
 private:
 	static DWORD WINAPI ReceiveThread(LPVOID arg);
@@ -41,6 +47,11 @@ private:
 	Player* m_pPlayer;
 	Player* m_pPlayer2; // 2P
 	std::list<Object*> m_lObjectList;
+
+	// 현재 가지고 있는 몬스터 리스트
+	std::map<int, class Bat*> m_BatMap;
+	std::map<int, class Wolf*> m_WolfMap;
+	class Papyrus* m_Papyrus;
 
 	class Castle* m_pCastle;
 

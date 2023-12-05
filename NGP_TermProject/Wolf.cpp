@@ -14,6 +14,7 @@ Wolf::Wolf()
 	m_pPoint = { 86 * 2, 58 * 2 };
 	m_pOffset = { 86, 58 };
 	m_rRect = { WINWIDTH - 200, 634 - m_pPoint.y, WINWIDTH + m_pPoint.x - 200, 634 };
+	m_Location = { (float)(WINWIDTH - 200), (float)(634 - m_pPoint.y) };
 
 	status = MonsterStatus::Move;
 	m_iSpeed = 6;

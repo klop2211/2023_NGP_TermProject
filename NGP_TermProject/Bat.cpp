@@ -13,6 +13,8 @@ Bat::Bat()
 	m_pPoint = { 67 * 2,49 * 2 };
 	m_pOffset = { 67,49 };
 	m_rRect = { WINWIDTH - 200, 400 - m_pPoint.y, WINWIDTH - 200 + m_pPoint.x, 400 };
+	m_Location = { (float)m_rRect.left, (float)m_rRect.top };
+
 	//m_cImg = BatImg;
 	status = MonsterStatus::Move;
 	m_iMaxHp = 10;

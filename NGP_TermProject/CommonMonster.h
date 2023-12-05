@@ -20,6 +20,8 @@ public:
 public:
 	virtual CImage GetImg() const = 0;
 
+	void SetStatus(MonsterStatus MS) { status = MS; }
+
 protected:
 	MonsterStatus status;
 };

@@ -52,7 +52,7 @@ void GameRoom::Update(array<queue<StateMsgInfo>, MAX_CLIENTS> StateMsg)
 	SetElapsedTime();
 	UpdateUseStateMsg(StateMsg);
 	WritePlayerLocation();
-	//SpawnEnemy();
+	SpawnEnemy();
 	//UpdateEnemy();
 	DoCollisionCheck();
 
@@ -68,7 +68,7 @@ void GameRoom::SpawnEnemy()
 
 		if (m_fWolfSpawnTimer >= 5.f)
 		{
-			WriteMonsterSpawn(MonsterType::Wolf, m_iBatSN);
+			WriteMonsterSpawn(MonsterType::Wolf, m_iWolfSN);
 
 			m_WolfMap.insert({ m_iWolfSN, new Wolf(m_iWolfSN)});
 			m_iWolfSN++;

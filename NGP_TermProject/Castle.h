@@ -20,6 +20,8 @@ public:
 public:
 	virtual CImage GetImg() const;
 
+	void SetCurrentHp(int hp) { m_iCastleHp = hp; m_iCastleMovement = 1; }
+
 private:
 	// 성 공격 받았을 떄 흔들림 효과
 	int m_iCastleMovement;

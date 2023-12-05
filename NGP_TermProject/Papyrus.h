@@ -26,6 +26,7 @@ public:
 
 	//Gettor, Settor
 public:
+	virtual CImage GetImg() const { return m_cImg; };
 
 private:
 	CImage m_cImg, m_cBossHpBar;

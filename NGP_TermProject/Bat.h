@@ -18,7 +18,7 @@ public:
 
 	//Gettor, Settor
 public:
-	//virtual CImage GetImg() const { return m_cImg; };
+	virtual CImage GetImg() const { return m_cImg; };
 
 private:
 	static CImage m_cImg;

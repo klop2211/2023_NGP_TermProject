@@ -36,6 +36,8 @@ public:
 	int  GetMaxHp()			{ return m_iMaxHp; }
 	int  GetSpeed()			{ return m_iSpeed; }
 
+	void SetCurrentHp(int Hp) { m_iCurrentHp = Hp; }
+
 	virtual CImage GetImg() const = 0;
 
 	void SetCastleInteraction(CastleInteraction* castleIntercation);
