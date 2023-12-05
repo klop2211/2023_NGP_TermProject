@@ -3,7 +3,6 @@
 #include "Papyrus.h"
 #include "Random.h"
 
-#include "StateMessage.h"
 
 MonsterMoveState* MonsterMoveState::Instance()
 {

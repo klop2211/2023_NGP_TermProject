@@ -77,3 +77,8 @@ bool Papyrus::GetDamageAndIsDead(int Damage, int KnockDamage, int Destuction, in
 
 	return false;
 }
+
+BossPatternType Papyrus::GetStateType()
+{
+	return m_State->GetStateType();
+}

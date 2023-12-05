@@ -8,7 +8,8 @@ class PlayerInfo;
 
 class GameRoom
 {
-	enum PhaseEnum {WolfPhase, BatPhase, BossPhase};
+	enum PhaseEnum : BYTE {WolfPhase, BatPhase, BossPhase};
+	enum GameOverFlag : char {Win = 1, NotYet = 0, Lose = -1};
 
 public:
 	GameRoom(array<SOCKET, MAX_CLIENTS>&);
@@ -34,15 +35,16 @@ public:
 	void WritePlayerLocation();
 	void WriteMonsterSpawn(MonsterType, BYTE);
 	void WriteCastleHp();
+	void WriteMonsterHp(MonsterType, BYTE, BYTE);
 
 	void ReadPlayerLocation(StateMsgArgu*);
 	void ReadUseCard(StateMsgArgu*);
 
-	// Gameover
+	// 킬카운트 Gameover시 사용
 	array<array<WORD, (int)MonsterType::END>, MAX_CLIENTS> GetKillCount();
 
 public:
-	bool GetIsOver() { return m_bIsOver; }
+	char GetIsOver() { return m_bIsOver; }
 
 private:
 	std::chrono::time_point<std::chrono::system_clock> m_tPreviousTime;
@@ -71,6 +73,6 @@ private:
 
 	class MemoryWriteStream* m_pStream;
 
-	// 종료판단 코드
-	bool m_bIsOver;
+	// 종료판단 코드 -1: 패배, 0 안끝남, 1: 승리
+	char m_bIsOver;
 };

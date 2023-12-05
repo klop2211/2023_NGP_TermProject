@@ -1,9 +1,9 @@
 #pragma once
 
+#include "StateMessage.h"
+
 class Monster;
 class Papyrus;
-
-enum class BossPatternType;
 
 class MonsterState
 {

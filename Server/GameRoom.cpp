@@ -15,7 +15,7 @@ GameRoom::GameRoom(array<SOCKET, MAX_CLIENTS>& ClientSocket) :
 	m_iBatSN(0),
 	m_iPhase(GameRoom::WolfPhase),
 	m_Papyrus(nullptr),
-	m_bIsOver(false)
+	m_bIsOver(NotYet)
 {
 	m_pCastle = new Castle();
 	m_pStream = new MemoryWriteStream(ClientSocket);
@@ -109,7 +109,9 @@ void GameRoom::UpdateEnemy()
 		if (bat->GetCanAttack())
 		{
 			bat->SetCanAttack(false);
+
 			WriteMonsterState(MonsterType::Bat, MonNum, MonsterStateType::Attack);
+
 			m_pCastle->GetDamage(bat->GetDamage());
 			WriteCastleHp();
 		}
@@ -123,7 +125,9 @@ void GameRoom::UpdateEnemy()
 		if (wolf->GetCanAttack())
 		{
 			wolf->SetCanAttack(false);
+
 			WriteMonsterState(MonsterType::Wolf, it.first, MonsterStateType::Attack);
+
 			m_pCastle->GetDamage(wolf->GetDamage());
 			WriteCastleHp();
 		}
@@ -142,6 +146,12 @@ void GameRoom::UpdateEnemy()
 			m_pStream->Write(StateMsgType::BossState);
 			m_pStream->Write(BPM);
 		}
+	}
+
+
+	if (m_pCastle->IsOver())
+	{
+		m_bIsOver = Lose;
 	}
 }
 
@@ -188,13 +198,7 @@ void GameRoom::IsCollisionMonsterWithPlayer(PlayerInfo* p)
 				0, 0, 0,
 				p->GetType());
 
-			MonsterHpStateMsg MHSM;
-			MHSM.SerialId = SN;
-			MHSM.Type = MonsterType::Bat;
-			MHSM.Hp = bat->GetCurrentHp();
-
-			m_pStream->Write(StateMsgType::MonsterHp);
-			m_pStream->Write(MHSM);
+			WriteMonsterHp(MonsterType::Bat, SN, bat->GetCurrentHp());
 
 			if (IsDead)
 			{
@@ -214,13 +218,7 @@ void GameRoom::IsCollisionMonsterWithPlayer(PlayerInfo* p)
 				0, 0, 0,
 				p->GetType());
 
-			MonsterHpStateMsg MHSM;
-			MHSM.SerialId = SN;
-			MHSM.Type = MonsterType::Wolf;
-			MHSM.Hp = wolf->GetCurrentHp();
-
-			m_pStream->Write(StateMsgType::MonsterHp);
-			m_pStream->Write(MHSM);
+			WriteMonsterHp(MonsterType::Wolf, SN, wolf->GetCurrentHp());
 
 			if (IsDead)
 			{
@@ -241,17 +239,12 @@ void GameRoom::IsCollisionMonsterWithPlayer(PlayerInfo* p)
 				p->GetNamedDamage(),
 				p->GetType());
 
-			MonsterHpStateMsg MHSM;
-			MHSM.SerialId = 0;
-			MHSM.Type = MonsterType::Papyrus;
-			MHSM.Hp = m_Papyrus->GetCurrentHp();
-
-			m_pStream->Write(StateMsgType::MonsterHp);
-			m_pStream->Write(MHSM);
+			WriteMonsterHp(MonsterType::Papyrus, 0, m_Papyrus->GetCurrentHp());
 
 			if (IsDead)
 			{
 				// TODO: 게임종료
+				m_bIsOver = Win;
 			}
 		}
 	}
@@ -362,6 +355,17 @@ void GameRoom::WriteCastleHp()
 {
 	m_pStream->Write(StateMsgType::CastleHp);
 	m_pStream->Write(m_pCastle->GetCurrnetHp());
+}
+
+void GameRoom::WriteMonsterHp(MonsterType MT, BYTE SN, BYTE Hp)
+{
+	MonsterHpStateMsg MHSM;
+	MHSM.SerialId = SN;
+	MHSM.Type = MT;
+	MHSM.Hp = Hp;
+
+	m_pStream->Write(StateMsgType::MonsterHp);
+	m_pStream->Write(MHSM);
 }
 
 //=========================Read==================================

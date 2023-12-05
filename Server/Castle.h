@@ -11,6 +11,7 @@ public:
 
 	// TODO: 게임 종료 판정 추가 필요
 	void GetDamage(int hp);
+	bool IsOver() { return m_iCurrentHp <= 0; }
 
 public:
 	int GetMaxHp() { return m_iMaxHp; }

@@ -31,7 +31,7 @@ public:
 	float	GetRemainTimer() { return m_fRemainTimeToChangeState; }
 	bool	GetIsStateChanged() { return m_bIsStateChanged; }
 
-	BossPatternType GetStateType() { m_State->GetStateType(); }
+	BossPatternType GetStateType();
 
 	void	SetBreaked(bool bBreaked) { m_bBreaked = bBreaked; };
 	void	SetCanDown(bool bCandown) { m_bCanDown = bCandown; };
