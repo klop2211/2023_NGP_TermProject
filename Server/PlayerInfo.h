@@ -29,6 +29,7 @@ public:
 	int GetDestuction() const { return m_iDestuction; }
 	int GetNamedDamage() const { return m_iNamedDamage; }
 	int GetType() const { return m_iType; }
+	array<WORD, (int)MonsterType::END> GetKillCount() { return m_KillCount; };
 
 	void SetLocation(FPOINT point) { m_PlayerLocation = point; };
 	void SetState(PStateName name) { m_PlayerState = name; };

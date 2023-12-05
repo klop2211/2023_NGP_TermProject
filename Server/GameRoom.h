@@ -37,6 +37,13 @@ public:
 
 	void ReadPlayerLocation(StateMsgArgu*);
 	void ReadUseCard(StateMsgArgu*);
+
+	// Gameover
+	array<array<WORD, (int)MonsterType::END>, MAX_CLIENTS> GetKillCount();
+
+public:
+	bool GetIsOver() { return m_bIsOver; }
+
 private:
 	std::chrono::time_point<std::chrono::system_clock> m_tPreviousTime;
 	float m_fElapsedTime;
@@ -55,6 +62,7 @@ private:
 	// 성
 	class Castle* m_pCastle;
 
+	// TODO: 페이즈 증가하는 코드 필요 
 	// 현재 몇 페이즈 인지
 	int m_iPhase;
 
@@ -62,4 +70,7 @@ private:
 	float m_fBatSpawnTimer, m_fWolfSpawnTimer;
 
 	class MemoryWriteStream* m_pStream;
+
+	// 종료판단 코드
+	bool m_bIsOver;
 };

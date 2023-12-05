@@ -14,7 +14,8 @@ GameRoom::GameRoom(array<SOCKET, MAX_CLIENTS>& ClientSocket) :
 	m_iWolfSN(0),
 	m_iBatSN(0),
 	m_iPhase(GameRoom::WolfPhase),
-	m_Papyrus(nullptr)
+	m_Papyrus(nullptr),
+	m_bIsOver(false)
 {
 	m_pCastle = new Castle();
 	m_pStream = new MemoryWriteStream(ClientSocket);
@@ -131,6 +132,10 @@ void GameRoom::UpdateEnemy()
 	if (m_Papyrus)
 	{
 		m_Papyrus->Update(m_fElapsedTime);
+		if (m_Papyrus->GetIsStateChanged())
+		{
+			//TODO: 보스 공격 패턴
+		}
 	}
 }
 
@@ -394,4 +399,17 @@ void GameRoom::ReadUseCard(StateMsgArgu* SMA)
 		UCSM->NamedDamage,
 		UCSM->Type
 	);
+}
+
+//===============================Getter================================
+array<array<WORD, (int)MonsterType::END>, MAX_CLIENTS> GameRoom::GetKillCount()
+{
+	array<array<WORD, (int)MonsterType::END>, MAX_CLIENTS> ReturnValue;
+
+	for (int i = 0; i < MAX_CLIENTS; i++)
+	{
+		ReturnValue[i] = m_pPlayerList[i]->GetKillCount();
+	}
+
+	return ReturnValue;
 }

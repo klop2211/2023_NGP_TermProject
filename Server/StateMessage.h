@@ -1,6 +1,6 @@
 #pragma once
 enum class MonsterType : BYTE { Wolf, Bat, Papyrus, END };
-enum class PlayerMove : BYTE {};
+enum class BossPatternType : BYTE { Move, UBPattern, BPattern1, BPattern2, CantMove };
 enum class CardType : BYTE { N_rhlddufvk, N_sktjsckd, N_dbtjdrkdcjs, N_wjrfydvh, N_aodfyddufvk, N_qksdnjftja, N_dusghkstja, N_cjdfydwls, N_cjdfydcnftn, N_ghltjsckd, N_dmsgkdbtjdxks };
 enum class StateMsgType : BYTE {MonsterSpawn, MonsterHp, MonsterState, PlayerLocation, CastleHp, UseCard, GameStart};
 enum class MonsterStateType : BYTE {Move, Attack, Ice, Fire};
@@ -70,6 +70,11 @@ struct UseCardStateMsg : StateMsgArgu
 struct CastleHpStateMsg : StateMsgArgu
 {
 	int Hp;
+};
+
+struct BossPatternMsg : StateMsgArgu
+{
+
 };
 
 // 서버에서 배열로 관리하기위해

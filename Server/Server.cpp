@@ -128,13 +128,9 @@ DWORD WINAPI ProcessRoom(LPVOID arg)
 	int RoomNum = Arg->RoomNumber;
 	array<HANDLE, MAX_CLIENTS> hClients;
 
-	// Array는 Vector와 다르게 Move의 효율이 좋지 않다.
-	//TODO: 실행되는지 확인S
-	//memcpy(hClients.data(), Arg->Client.data(), sizeof(HANDLE) * MAX_CLIENTS);
-
 	GameRoom* pGameRoom = new GameRoom(Arg->Clients);
 	// Main Game Room 로직
-	while (true)
+	while (!pGameRoom->GetIsOver())
 	{
 		retval = WaitForSingleObject(events[RoomNum].hRoomEvent, INFINITE);
 		//printf("server Run\n");
@@ -144,7 +140,9 @@ DWORD WINAPI ProcessRoom(LPVOID arg)
 		SetEvent(events[RoomNum].hClient1Event);
 	}
 
-	delete ReadStreamArr[RoomNum];
+
+	// TODO: 적당한 위치로 옮기기
+	//delete ReadStreamArr[RoomNum];
 	delete pGameRoom;
 	return NULL;
 }
