@@ -36,6 +36,7 @@ public:
 	void MakeCard(int randomValue, int** tripord);
 	int	ActivatedTripordNumber(CardName cardName, int num) { return m_ppTripord[(int)cardName][num]; }
 	void AddSkillObject(const SkillObject& skillObject);
+	bool IsSkillMsg() { return m_iSkillCheck; }
 
 public:
 	CImage GetImg() const { return *m_pImg; }
@@ -47,7 +48,7 @@ public:
 	int GetNamedDamage() const { return m_iNamedDamage; }
 	int GetType() const { return m_iType; }
 	PStateName GetStateName() const { return m_pStateMachine->CurrentState()->GetName(); }
-
+	
 	void SetDir(Direction dir) { m_dDir = dir; }
 	void SetImg(const TCHAR* str);
 	void SetSpeed(const int speed) { m_iSpeed = speed; }
@@ -56,6 +57,7 @@ public:
 	void SetDestruction(const int destruction) { m_iDestruction = destruction; }
 	void SetNamedDamage(const int NamedDamage) { m_iNamedDamage = NamedDamage; }
 	void SetType(const int type) { m_iType = type; }
+	void SetFrameIndex(const int idx) { m_iFrameIdx = idx; }
 	void SetLocation(const POINT point) {
 		m_Location.x = point.x;
 		m_Location.y = point.y;
@@ -75,6 +77,8 @@ private:
 	int			m_iDestruction;	// 부위파괴 수치
 	int			m_iNamedDamage; // 네임드 추가데미지 기존 데미지에 이 수치를 + 하여 계산
 	int			m_iType;		// 현재 속성 타입
+
+	bool		m_iSkillCheck;	// 스킬 사용 및 종료시 메시지를 보내기 위한 트리거
 
 	CImage*		m_pImg;			// 그릴 이미지
 

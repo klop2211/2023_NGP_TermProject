@@ -300,66 +300,6 @@ void Player::UseCard()
 		ChangeState(PSkill::Instance());
 		//switch (m_pHandCard[m_iClickSelect]->GetCardName())
 		//{
-		//case CardName::N_cjdfydcnftn: // 청룡출수
-		//	if (player.GetDirection() == Left)
-		//		player.SetImage(L"./\\윈플 텀프 이미지\\창술사_청룡출수_이펙트(left).png");
-		//	else
-		//		player.SetImage(L"./\\윈플 텀프 이미지\\창술사_청룡출수_이펙트.png");
-		//	for (int i = 0; i < player.GetFrame_Max(); i++) {
-		//		if (i < 4) {
-		//			if (player.GetDirection() == Left)
-		//				player.SetOder(i, { -20,0 }, -1);
-		//			else
-		//				player.SetOder(i, { 20,0 }, -1);
-		//		}
-		//		else {
-		//			player.SetOder(i, { 0,0 }, -1);
-		//		}
-		//	}
-		//	player.SetBaseDelay(2);
-		//	player.SetSpeed(player.GetOder(0).speed.x, player.GetOder(0).speed.y);
-		//	player.SetDamage(5);
-		//	player.SetNeutralization(15);
-		//	player.SetDestruction(0);
-		//	if (m_ppTripord[(int)CardName::N_cjdfydcnftn][0] == 1) {
-		//		player.SetDamage(player.GetDamage() + 1);
-
-		//	}
-		//	else if (m_ppTripord[(int)CardName::N_cjdfydcnftn][0] == 2) {
-		//		player.SetFrame_Now(4);
-		//		player.SetDamage(player.GetDamage() + 2);
-
-		//	}
-		//	else if (m_ppTripord[(int)CardName::N_cjdfydcnftn][0] == 3) {
-		//		for (int i = 0; i < player.GetFrame_Max(); i++) {
-		//			if (i < 4) {
-		//				if (player.GetDirection() == Left)
-		//					player.SetOder(i, { -25,0 }, -1);
-		//				else
-		//					player.SetOder(i, { 25,0 }, -1);
-		//			}
-		//			else {
-		//				player.SetOder(i, { 0,0 }, -1);
-		//			}
-		//		}
-		//	}
-		//	if (m_ppTripord[(int)CardName::N_cjdfydcnftn][1] == 1) {
-		//		player.SetType(Hurricane);
-		//	}
-		//	else if (m_ppTripord[(int)CardName::N_cjdfydcnftn][1] == 2) {
-		//		//TODO:각성게이지 추가회복
-		//	}
-		//	else if (m_ppTripord[(int)CardName::N_cjdfydcnftn][1] == 3) {
-		//		player.SetRect(player.GetRect().left - 30, player.GetRect().top - 30, player.GetRect().right, player.GetRect().bottom);
-		//	}
-		//	if (m_ppTripord[(int)CardName::N_cjdfydcnftn][2] == 1) {
-		//		player.SetOder(player.GetFrame_Max() - 1, { 0,0 }, Rotation_Spear);
-		//	}
-		//	else if (m_ppTripord[(int)CardName::N_cjdfydcnftn][2] == 2) {
-		//		player.SetOder(player.GetFrame_Max() - 1, { 0,0 }, Airborne_Spear);
-		//	}
-
-		//	break;
 		//case CardName::N_dmsgkdbtjdxks: // 은하유성탄
 		//	if (player.GetDirection() == Left)
 		//		player.SetImage(L"./\\윈플 텀프 이미지\\창술사_은하유성탄_이펙트(left).png");

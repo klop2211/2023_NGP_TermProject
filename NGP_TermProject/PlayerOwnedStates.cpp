@@ -125,7 +125,7 @@ void PSkill::Enter(Player* player)
 		else if(tripordNum == 2)
 			player->SetDamage(player->GetDamage() + 1);
 		else if(tripordNum == 3)
-			player->SetRect(player->GetRect().left - 30, player->GetRect().top - 30, player->GetRect().right, player->GetRect().bottom);
+			player->SetRect(player->GetRect().left, player->GetRect().top, player->GetRect().right, player->GetRect().bottom);
 		
 		tripordNum = player->ActivatedTripordNumber(CardName::N_cjdfydwls, 1); // 청룡진 2트포 체크
 		if (tripordNum == 1) {
@@ -135,7 +135,7 @@ void PSkill::Enter(Player* player)
 				player->SetImg(L"->/\\윈플 텀프 이미지\\창술사_청룡진창사라지는_이펙트->png");
 		}
 		else if (tripordNum == 2) {
-			player->SetRect(player->GetRect().left - 30, player->GetRect().top - 30, player->GetRect().right, player->GetRect().bottom);
+			player->SetRect(player->GetRect().left, player->GetRect().top, player->GetRect().right, player->GetRect().bottom);
 			player->SetDamage(player->GetDamage() + 2);
 		}
 		else if (tripordNum == 3) {
@@ -201,7 +201,7 @@ void PSkill::Enter(Player* player)
 
 		tripordNum = player->ActivatedTripordNumber(CardName::N_aodfyddufvk, 0);
 		if (tripordNum == 1) {
-			player->SetRect(player->GetRect().left - 30, player->GetRect().top - 30, player->GetRect().right, player->GetRect().bottom);
+			player->SetRect(player->GetRect().left, player->GetRect().top, player->GetRect().right, player->GetRect().bottom);
 		}
 		else if (tripordNum == 2) {
 			player->SetStunDamage(player->GetStunDamage() + 5);
@@ -283,12 +283,49 @@ void PSkill::Enter(Player* player)
 			player->DrawCard();
 		}
 		break;
+		case CardName::N_cjdfydcnftn: // 청룡출수
 
+		if (player->GetDir() == Left)
+			player->SetImg(L"./\\윈플 텀프 이미지\\창술사_청룡출수_이펙트(left).png");
+		else
+			player->SetImg(L"./\\윈플 텀프 이미지\\창술사_청룡출수_이펙트.png");
 
+		player->SetSpeed(150);
+		player->SetDamage(5);
+		player->SetStunDamage(15);
+		player->SetDestruction(0);
+
+		tripordNum = player->ActivatedTripordNumber(CardName::N_cjdfydcnftn, 0);
+		if (tripordNum == 1) {
+			player->SetDamage(player->GetDamage() + 1);
+
+		}
+		else if (tripordNum == 2) {
+			player->SetSpeed(0);
+			player->SetFrameIndex(4);
+			player->SetDamage(player->GetDamage() + 2);
+
+		}
+		else if (tripordNum == 3) {
+			player->SetSpeed(230);
+		}
+
+		tripordNum = player->ActivatedTripordNumber(CardName::N_cjdfydcnftn, 1);
+		if (tripordNum == 1) {
+			player->SetType(Hurricane);
+		}
+		else if (tripordNum == 2) {
+			//TODO:각성게이지 추가회복
+		}
+		else if (tripordNum == 3) {
+			player->SetDamage(player->GetDamage() + 2);
+		}
+	break;
 
 	default:
 		break;
 	}
+
 }
 
 void PSkill::Execute(Player* player, float elapsed)
@@ -302,7 +339,7 @@ void PSkill::Exit(Player* player)
 	int dx, dy;
 	int speed;
 	CardName test = TEST_CARDNAME;
-	switch (test)
+	switch (player->GetUseCardName())
 	{
 	case CardName::N_cjdfydwls:
 		tripordNum = player->ActivatedTripordNumber(CardName::N_cjdfydwls, 1); // 청룡진 2트포 체크
@@ -349,6 +386,40 @@ void PSkill::Exit(Player* player)
 				FPOINT{player->GetLocation().x + dx, player->GetLocation().y - dy}, speed,
 				player->GetDamage(), player->GetStunDamage(), player->GetDestruction() });
 		}
+		break;
+	case CardName::N_cjdfydcnftn:
+		tripordNum = player->ActivatedTripordNumber(CardName::N_cjdfydcnftn, 2);
+		if (tripordNum == 1) {
+			dx = 0;
+			dy = 0;
+			speed = 0;
+			player->AddSkillObject(SkillObject{ Rotation_Spear,
+				FPOINT{player->GetLocation().x + dx, player->GetLocation().y - dy}, speed,
+				player->GetDamage(), player->GetStunDamage(), player->GetDestruction() });
+		}
+		else if (tripordNum == 2) {
+			dx = 25;
+			dy = -75;
+			speed = 0;
+			player->AddSkillObject(SkillObject{ Airborne_Spear,
+				FPOINT{player->GetLocation().x + dx, player->GetLocation().y - dy}, speed,
+				player->GetDamage(), player->GetStunDamage(), player->GetDestruction() });
+
+			dx = -75;
+			dy = 25;
+			speed = 0;
+			player->AddSkillObject(SkillObject{ Airborne_Spear,
+				FPOINT{player->GetLocation().x + dx, player->GetLocation().y - dy}, speed,
+				player->GetDamage(), player->GetStunDamage(), player->GetDestruction() });
+
+			dx = 125;
+			dy = 25;
+			speed = 0;
+			player->AddSkillObject(SkillObject{ Airborne_Spear,
+				FPOINT{player->GetLocation().x + dx, player->GetLocation().y - dy}, speed,
+				player->GetDamage(), player->GetStunDamage(), player->GetDestruction() });
+		}
+
 		break;
 	default:
 		break;

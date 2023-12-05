@@ -71,30 +71,68 @@ void Scene::Update(float elapsed)
 		}
 
 #ifdef MULTI_PLAY
-		WaitForSingleObject(*m_pReadEvent, INFINITE);
+		WaitForSingleObject(*m_pReadEvent, INFINITE); 
+
+		// 서버에서 받은 메시지 처리
 		while (!m_StateMsgQueue.empty())
 		{
 			StateMsgInfo SMI = m_StateMsgQueue.front();
 			m_StateMsgQueue.pop();
 
-			PlayerLocationMsg* temp = (PlayerLocationMsg*)SMI.pStateMsgArgu;
-			if (temp->PlayerId != m_iClientNum && m_pPlayer2 != NULL) {
-				m_pPlayer2->SetLocation(temp->Location);
-				m_pPlayer2->SetDir((Direction)temp->Direction);
-				if (m_pPlayer2->GetStateName() != temp->State)
-					m_pPlayer2->ChangeState(temp->State);
+			switch (SMI.StateMsg) {
+			case StateMsgType::MonsterSpawn:
+			{
+				MonsterSpawnStateMsg* temp = (MonsterSpawnStateMsg*)SMI.pStateMsgArgu;
 			}
-		}
-		//if (m_pStateMsgArgu != NULL) {
-		//	PlayerLocationMsg* temp = (PlayerLocationMsg*)m_pStateMsgArgu;
-		//	if (temp->PlayerId != m_iClientNum && m_pPlayer2 != NULL) {
-		//		m_pPlayer2->SetLocation(temp->Location);
-		//		m_pPlayer2->SetDir((Direction)temp->Direction);
-		//		if (m_pPlayer2->GetStateName() != temp->State)
-		//			m_pPlayer2->ChangeState(temp->State);
-		//	}
-		//}
+				break;
+			case StateMsgType::MonsterHp:
+			{
+				MonsterHpStateMsg* temp = (MonsterHpStateMsg*)SMI.pStateMsgArgu;
 
+			}
+				break;
+			case StateMsgType::MonsterState:
+			{
+				MonsterStateMsg* temp = (MonsterStateMsg*)SMI.pStateMsgArgu;
+			}
+				break;
+			case StateMsgType::PlayerLocation:
+			{
+				PlayerLocationMsg* temp = (PlayerLocationMsg*)SMI.pStateMsgArgu;
+				if (temp->PlayerId != m_iClientNum && m_pPlayer2 != NULL) {
+					m_pPlayer2->SetLocation(temp->Location);
+					m_pPlayer2->SetDir((Direction)temp->Direction);
+					if (m_pPlayer2->GetStateName() != temp->State)
+						m_pPlayer2->ChangeState(temp->State);
+				}
+			}
+				break;
+			case StateMsgType::CastleHp:
+			{
+				CastleHpStateMsg* temp = (CastleHpStateMsg*)SMI.pStateMsgArgu;
+			}
+				break;
+			case StateMsgType::UseCard:
+			{
+				UseCardStateMsg* temp = (UseCardStateMsg*)SMI.pStateMsgArgu;
+
+			}
+				break; 
+			case StateMsgType::BossState:
+			{
+				BossPatternMsg* temp = (BossPatternMsg*)SMI.pStateMsgArgu;
+
+			}
+				break;
+			default:
+				break;
+			}
+
+		}
+
+		// 현 상황을 서버에게 전달
+
+		// 플레이어의 기본정보
 		StateMsgType smt = StateMsgType::PlayerLocation;
 		PlayerLocationMsg sma;
 		if (m_pPlayer != NULL) {
@@ -111,28 +149,20 @@ void Scene::Update(float elapsed)
 			sma.Direction = 0;
 			sma.State = PStateName::Move;
 		}
+
 		m_WriteStream->Write(smt);
 		m_WriteStream->Write(sma);
 
-		//StateMsgType smt = StateMsgType::PlayerLocation;
-		//send(*m_pSock, (char*)&smt, sizeof(StateMsgType), 0);
+		// 스킬을 사용했는가?
+		if (m_pPlayer->IsSkillMsg()) {
 
-		//PlayerLocationMsg sma;
-		//if (m_pPlayer != NULL) {
-		//	sma.Location.x = (int)m_pPlayer->GetLocation().x;
-		//	sma.Location.y = (int)m_pPlayer->GetLocation().y;
-		//	sma.PlayerId = m_iClientNum;
-		//	sma.Direction = m_pPlayer->GetDir();
-		//	sma.State = m_pPlayer->GetStateName();
-		//}
-		//else {
-		//	sma.Location.x = 100;
-		//	sma.Location.y = 200;
-		//	sma.PlayerId = -1;
-		//	sma.Direction = 0;
-		//	sma.State = PStateName::Move;
-		//}
-		//send(*m_pSock, (char*)&sma, sizeof(PlayerLocationMsg), 0);
+		}
+		// 플레이어의 부가정보 Write
+
+
+
+
+
 		m_WriteStream->Send();
 		SetEvent(*m_pWriteEvent);
 
