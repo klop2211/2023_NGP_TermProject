@@ -36,7 +36,8 @@ protected:
 	RECT m_rRect;
 
 	// 텍스쳐 위치
-	POINT m_pPoint;
+	POINT m_Size;
+	//POINT m_pPoint;
 
 	// 텍스쳐 오프셋
 	POINT m_pOffset;

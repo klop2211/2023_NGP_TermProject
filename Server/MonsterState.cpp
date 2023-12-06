@@ -13,8 +13,8 @@ MonsterMoveState* MonsterMoveState::Instance()
 void MonsterMoveState::Execute(Monster* monster, float ElapsedTime)
 {
 	// 이동
-	int NewLocation = monster->GetLocation().x + monster->GetSpeed() * 20 * ElapsedTime;
-	monster->SetLocation(FPOINT(NewLocation, 0));
+	int NewLocation = monster->GetLocation().x - monster->GetSpeed() * 20 * ElapsedTime;
+	monster->SetLocation(FPOINT(NewLocation, monster->GetLocation().y));
 }
 
 MonsterAttackState* MonsterAttackState::Instance()
@@ -43,8 +43,8 @@ BossMoveState* BossMoveState::Instance()
 void BossMoveState::Execute(Papyrus* papyrus, float ElapsedTime)
 {
 	// 이동
-	int NewLocation = papyrus->GetLocation().x + papyrus->GetSpeed() * 20 * ElapsedTime;
-	papyrus->SetLocation(FPOINT(NewLocation, 0));
+	int NewLocation = papyrus->GetLocation().x - papyrus->GetSpeed() * 20 * ElapsedTime;
+	papyrus->SetLocation(FPOINT(NewLocation, papyrus->GetLocation().y));
 
 	papyrus->MinusRemainTimer(ElapsedTime);
 	if (papyrus->GetRemainTimer() < 0.f)

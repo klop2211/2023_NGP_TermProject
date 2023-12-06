@@ -33,7 +33,7 @@ public:
 	// 송수신 관련 함수
 	void WriteMonsterState(MonsterType, BYTE, MonsterStateType);
 	void WritePlayerLocation();
-	void WriteMonsterSpawn(MonsterType, BYTE);
+	void WriteMonsterLocation(MonsterType, BYTE, POINT location = {0, 0});
 	void WriteCastleHp();
 	void WriteMonsterHp(MonsterType, BYTE, BYTE);
 	void WriteBossHp();

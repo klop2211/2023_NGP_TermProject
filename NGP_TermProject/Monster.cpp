@@ -7,8 +7,8 @@ void Monster::SyncLocationAtRect()
 {
 	m_rRect.left = int(m_Location.x);
 	m_rRect.top = int(m_Location.y);
-	m_rRect.right = m_rRect.left + m_pOffset.x * m_iSize;
-	m_rRect.bottom = m_rRect.top + m_pOffset.y * m_iSize;
+	m_rRect.right = m_rRect.left + m_Size.x;
+	m_rRect.bottom = m_rRect.top + m_Size.y;
 }
 
 void Monster::MoveXY(float x, float y, float elapsed)

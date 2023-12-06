@@ -22,10 +22,11 @@ struct StateMsgArgu
 // 송신 구현 : /
 
 // 서버 -> 클라 /
-struct MonsterLoctionMsg : StateMsgArgu
+struct MonsterLocationMsg : StateMsgArgu
 {
 	MonsterType Type;
 	BYTE SerialId;
+	POINT Location;
 };
 
 // 서버 -> 클라 (충돌처리 후 전송)

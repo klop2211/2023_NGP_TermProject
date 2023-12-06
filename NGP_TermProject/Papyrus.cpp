@@ -15,10 +15,14 @@ Papyrus::Papyrus()
 	}
 
 	//start 1,1
-	m_pPoint = m_pOffset = { 49, 54 };
-	m_iSize = 5;
-	m_Location = { float(WINWIDTH - 300), float(634 - m_iSize * 5) };
-	m_rRect = { WINWIDTH - 300, 634 - m_iSize * m_pOffset.x, WINWIDTH + m_iSize * m_pOffset.y - 300, 634 };
+	//m_pPoint = m_pOffset = { 49, 54 };
+	//m_iSize = 5;
+
+	m_pOffset = { 49, 54 };
+	m_Size = { m_pOffset.x * 5, m_pOffset.y * 5 };
+
+	// m_Location = { float(WINWIDTH - 300), float(634 - m_Size.y) };
+	// m_rRect = { WINWIDTH - 300, 634 - m_Size.y * m_pOffset.x, WINWIDTH + m_Size.y * m_pOffset.y - 300, 634 };
 	//img = papyrusImg;
 	//this->m_cBossHpBar = m_cBossHpBar;
 	m_iCount = 0, m_fWait = 0, m_iSpeed = 10;
@@ -241,19 +245,19 @@ void Papyrus::ImgDraw(HDC& memdc)
 			break;
 		}
 	}
-	if (!m_bBreaked)
-		m_cImg.Draw(memdc, m_rRect.left, m_rRect.top, m_pPoint.x, m_pPoint.y,
-			1 + m_pPoint.x * (m_iCount % frame), 1 + m_pPoint.y * (int)m_Status, m_pPoint.x - 1, m_pPoint.y - 1);
-	else {
-		if (m_Status == P_Die) {
-			m_cImg.AlphaBlend(memdc, m_rRect.left, m_rRect.top, m_pPoint.x, m_pPoint.y,
-				1 + m_pPoint.x * 10, 163 + m_pPoint.y * 1, m_pPoint.x - 1, m_pPoint.y - 1, 255 - m_iCount, AC_SRC_OVER);
-		}
-		else {
-			m_cImg.Draw(memdc, m_rRect.left, m_rRect.top, m_pPoint.x, m_pPoint.y,
-				1 + m_pPoint.x * (m_iCount % frame), 163 + m_pPoint.y * (int)m_Status, m_pPoint.x - 1, m_pPoint.y - 1);
-		}
-	}
+	//if (!m_bBreaked)
+	//	m_cImg.Draw(memdc, m_rRect.left, m_rRect.top, m_pPoint.x, m_pPoint.y,
+	//		1 + m_pPoint.x * (m_iCount % frame), 1 + m_pPoint.y * (int)m_Status, m_pPoint.x - 1, m_pPoint.y - 1);
+	//else {
+	//	if (m_Status == P_Die) {
+	//		m_cImg.AlphaBlend(memdc, m_rRect.left, m_rRect.top, m_pPoint.x, m_pPoint.y,
+	//			1 + m_pPoint.x * 10, 163 + m_pPoint.y * 1, m_pPoint.x - 1, m_pPoint.y - 1, 255 - m_iCount, AC_SRC_OVER);
+	//	}
+	//	else {
+	//		m_cImg.Draw(memdc, m_rRect.left, m_rRect.top, m_pPoint.x, m_pPoint.y,
+	//			1 + m_pPoint.x * (m_iCount % frame), 163 + m_pPoint.y * (int)m_Status, m_pPoint.x - 1, m_pPoint.y - 1);
+	//	}
+	//}
 }
 
 void Papyrus::HpDraw(HDC& memdc)

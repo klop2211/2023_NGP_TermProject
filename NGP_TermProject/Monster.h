@@ -10,7 +10,7 @@ enum class StatusEffect : BYTE { Ice_s = 1, Fire_s, NULL_S };
 class Monster : public Object
 {
 public:
-	Monster() : m_iSize(1) {}
+	Monster() {}
 	~Monster() {}
 
 	virtual void Update(float elapsed) override = 0;
@@ -37,6 +37,7 @@ public:
 	int  GetSpeed()			{ return m_iSpeed; }
 
 	void SetCurrentHp(int Hp) { m_iCurrentHp = Hp; }
+	void SetLocation(POINT p) { m_Location.x = p.x; m_Location.y = p.y; }
 
 	virtual CImage GetImg() const = 0;
 
@@ -50,7 +51,7 @@ protected:
 	int m_iCount;
 	float m_fWait;
 
-	int m_iSize;
+	// int m_iSize;
 
 	// 상태이상
 	StatusEffect m_eSE;

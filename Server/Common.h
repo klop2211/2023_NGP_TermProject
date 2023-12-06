@@ -61,6 +61,11 @@ struct FPOINT
 	FPOINT() {}
 	FPOINT(float x, float y) { this->x = x; this->y = y; }
 
+	FPOINT operator=(POINT& point)
+	{
+		return FPOINT{ (float)point.x, (float)point.y };
+	}
+
 	float x;
 	float y;
 };

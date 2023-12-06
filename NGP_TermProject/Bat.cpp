@@ -10,10 +10,10 @@ Bat::Bat()
 	{
 		m_cImg.Load(TEXT("적관련\\박쥐.png"));
 	}
-	m_pPoint = { 67 * 2,49 * 2 };
+	m_Size = { 67 * 2,49 * 2 };
 	m_pOffset = { 67,49 };
-	m_rRect = { WINWIDTH - 200, 400 - m_pPoint.y, WINWIDTH - 200 + m_pPoint.x, 400 };
-	m_Location = { (float)m_rRect.left, (float)m_rRect.top };
+	// m_rRect = { WINWIDTH - 200, 400 - m_Size.y, WINWIDTH - 200 + m_Size.x, 400 };
+	// m_Location = { (float)m_rRect.left, (float)m_rRect.top };
 
 	//m_cImg = BatImg;
 	status = MonsterStatus::Move;
@@ -36,10 +36,10 @@ void Bat::ImgDraw(HDC& memdc)
 	int frame = 6;
 
 	if (status != MonsterStatus::Die)
-		m_cImg.Draw(memdc, m_rRect.left, m_rRect.top, m_pPoint.x, m_pPoint.y,
+		m_cImg.Draw(memdc, m_rRect.left, m_rRect.top, m_Size.x, m_Size.y,
 			0 + m_pOffset.x * (m_iCount % frame), 0 + m_pOffset.y * (int)status, m_pOffset.x - 2, m_pOffset.y - 2);
 	else
-		m_cImg.AlphaBlend(memdc, m_rRect.left, m_rRect.top, m_pPoint.x, m_pPoint.y,
+		m_cImg.AlphaBlend(memdc, m_rRect.left, m_rRect.top, m_Size.x, m_Size.y,
 			0 + m_pOffset.x * 5, 0 + m_pOffset.y * 1, m_pOffset.x - 2, m_pOffset.y - 2, 255 - m_iCount, AC_SRC_OVER);
 }
 
@@ -55,57 +55,80 @@ void Bat::HpDraw(HDC& memdc)
 
 void Bat::Update(float elapsed)
 {
-	// 60프레임 기준 초당 20번 if 문 통과 및 m_iCount 증가
-	// TODO: 타이머 적용
 	m_fWait += elapsed;
-	if (m_fWait) {
+	if (m_fWait > 0.016)
+	{
+		m_fWait = 0.f;
 		m_iCount++;
-
+	
 		switch (status)
 		{
 		case MonsterStatus::Move:
-			//hit(1);
-			MoveXY(-m_iSpeed, 0, elapsed);
-			if (m_rRect.left < CASTLEXPOINT - 50) {
-				status = MonsterStatus::Attack;
-				m_iCount = 0, m_fWait = 0;
-			}
 			break;
 		case MonsterStatus::Dead:
-			MoveXY(0, 15, elapsed);
-			if (m_iCount == 5)
-				--m_iCount;
-			if (m_rRect.bottom > GROUNDYPOINT) {
-				m_rRect.bottom = GROUNDYPOINT;
-				m_rRect.top = GROUNDYPOINT - m_pPoint.y;
-				status = MonsterStatus::Die;
-				m_iCount = 0, m_fWait = 0;
-			}
 			break;
 		case MonsterStatus::Attack:
-			if (m_iCount % 6 == 3)
-			{
-				if (m_pCastleInteraction)
-				{
-					m_pCastleInteraction->HitCastle(m_iDamage);
-				}
-			}
 			break;
 		case MonsterStatus::Hit:
-			if (m_iCount == 6) {
-				status = MonsterStatus::Move;
-				m_iCount = 0, m_fWait = 0;
-			}
 			break;
 		case MonsterStatus::Die:
-			m_iCount += 10;
-			if (m_iCount > 245)
-				m_bCanDie = true;
-			break;
-		default:
-			break;
+				break;
+			default:
+				break;
 		}
 	}
+
+
+	// 60프레임 기준 초당 20번 if 문 통과 및 m_iCount 증가
+	// TODO: 타이머 적용
+	//if (m_fWait) {
+	//	m_iCount++;
+
+	//	switch (status)
+	//	{
+	//	case MonsterStatus::Move:
+	//		//hit(1);
+	//		MoveXY(-m_iSpeed, 0, elapsed);
+	//		if (m_rRect.left < CASTLEXPOINT - 50) {
+	//			status = MonsterStatus::Attack;
+	//			m_iCount = 0, m_fWait = 0;
+	//		}
+	//		break;
+	//	case MonsterStatus::Dead:
+	//		MoveXY(0, 15, elapsed);
+	//		if (m_iCount == 5)
+	//			--m_iCount;
+	//		if (m_rRect.bottom > GROUNDYPOINT) {
+	//			m_rRect.bottom = GROUNDYPOINT;
+	//			m_rRect.top = GROUNDYPOINT - m_pPoint.y;
+	//			status = MonsterStatus::Die;
+	//			m_iCount = 0, m_fWait = 0;
+	//		}
+	//		break;
+	//	case MonsterStatus::Attack:
+	//		if (m_iCount % 6 == 3)
+	//		{
+	//			if (m_pCastleInteraction)
+	//			{
+	//				m_pCastleInteraction->HitCastle(m_iDamage);
+	//			}
+	//		}
+	//		break;
+	//	case MonsterStatus::Hit:
+	//		if (m_iCount == 6) {
+	//			status = MonsterStatus::Move;
+	//			m_iCount = 0, m_fWait = 0;
+	//		}
+	//		break;
+	//	case MonsterStatus::Die:
+	//		m_iCount += 10;
+	//		if (m_iCount > 245)
+	//			m_bCanDie = true;
+	//		break;
+	//	default:
+	//		break;
+	//	}
+	//}
 }
 
 bool Bat::Hit(int att)

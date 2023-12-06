@@ -85,16 +85,16 @@ void Scene::Update(float elapsed)
 			m_StateMsgQueue.pop();
 
 			switch (SMI.StateMsg) {
-			case StateMsgType::MonsterSpawn:
+			case StateMsgType::MonsterLocation:
 			{
-				MonsterSpawnStateMsg* temp = (MonsterSpawnStateMsg*)SMI.pStateMsgArgu;
-				MonsterSpawn(temp->Type, temp->SerialId);
+				MonsterLocationMsg* temp = (MonsterLocationMsg*)SMI.pStateMsgArgu;
+				MonsterLocation(temp->Type, temp->SerialId, temp->Location);
 			}
 				break;
 			case StateMsgType::MonsterHp:
 			{
 				MonsterHpMsg* temp = (MonsterHpMsg*)SMI.pStateMsgArgu;
-
+				MonsterHp(temp->Type, temp->SerialId, temp->Hp);
 			}
 				break;
 			case StateMsgType::MonsterState:
@@ -468,25 +468,46 @@ void Scene::UpdateChangeStart(float elapsed)
 }
 
 //===================Msg 읽어와 상태 적용하는 코드들===========================
-void Scene::MonsterSpawn(MonsterType MT, int SN)
+void Scene::MonsterLocation(MonsterType MT, int SN, POINT Location)
 {
 	switch (MT)
 	{
 	case MonsterType::Wolf:
 	{
-		Wolf* wolf = new Wolf();
-		m_WolfMap.insert({ SN, wolf });
+		if (m_WolfMap.find(SN) != m_WolfMap.end())
+		{
+			m_WolfMap[SN]->SetLocation(Location);
+		}
+		else
+		{
+			Wolf* wolf = new Wolf();
+			m_WolfMap.insert({ SN, wolf });
+		}
 	}
 		break;
 	case MonsterType::Bat:
 	{
-		Bat* bat = new Bat();
-		m_BatMap.insert({ SN, bat });
+		if (m_BatMap.find(SN) != m_BatMap.end())
+		{
+			m_BatMap[SN]->SetLocation(Location);
+		}
+		else
+		{
+			Bat* bat = new Bat();
+			m_BatMap.insert({ SN, bat });
+		}
 	}
 		break;
 	case MonsterType::Papyrus:
 	{
-		m_Papyrus = new Papyrus();
+		if (m_Papyrus)
+		{
+			m_Papyrus->SetLocation(Location);
+		}
+		else
+		{
+			m_Papyrus = new Papyrus();
+		}
 	}
 		break;
 	default:

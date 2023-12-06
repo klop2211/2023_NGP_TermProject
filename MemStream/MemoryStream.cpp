@@ -73,9 +73,9 @@ StateMsgArgu* MemoryStream::GetStateMsg(StateMsgType smt, int& size)
 {
 	switch (smt)
 	{
-	case StateMsgType::MonsterSpawn:
-		size = sizeof(MonsterSpawnStateMsg);
-		return new MonsterSpawnStateMsg();
+	case StateMsgType::MonsterLocation:
+		size = sizeof(MonsterLocationMsg);
+		return new MonsterLocationMsg();
 
 	case StateMsgType::MonsterHp:
 		size = sizeof(MonsterHpMsg);

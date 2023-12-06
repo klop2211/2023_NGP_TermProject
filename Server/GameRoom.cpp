@@ -23,6 +23,8 @@ GameRoom::GameRoom(array<SOCKET, MAX_CLIENTS>& ClientSocket) :
 	{
 		p = new PlayerInfo();
 	}
+
+	m_tPreviousTime = std::chrono::system_clock::now();
 }
 
 GameRoom::~GameRoom()
@@ -53,7 +55,7 @@ void GameRoom::Update(array<queue<StateMsgInfo>, MAX_CLIENTS> StateMsg)
 	UpdateUseStateMsg(StateMsg);
 	WritePlayerLocation();
 	SpawnEnemy();
-	//UpdateEnemy();
+	UpdateEnemy();
 	DoCollisionCheck();
 
 	m_pStream->Send();
@@ -68,7 +70,7 @@ void GameRoom::SpawnEnemy()
 
 		if (m_fWolfSpawnTimer >= 5.f)
 		{
-			WriteMonsterSpawn(MonsterType::Wolf, m_iWolfSN);
+			// WriteMonsterLocation(MonsterType::Wolf, m_iWolfSN);
 
 			m_WolfMap.insert({ m_iWolfSN, new Wolf(m_iWolfSN)});
 			m_iWolfSN++;
@@ -80,7 +82,7 @@ void GameRoom::SpawnEnemy()
 
 		if (m_fBatSpawnTimer >= 5.f)
 		{
-			WriteMonsterSpawn(MonsterType::Bat, m_iBatSN);
+			// WriteMonsterLocation(MonsterType::Bat, m_iBatSN);
 
 			m_BatMap.insert({ m_iBatSN, new Bat(m_iBatSN) });
 			m_iBatSN++;
@@ -106,6 +108,10 @@ void GameRoom::UpdateEnemy()
 		Bat* bat = it.second;
 
 		bat->Update(m_fElapsedTime);
+
+		POINT location = { int(bat->GetLocation().x), int(bat->GetLocation().y) };
+		WriteMonsterLocation(MonsterType::Bat, MonNum, location);
+
 		if (bat->GetCanAttack())
 		{
 			bat->SetCanAttack(false);
@@ -122,6 +128,10 @@ void GameRoom::UpdateEnemy()
 		Wolf* wolf = it.second;
 
 		wolf->Update(m_fElapsedTime);
+
+		POINT location = { int(wolf->GetLocation().x), int(wolf->GetLocation().y) };
+		WriteMonsterLocation(MonsterType::Wolf, MonNum, location);
+
 		if (wolf->GetCanAttack())
 		{
 			wolf->SetCanAttack(false);
@@ -136,6 +146,10 @@ void GameRoom::UpdateEnemy()
 	if (m_Papyrus)
 	{
 		m_Papyrus->Update(m_fElapsedTime);
+
+		POINT location = { int(m_Papyrus->GetLocation().x), int(m_Papyrus->GetLocation().y) };
+		WriteMonsterLocation(MonsterType::Papyrus, 0, location);
+
 		if (m_Papyrus->GetIsStateChanged())
 		{
 			m_Papyrus->SetIsStateChanged(false);
@@ -340,13 +354,14 @@ void GameRoom::WritePlayerLocation()
 	}
 }
 
-void GameRoom::WriteMonsterSpawn(MonsterType MT, BYTE id)
+void GameRoom::WriteMonsterLocation(MonsterType MT, BYTE id, POINT location)
 {
-	MonsterSpawnStateMsg MSSM;
+	MonsterLocationMsg MSSM;
 	MSSM.Type = MT;
 	MSSM.SerialId = id;
+	MSSM.Location = location;
 
-	m_pStream->Write(StateMsgType::MonsterSpawn);
+	m_pStream->Write(StateMsgType::MonsterLocation);
 	m_pStream->Write(MSSM);
 }
 

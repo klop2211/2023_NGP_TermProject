@@ -10,8 +10,8 @@ Wolf::Wolf(int SN) : CommonMonster(SN)
 	m_iExperi = 20;
 	m_fAttackCoolTime = 3.f;
 
-	m_Size = { 67 * 2,49 * 2 };
-	m_Location = { (float)(CLIENTWINWIDTH - 200),  (float)(CLIENTWINWIDTH - 200 + m_Size.x) };
+	m_Size = { 86 * 2, 58 * 2 };
+	m_Location = { (float)(CLIENTWINWIDTH),  (float)(634 - m_Size.y) };
 }
 
 void Wolf::Update(float ElapsedTime)
