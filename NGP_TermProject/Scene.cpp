@@ -11,6 +11,8 @@
 #include "Wolf.h"
 #include "Papyrus.h"
 
+#include "Shop.h"
+
 #define MULTI_PLAY
 
 SOCKET*			Scene::m_pSock;
@@ -29,6 +31,7 @@ Scene::Scene()
 	m_pPlayer = NULL;
 	m_pPlayer2 = NULL;
 	m_pCastle = new Castle;
+	m_Shop = new Shop(m_hWnd, m_hInst);
 
 	m_fChangeCount = 0;
 	m_cClosing.Load(TEXT("윈플 텀프 이미지\\원.png"));
@@ -213,6 +216,7 @@ void Scene::Draw(HDC& memDc)
 		else
 		{
 			DrawGameStart(memDc);
+			//m_Shop->StartShop(memDc);
 		}
 	}
 	else {
@@ -342,6 +346,18 @@ void Scene::OnProcessingKeyboardMessage(HWND hWnd, UINT message, WPARAM wParam, 
 		break;
 	}
 
+}
+
+void Scene::OnProcessingCommandMessage(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+{
+	switch (message)
+	{
+		case WM_COMMAND:
+		{
+			m_Shop->OnProcessingCommandMessage(hWnd, wParam, m_pPlayer);
+		}
+		break;
+	}
 }
 
 void Scene::UpdateChangeLoading(float elapsed)

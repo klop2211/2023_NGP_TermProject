@@ -70,6 +70,9 @@
     <ClCompile Include="..\Server\Common.cpp">
       <Filter>2019180016\Stream</Filter>
     </ClCompile>
+    <ClCompile Include="Shop.cpp">
+      <Filter>2019180016\Source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Bat.h">
@@ -153,6 +156,9 @@
     </ClInclude>
     <ClInclude Include="..\MemStream\MemoryWriteStream.h">
       <Filter>2019180016\Stream</Filter>
+    </ClInclude>
+    <ClInclude Include="Shop.h">
+      <Filter>2019180016\Header</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

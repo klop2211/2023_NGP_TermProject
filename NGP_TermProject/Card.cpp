@@ -125,3 +125,11 @@ void Card::mainDraw(HDC& memdc, int tempX, int tempY)
 	DrawText(memdc, manaStr, lstrlen(manaStr), &manaRect, DT_CENTER | DT_SINGLELINE | DT_VCENTER);
 	SelectObject(memdc, oldFont); DeleteObject(hFont);
 }
+
+void Card::SetTripord(int* tripord)
+{
+	for (int i = 0; i < 4; i++)
+	{
+		m_iTripord[i] = tripord[i];
+	}
+}

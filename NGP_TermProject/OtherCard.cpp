@@ -2,7 +2,7 @@
 #include "OtherCard.h"
 //====================================집중============================================
 
-Wjrfydvh::Wjrfydvh(int** m_iTripord)
+Wjrfydvh::Wjrfydvh(int* Tripord)
 {
 	__init__();
 	this->m_iTripord = m_iTripord;
@@ -10,7 +10,7 @@ Wjrfydvh::Wjrfydvh(int** m_iTripord)
 
 void Wjrfydvh::setTier1()
 {
-	switch (m_iTripord[(int)CardName::N_wjrfydvh][0])
+	switch (m_iTripord[0])
 	{
 	case 1:
 		m_cImg[(int)CardRect::R_tier1].Load(TEXT(".//카드관련//트포//빠른준비1.jpg"));
@@ -30,7 +30,7 @@ void Wjrfydvh::setTier1()
 }
 
 void Wjrfydvh::setTier2() {
-	switch (m_iTripord[(int)CardName::N_wjrfydvh][1])
+	switch (m_iTripord[1])
 	{
 	case 1:
 		m_cImg[(int)CardRect::R_tier2].Load(TEXT(".//카드관련//트포//마력조절2.jpg"));
@@ -51,7 +51,7 @@ void Wjrfydvh::setTier2() {
 }
 
 void Wjrfydvh::setTier3() {
-	switch (m_iTripord[(int)CardName::N_wjrfydvh][2])
+	switch (m_iTripord[2])
 	{
 	case 1:
 		m_cImg[(int)CardRect::R_tier3].Load(TEXT(".//카드관련//트포//치명적인조준.jpg"));
@@ -79,18 +79,18 @@ void Wjrfydvh::__init__()
 	if (m_cEffect != nullptr)
 		m_cEffect.Destroy();
 
-	if (m_iTripord[(int)CardName::N_wjrfydvh][2] != 0) {
+	if (m_iTripord[2] != 0) {
 		m_cImg[0].Load(TEXT(".//카드관련//카드//적룡포3.png"));
 		setTier3();
 		setTier2();
 		setTier1();
 	}
-	else if (m_iTripord[(int)CardName::N_wjrfydvh][1] != 0) {
+	else if (m_iTripord[1] != 0) {
 		m_cImg[0].Load(TEXT(".//카드관련//카드//적룡포2.png"));
 		setTier2();
 		setTier1();
 	}
-	else if (m_iTripord[(int)CardName::N_wjrfydvh][0] != 0) {
+	else if (m_iTripord[0] != 0) {
 		m_cImg[0].Load(TEXT(".//카드관련//카드//적룡포1.png"));
 		setTier1();
 	}
@@ -105,14 +105,14 @@ void Wjrfydvh::__init__()
 	swprintf_s(m_tStr[(int)CardRect::R_main], 100, L"자세를 잡고 집중한 뒤 전방으로 창을 찔러 %d의 피해를 준다.\n부위파괴 : %d\0", m_iDamage, m_iDestruction);
 }
 
-Sktjsckd::Sktjsckd(int** m_iTripord)
+Sktjsckd::Sktjsckd(int* Tripord)
 {
 	__init__();
 	this->m_iTripord = m_iTripord;
 }
 
 void Sktjsckd::setTier1() {
-	switch (m_iTripord[(int)CardName::N_sktjsckd][0])
+	switch (m_iTripord[0])
 	{
 	case 1:
 		m_cImg[(int)CardRect::R_tier1].Load(TEXT(".//카드관련//트포//난무특화.jpg"));
@@ -132,7 +132,7 @@ void Sktjsckd::setTier1() {
 }
 
 void Sktjsckd::setTier2() {
-	switch (m_iTripord[(int)CardName::N_sktjsckd][1])
+	switch (m_iTripord[1])
 	{
 	case 1:
 		m_cImg[(int)CardRect::R_tier2].Load(TEXT(".//카드관련//트포//공격잇기.jpg"));
@@ -152,7 +152,7 @@ void Sktjsckd::setTier2() {
 }
 
 void Sktjsckd::setTier3() {
-	switch (m_iTripord[(int)CardName::N_sktjsckd][2])
+	switch (m_iTripord[2])
 	{
 	case 1:
 		m_cImg[(int)CardRect::R_tier3].Load(TEXT(".//카드관련//트포//기술강화.jpg"));
@@ -177,18 +177,18 @@ void Sktjsckd::__init__() {
 		m_cSkill.Destroy();
 	if (m_cEffect != nullptr)
 		m_cEffect.Destroy();
-	if (m_iTripord[(int)CardName::N_sktjsckd][2] != 0) {
+	if (m_iTripord[2] != 0) {
 		m_cImg[0].Load(TEXT(".//카드관련//카드//나선창3.png"));
 		setTier3();
 		setTier2();
 		setTier1();
 	}
-	else if (m_iTripord[(int)CardName::N_sktjsckd][1] != 0) {
+	else if (m_iTripord[1] != 0) {
 		m_cImg[0].Load(TEXT(".//카드관련//카드//나선창2.png"));
 		setTier2();
 		setTier1();
 	}
-	else if (m_iTripord[(int)CardName::N_sktjsckd][0] != 0) {
+	else if (m_iTripord[0] != 0) {
 		m_cImg[0].Load(TEXT(".//카드관련//카드//나선창1.png"));
 		setTier1();
 	}
@@ -203,14 +203,14 @@ void Sktjsckd::__init__() {
 	swprintf_s(m_tStr[(int)CardRect::R_main], 100, L"창으로 간결하게 찔러 %d의 피해를 준다.\n\0", m_iDamage);
 }
 
-Rhlddufvk::Rhlddufvk(int** m_iTripord)
+Rhlddufvk::Rhlddufvk(int* Tripord)
 {
 	__init__();
 	this->m_iTripord = m_iTripord;
 }
 
 void Rhlddufvk::setTier1() {
-	switch (m_iTripord[(int)CardName::N_rhlddufvk][0])
+	switch (m_iTripord[0])
 	{
 	case 1:
 		m_cImg[(int)CardRect::R_tier1].Load(TEXT(".//카드관련//트포//부위파괴강화1.jpg"));
@@ -230,7 +230,7 @@ void Rhlddufvk::setTier1() {
 }
 
 void Rhlddufvk::setTier2() {
-	switch (m_iTripord[(int)CardName::N_rhlddufvk][1])
+	switch (m_iTripord[1])
 	{
 	case 1:
 		m_cImg[(int)CardRect::R_tier2].Load(TEXT(".//카드관련//트포//화염회전.jpg"));
@@ -250,7 +250,7 @@ void Rhlddufvk::setTier2() {
 }
 
 void Rhlddufvk::setTier3() {
-	switch (m_iTripord[(int)CardName::N_rhlddufvk][2])
+	switch (m_iTripord[2])
 	{
 	case 1:
 		m_cImg[(int)CardRect::R_tier3].Load(TEXT(".//카드관련//트포//돌격베기.jpg"));
@@ -277,18 +277,18 @@ void Rhlddufvk::__init__() {
 	if (m_cEffect != nullptr)
 		m_cEffect.Destroy();
 
-	if (m_iTripord[(int)CardName::N_rhlddufvk][2] != 0) {
+	if (m_iTripord[2] != 0) {
 		m_cImg[0].Load(TEXT(".//카드관련//카드//굉열파3.png"));
 		setTier3();
 		setTier2();
 		setTier1();
 	}
-	else if (m_iTripord[(int)CardName::N_rhlddufvk][1] != 0) {
+	else if (m_iTripord[1] != 0) {
 		m_cImg[0].Load(TEXT(".//카드관련//카드//굉열파2.png"));
 		setTier1();
 		setTier2();
 	}
-	else if (m_iTripord[(int)CardName::N_rhlddufvk][0] != 0) {
+	else if (m_iTripord[0] != 0) {
 		m_cImg[0].Load(TEXT(".//카드관련//카드//굉열파1.png"));
 		setTier1();
 	}
@@ -305,13 +305,13 @@ void Rhlddufvk::__init__() {
 }
 
 
-Dbtjdrkdcjs::Dbtjdrkdcjs(int** m_iTripord) {
+Dbtjdrkdcjs::Dbtjdrkdcjs(int* Tripord) {
 	__init__();
 	this->m_iTripord = m_iTripord;
 }
 
 void Dbtjdrkdcjs::setTier1() {
-	switch (m_iTripord[(int)CardName::N_dbtjdrkdcjs][0])
+	switch (m_iTripord[0])
 	{
 	case 1:
 		m_cImg[(int)CardRect::R_tier1].Load(TEXT(".//카드관련//트포//빠른준비1.jpg"));
@@ -331,7 +331,7 @@ void Dbtjdrkdcjs::setTier1() {
 }
 
 void Dbtjdrkdcjs::setTier2() {
-	switch (m_iTripord[(int)CardName::N_dbtjdrkdcjs][1])
+	switch (m_iTripord[1])
 	{
 	case 1:
 		m_cImg[(int)CardRect::R_tier2].Load(TEXT(".//카드관련//트포//기절효과.jpg"));
@@ -351,7 +351,7 @@ void Dbtjdrkdcjs::setTier2() {
 }
 
 void Dbtjdrkdcjs::setTier3() {
-	switch (m_iTripord[(int)CardName::N_dbtjdrkdcjs][2])
+	switch (m_iTripord[2])
 	{
 	case 1:
 		m_cImg[(int)CardRect::R_tier3].Load(TEXT(".//카드관련//트포//강력한마무리.jpg"));
@@ -377,18 +377,18 @@ void Dbtjdrkdcjs::__init__() {
 	if (m_cEffect != nullptr)
 		m_cEffect.Destroy();
 
-	if (m_iTripord[(int)CardName::N_dbtjdrkdcjs][2] != 0) {
+	if (m_iTripord[2] != 0) {
 		m_cImg[0].Load(TEXT(".//카드관련//카드//유성강천3.png"));
 		setTier3();
 		setTier2();
 		setTier1();
 	}
-	else if (m_iTripord[(int)CardName::N_dbtjdrkdcjs][1] != 0) {
+	else if (m_iTripord[1] != 0) {
 		m_cImg[0].Load(TEXT(".//카드관련//카드//유성강천2.png"));
 		setTier1();
 		setTier2();
 	}
-	else if (m_iTripord[(int)CardName::N_dbtjdrkdcjs][0] != 0) {
+	else if (m_iTripord[0] != 0) {
 		m_cImg[0].Load(TEXT(".//카드관련//카드//유성강천1.png"));
 		setTier1();
 	}
@@ -405,13 +405,13 @@ void Dbtjdrkdcjs::__init__() {
 
 //==========================난무======================================
 
-Aodfyddufvk::Aodfyddufvk(int** m_iTripord) {
+Aodfyddufvk::Aodfyddufvk(int* Tripord) {
 	__init__();
 	this->m_iTripord = m_iTripord;
 }
 
 void Aodfyddufvk::setTier1() {
-	switch (m_iTripord[(int)CardName::N_aodfyddufvk][0])
+	switch (m_iTripord[0])
 	{
 	case 1:
 		m_cImg[(int)CardRect::R_tier1].Load(TEXT(".//카드관련//트포//넓은공격.jpg"));
@@ -431,7 +431,7 @@ void Aodfyddufvk::setTier1() {
 }
 
 void Aodfyddufvk::setTier2() {
-	switch (m_iTripord[(int)CardName::N_aodfyddufvk][1])
+	switch (m_iTripord[1])
 	{
 	case 1:
 		m_cImg[(int)CardRect::R_tier2].Load(TEXT(".//카드관련//트포//빠른준비2.jpg"));
@@ -451,7 +451,7 @@ void Aodfyddufvk::setTier2() {
 }
 
 void Aodfyddufvk::setTier3() {
-	switch (m_iTripord[(int)CardName::N_aodfyddufvk][2])
+	switch (m_iTripord[2])
 	{
 	case 1:
 		m_cImg[(int)CardRect::R_tier3].Load(TEXT(".//카드관련//트포//공격잇기3.jpg"));
@@ -478,18 +478,18 @@ void Aodfyddufvk::__init__() {
 	if (m_cEffect != nullptr)
 		m_cEffect.Destroy();
 
-	if (m_iTripord[(int)CardName::N_aodfyddufvk][2] != 0) {
+	if (m_iTripord[2] != 0) {
 		m_cImg[0].Load(TEXT(".//카드관련//카드//맹룡열파3.png"));
 		setTier3();
 		setTier2();
 		setTier1();
 	}
-	else if (m_iTripord[(int)CardName::N_aodfyddufvk][1] != 0) {
+	else if (m_iTripord[1] != 0) {
 		m_cImg[0].Load(TEXT(".//카드관련//카드//맹룡열파2.png"));
 		setTier2();
 		setTier1();
 	}
-	else if (m_iTripord[(int)CardName::N_aodfyddufvk][0] != 0) {
+	else if (m_iTripord[0] != 0) {
 		m_cImg[0].Load(TEXT(".//카드관련//카드//맹룡열파1.png"));
 		setTier1();
 	}
@@ -504,13 +504,13 @@ void Aodfyddufvk::__init__() {
 	swprintf_s(m_tStr[(int)CardRect::R_main], 100, L"더욱 큰 창으로 바뀌고 크게 휘둘러 %d의 피해를 준다.\n무력화 : 중\0", m_iDamage);
 }
 
-Qksdnjftja::Qksdnjftja(int** m_iTripord) {
+Qksdnjftja::Qksdnjftja(int* Tripord) {
 	__init__();
 	this->m_iTripord = m_iTripord;
 }
 
 void Qksdnjftja::setTier1() {
-	switch (m_iTripord[(int)CardName::N_qksdnjftja][0])
+	switch (m_iTripord[0])
 	{
 	case 1:
 		m_cImg[(int)CardRect::R_tier1].Load(TEXT(".//카드관련//트포//부위파괴강화1.jpg"));
@@ -530,7 +530,7 @@ void Qksdnjftja::setTier1() {
 }
 
 void Qksdnjftja::setTier2() {
-	switch (m_iTripord[(int)CardName::N_qksdnjftja][1])
+	switch (m_iTripord[1])
 	{
 	case 1:
 		m_cImg[(int)CardRect::R_tier2].Load(TEXT(".//카드관련//트포//뇌진탕2.jpg"));
@@ -551,7 +551,7 @@ void Qksdnjftja::setTier2() {
 }
 
 void Qksdnjftja::setTier3() {
-	switch (m_iTripord[(int)CardName::N_qksdnjftja][2])
+	switch (m_iTripord[2])
 	{
 	case 1:
 		m_cImg[(int)CardRect::R_tier3].Load(TEXT(".//카드관련//트포//강력한마무리.jpg"));
@@ -576,18 +576,18 @@ void Qksdnjftja::__init__() {
 	if (m_cEffect != nullptr)
 		m_cEffect.Destroy();
 
-	if (m_iTripord[(int)CardName::N_qksdnjftja][2] != 0) {
+	if (m_iTripord[2] != 0) {
 		m_cImg[0].Load(TEXT(".//카드관련//카드//반월섬3.png"));
 		setTier3();
 		setTier2();
 		setTier1();
 	}
-	else if (m_iTripord[(int)CardName::N_qksdnjftja][1] != 0) {
+	else if (m_iTripord[1] != 0) {
 		m_cImg[0].Load(TEXT(".//카드관련//카드//반월섬2.png"));
 		setTier2();
 		setTier1();
 	}
-	else if (m_iTripord[(int)CardName::N_qksdnjftja][0] != 0) {
+	else if (m_iTripord[0] != 0) {
 		m_cImg[0].Load(TEXT(".//카드관련//카드//반월섬1.png"));
 		setTier1();
 	}
@@ -602,13 +602,13 @@ void Qksdnjftja::__init__() {
 	swprintf_s(m_tStr[(int)CardRect::R_main], 100, L"전방으로 긴창을 바닥에 끌면서 이동하여 %d의 피해를 준다.\n무력화 : 중상\0", m_iDamage);
 }
 
-Dusghkstja::Dusghkstja(int** m_iTripord) {
+Dusghkstja::Dusghkstja(int* Tripord) {
 	__init__();
 	this->m_iTripord = m_iTripord;
 }
 
 void Dusghkstja::setTier1() {
-	switch (m_iTripord[(int)CardName::N_dusghkstja][0])
+	switch (m_iTripord[0])
 	{
 	case 1:
 		m_cImg[(int)CardRect::R_tier1].Load(TEXT(".//카드관련//트포//급소타격.jpg"));
@@ -628,7 +628,7 @@ void Dusghkstja::setTier1() {
 }
 
 void Dusghkstja::setTier2() {
-	switch (m_iTripord[(int)CardName::N_dusghkstja][1])
+	switch (m_iTripord[1])
 	{
 	case 1:
 		m_cImg[(int)CardRect::R_tier2].Load(TEXT(".//카드관련//트포//빠른준비2.jpg"));
@@ -648,7 +648,7 @@ void Dusghkstja::setTier2() {
 }
 
 void Dusghkstja::setTier3() {
-	switch (m_iTripord[(int)CardName::N_dusghkstja][2])
+	switch (m_iTripord[2])
 	{
 	case 1:
 		m_cImg[(int)CardRect::R_tier3].Load(TEXT(".//카드관련//트포//강력한마무리.jpg"));
@@ -676,18 +676,18 @@ void Dusghkstja::__init__() {
 	if (m_cEffect != nullptr)
 		m_cEffect.Destroy();
 
-	if (m_iTripord[(int)CardName::N_dusghkstja][2] != 0) {
+	if (m_iTripord[2] != 0) {
 		m_cImg[0].Load(TEXT(".//카드관련//카드//연환섬3.png"));
 		setTier3();
 		setTier2();
 		setTier1();
 	}
-	else if (m_iTripord[(int)CardName::N_dusghkstja][1] != 0) {
+	else if (m_iTripord[1] != 0) {
 		m_cImg[0].Load(TEXT(".//카드관련//카드//연환섬2.png"));
 		setTier2();
 		setTier1();
 	}
-	else if (m_iTripord[(int)CardName::N_dusghkstja][0] != 0) {
+	else if (m_iTripord[0] != 0) {
 		m_cImg[0].Load(TEXT(".//카드관련//카드//연환섬1.png"));
 		setTier1();
 	}
@@ -702,13 +702,13 @@ void Dusghkstja::__init__() {
 	swprintf_s(m_tStr[(int)CardRect::R_main], 100, L"창을 위로 올려친 후 앞으로 전진하여 베기공격을하여 %d의 피해를 준다.\n부위파괴 : %d\0", m_iDamage, m_iDestruction);
 }
 
-Cjdfydwls::Cjdfydwls(int** m_iTripord) {
+Cjdfydwls::Cjdfydwls(int* Tripord) {
 	__init__();
 	this->m_iTripord = m_iTripord;
 }
 
 void Cjdfydwls::setTier1() {
-	switch (m_iTripord[(int)CardName::N_cjdfydwls][0])
+	switch (m_iTripord[0])
 	{
 	case 1:
 		m_cImg[(int)CardRect::R_tier1].Load(TEXT(".//카드관련//트포//뇌진탕.jpg"));
@@ -728,7 +728,7 @@ void Cjdfydwls::setTier1() {
 }
 
 void Cjdfydwls::setTier2() {
-	switch (m_iTripord[(int)CardName::N_cjdfydwls][1])
+	switch (m_iTripord[1])
 	{
 	case 1:
 		m_cImg[(int)CardRect::R_tier2].Load(TEXT(".//카드관련//트포//내려치는창.jpg"));
@@ -748,7 +748,7 @@ void Cjdfydwls::setTier2() {
 }
 
 void Cjdfydwls::setTier3() {
-	switch (m_iTripord[(int)CardName::N_cjdfydwls][2])
+	switch (m_iTripord[2])
 	{
 	case 1:
 		m_cImg[(int)CardRect::R_tier3].Load(TEXT(".//카드관련//트포//공격잇기3.jpg"));
@@ -775,18 +775,18 @@ void Cjdfydwls::__init__() {
 	if (m_cEffect != nullptr)
 		m_cEffect.Destroy();
 
-	if (m_iTripord[(int)CardName::N_cjdfydwls][2] != 0) {
+	if (m_iTripord[2] != 0) {
 		m_cImg[0].Load(TEXT(".//카드관련//카드//청룡진3.png"));
 		setTier3();
 		setTier2();
 		setTier1();
 	}
-	else if (m_iTripord[(int)CardName::N_cjdfydwls][1] != 0) {
+	else if (m_iTripord[1] != 0) {
 		m_cImg[0].Load(TEXT(".//카드관련//카드//청룡진2.png"));
 		setTier2();
 		setTier1();
 	}
-	else if (m_iTripord[(int)CardName::N_cjdfydwls][0] != 0) {
+	else if (m_iTripord[0] != 0) {
 		m_cImg[0].Load(TEXT(".//카드관련//카드//청룡진1.png"));
 		setTier1();
 	}
@@ -801,13 +801,13 @@ void Cjdfydwls::__init__() {
 	swprintf_s(m_tStr[(int)CardRect::R_main], 100, L"제자리에서 창을 강하게 내려찍어 충격파가 퍼져 %d의 피해를 준다.\n부위파괴 : %d\0", m_iDamage, m_iDestruction);
 }
 
-Cjdfydcnftn::Cjdfydcnftn(int** m_iTripord) {
+Cjdfydcnftn::Cjdfydcnftn(int* Tripord) {
 	__init__();
 	this->m_iTripord = m_iTripord;
 }
 
 void Cjdfydcnftn::setTier1() {
-	switch (m_iTripord[(int)CardName::N_cjdfydcnftn][0])
+	switch (m_iTripord[0])
 	{
 	case 1:
 		m_cImg[(int)CardRect::R_tier1].Load(TEXT(".//카드관련//트포//급소타격.jpg"));
@@ -827,7 +827,7 @@ void Cjdfydcnftn::setTier1() {
 }
 
 void Cjdfydcnftn::setTier2() {
-	switch (m_iTripord[(int)CardName::N_cjdfydcnftn][1])
+	switch (m_iTripord[1])
 	{
 	case 1:
 		m_cImg[(int)CardRect::R_tier2].Load(TEXT(".//카드관련//트포//나선찌르기.jpg"));
@@ -847,7 +847,7 @@ void Cjdfydcnftn::setTier2() {
 }
 
 void Cjdfydcnftn::setTier3() {
-	switch (m_iTripord[(int)CardName::N_cjdfydcnftn][2])
+	switch (m_iTripord[2])
 	{
 	case 1:
 		m_cImg[(int)CardRect::R_tier3].Load(TEXT(".//카드관련//트포//돌격베기.jpg"));
@@ -873,18 +873,18 @@ void Cjdfydcnftn::__init__() {
 	if (m_cEffect != nullptr)
 		m_cEffect.Destroy();
 
-	if (m_iTripord[(int)CardName::N_cjdfydcnftn][2] != 0) {
+	if (m_iTripord[2] != 0) {
 		m_cImg[0].Load(TEXT(".//카드관련//카드//청룡출수3.png"));
 		setTier3();
 		setTier2();
 		setTier1();
 	}
-	else if (m_iTripord[(int)CardName::N_cjdfydcnftn][1] != 0) {
+	else if (m_iTripord[1] != 0) {
 		m_cImg[0].Load(TEXT(".//카드관련//카드//청룡출수2.png"));
 		setTier2();
 		setTier1();
 	}
-	else if (m_iTripord[(int)CardName::N_cjdfydcnftn][0] != 0) {
+	else if (m_iTripord[0] != 0) {
 		m_cImg[0].Load(TEXT(".//카드관련//카드//청룡출수1.png"));
 		setTier1();
 	}
@@ -899,7 +899,7 @@ void Cjdfydcnftn::__init__() {
 	swprintf_s(m_tStr[(int)CardRect::R_main], 100, L"전방으로 전진한 후 창을 빠르게 휘둘러 %d의 피해를 준다.\n무력화 : 중\0", m_iDamage);
 }
 
-Ghltjsckd::Ghltjsckd(int** m_iTripord, bool BOnce) {
+Ghltjsckd::Ghltjsckd(int* Tripord, bool BOnce) {
 	once = BOnce;
 	__init__();
 	this->m_iTripord = m_iTripord;
@@ -911,7 +911,7 @@ Ghltjsckd::Ghltjsckd(int** m_iTripord, bool BOnce) {
 //}
 
 void Ghltjsckd::setTier1() {
-	switch (m_iTripord[(int)CardName::N_ghltjsckd][0])
+	switch (m_iTripord[0])
 	{
 	case 1:
 		m_cImg[(int)CardRect::R_tier1].Load(TEXT(".//카드관련//트포//탁월한기동성.jpg"));
@@ -931,7 +931,7 @@ void Ghltjsckd::setTier1() {
 }
 
 void Ghltjsckd::setTier2() {
-	switch (m_iTripord[(int)CardName::N_ghltjsckd][1])
+	switch (m_iTripord[1])
 	{
 	case 1:
 		m_cImg[(int)CardRect::R_tier2].Load(TEXT(".//카드관련//트포//정신파괴.jpg"));
@@ -951,7 +951,7 @@ void Ghltjsckd::setTier2() {
 }
 
 void Ghltjsckd::setTier3() {
-	switch (m_iTripord[(int)CardName::N_ghltjsckd][2])
+	switch (m_iTripord[2])
 	{
 	case 1:
 		m_cImg[(int)CardRect::R_tier3].Load(TEXT(".//카드관련//트포//연속회전.jpg"));
@@ -977,18 +977,18 @@ void Ghltjsckd::__init__() {
 	if (m_cEffect != nullptr)
 		m_cEffect.Destroy();
 
-	if (m_iTripord[(int)CardName::N_ghltjsckd][2] != 0) {
+	if (m_iTripord[2] != 0) {
 		m_cImg[0].Load(TEXT(".//카드관련//카드//회선창3.png"));
 		setTier3();
 		setTier2();
 		setTier1();
 	}
-	else if (m_iTripord[(int)CardName::N_ghltjsckd][1] != 0) {
+	else if (m_iTripord[1] != 0) {
 		m_cImg[0].Load(TEXT(".//카드관련//카드//회선창2.png"));
 		setTier2();
 		setTier1();
 	}
-	else if (m_iTripord[(int)CardName::N_ghltjsckd][0] != 0) {
+	else if (m_iTripord[0] != 0) {
 		m_cImg[0].Load(TEXT(".//카드관련//카드//회선창1.png"));
 		setTier1();
 	}

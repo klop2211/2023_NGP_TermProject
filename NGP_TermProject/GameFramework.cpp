@@ -17,6 +17,8 @@ void GameFramework::Init(HWND hWnd)
 {
 	m_hWnd = hWnd;
 	m_tPreviousTime = std::chrono::system_clock::now();
+
+	m_pScene->SetInstance(m_hInst);
 }
 
 void GameFramework::Update()
@@ -116,4 +118,9 @@ LRESULT CALLBACK GameFramework::OnProcessingWindowMessage(HWND hWnd, UINT messag
 		break;
 	}
 	return LRESULT(0);
+}
+
+void GameFramework::OnProcessingCommandMessage(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+{
+	m_pScene->OnProcessingCommandMessage(hWnd, message, wParam, lParam);
 }

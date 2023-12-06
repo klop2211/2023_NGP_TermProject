@@ -18,7 +18,12 @@ public:
 	void OnProcessingKeyboardMessage(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 	LRESULT CALLBACK OnProcessingWindowMessage(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 
+	void OnProcessingCommandMessage(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
+	void SetInstance(HINSTANCE& Inst) { m_hInst = Inst; }
+
 private:
+	HINSTANCE m_hInst;
+
 	HWND m_hWnd;
 	Scene* m_pScene;
 	float m_fElapsedTime;

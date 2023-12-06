@@ -7,6 +7,8 @@
 #define FRAME_SPEED 6
 #define PLAYER_MOVE_SPEED 170
 
+typedef int(*PPint)[4];
+
 enum Direction : BYTE { Left, Right };
 
 class Card;
@@ -33,10 +35,13 @@ public:
 	void DrawCard();
 	void DrawCard(bool Attention);
 	void PlusUltimate();
-	void MakeCard(int randomValue, int** tripord);
+	void MakeCard(int randomValue);
 	int	ActivatedTripordNumber(CardName cardName, int num) { return m_ppTripord[(int)cardName][num]; }
 	void AddSkillObject(const SkillObject& skillObject);
 	bool IsSkillMsg() { return m_iSkillCheck; }
+
+	void MinusMoney(int money) { m_iMoney -= money; }
+	void SetCardTripod(int cardEnum);
 
 public:
 	CImage GetImg() const { return *m_pImg; }
@@ -49,6 +54,10 @@ public:
 	int GetType() const { return m_iType; }
 	int GetFrameIndex() const { return m_iFrameIdx; }
 	PStateName GetStateName() const { return m_pStateMachine->CurrentState()->GetName(); }
+	int GetCardCount() const { return m_iCardCount; }
+
+	int(*GetTripord())[4] {return m_ppTripord; }
+	int GetMoney() { return m_iMoney; }
 	
 	void SetDir(Direction dir) { m_dDir = dir; }
 	void SetImg(const TCHAR* str);
@@ -101,6 +110,7 @@ private:
 	int			m_iMaxMana;			// 최대 마나
 	int			m_iManaCount;		// 사용가능한 남은 마나
 	int			m_iLevel;			// 레벨
+	int			m_iMoney;			// 가진돈
 	bool		m_bOnemore;			// 스킬 한번더 사용?
 
 	int			m_iExperience;			// 경험치

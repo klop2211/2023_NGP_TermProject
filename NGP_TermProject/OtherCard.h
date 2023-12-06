@@ -5,118 +5,118 @@
 
 class Wjrfydvh : public Card {
 public:
-	Wjrfydvh(int** Tripord);
+	Wjrfydvh(int* Tripord);
 	void setTier1();
 	void setTier2();
 	void setTier3();
 
 	virtual void __init__() override;
 
-	virtual CImage GetImg() const { return m_cImg[0]; }
+	virtual CImage* GetImg() { return m_cImg; }
 };
 
 class Sktjsckd : public Card {
 public:
-	Sktjsckd(int** Tripord);
+	Sktjsckd(int* Tripord);
 	void setTier1();
 	void setTier2();
 	void setTier3();
 
 	virtual void __init__() override;
 
-	virtual CImage GetImg() const { return m_cImg[0]; }
+	virtual CImage* GetImg() { return m_cImg; }
 };
 
 class Rhlddufvk : public Card {
 public:
-	Rhlddufvk(int** Tripord);
+	Rhlddufvk(int* Tripord);
 	void setTier1();
 	void setTier2();
 	void setTier3();
 
 	virtual void __init__() override;
 
-	virtual CImage GetImg() const { return m_cImg[0]; }
+	virtual CImage* GetImg() { return m_cImg; }
 };
 
 class Dbtjdrkdcjs : public Card {
 public:
-	Dbtjdrkdcjs(int** Tripord);
+	Dbtjdrkdcjs(int* Tripord);
 	void setTier1();
 	void setTier2();
 	void setTier3();
 
 	virtual void __init__() override;
 
-	virtual CImage GetImg() const { return m_cImg[0]; }
+	virtual CImage* GetImg() { return m_cImg; }
 };
 
 //==========================³­¹«======================================
 
 class Aodfyddufvk : public Card {
 public:
-	Aodfyddufvk(int** Tripord);
+	Aodfyddufvk(int* Tripord);
 	void setTier1();
 	void setTier2();
 	void setTier3();
 
 	virtual void __init__() override;
 
-	virtual CImage GetImg() const { return m_cImg[0]; }
+	virtual CImage* GetImg() { return m_cImg; }
 };
 
 class Qksdnjftja : public Card {
 public:
-	Qksdnjftja(int** Tripord);
+	Qksdnjftja(int* Tripord);
 	void setTier1();
 	void setTier2();
 	void setTier3();
 
 	virtual void __init__() override;
 
-	virtual CImage GetImg() const { return m_cImg[0]; }
+	virtual CImage* GetImg() { return m_cImg; }
 
 };
 
 class Dusghkstja : public Card {
 public:
-	Dusghkstja(int** Tripord);
+	Dusghkstja(int* Tripord);
 	void setTier1();
 	void setTier2();
 	void setTier3();
 
 	virtual void __init__() override;
 
-	virtual CImage GetImg() const { return m_cImg[0]; }
+	virtual CImage* GetImg() { return m_cImg; }
 };
 
 class Cjdfydwls : public Card {
 public:
-	Cjdfydwls(int** Tripord);
+	Cjdfydwls(int* Tripord);
 	void setTier1();
 	void setTier2();
 	void setTier3();
 
 	virtual void __init__() override;
 
-	virtual CImage GetImg() const { return m_cImg[0]; }
+	virtual CImage* GetImg() { return m_cImg; }
 };
 
 class Cjdfydcnftn : public Card {
 public:
-	Cjdfydcnftn(int** Tripord);
+	Cjdfydcnftn(int* Tripord);
 	void setTier1();
 	void setTier2();
 	void setTier3();
 
 	virtual void __init__() override;
 
-	virtual CImage GetImg() const { return m_cImg[0]; }
+	virtual CImage* GetImg() { return m_cImg; }
 };
 
 class Ghltjsckd : public Card {
 public:
-	Ghltjsckd(int** Tripord, bool a = false);
+	Ghltjsckd(int* Tripord, bool a = false);
 
 	bool once;
 	virtual bool GetOnce() { return once; };
@@ -127,7 +127,7 @@ public:
 
 	virtual void __init__() override;
 
-	virtual CImage GetImg() const { return m_cImg[0]; }
+	virtual CImage* GetImg() { return m_cImg; }
 
 };
 
@@ -135,5 +135,5 @@ class Dmsgkdbtjdxks : public Card {
 public:
 	Dmsgkdbtjdxks();
 
-	virtual CImage GetImg() const { return m_cImg[0]; }
+	virtual CImage* GetImg() { return m_cImg; }
 };

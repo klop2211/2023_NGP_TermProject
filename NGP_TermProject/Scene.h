@@ -16,6 +16,7 @@ public:
 	void Draw(HDC& memDc);
 	void OnProcessingMouseMessage(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 	void OnProcessingKeyboardMessage(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
+	void OnProcessingCommandMessage(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 
 	// 게임 시작전 페이드아웃
 	void DrawChangeLoading(HDC& memDc);
@@ -40,10 +41,15 @@ public:
 	void UpdateMonsterState(MonsterType MT, int SN, MonsterStateType SMT);
 	void UpdateCastleHp(int Hp);
 
+	void SetInstance(HINSTANCE& Inst) { m_hInst = Inst; }
+
 private:
 	static DWORD WINAPI ReceiveThread(LPVOID arg);
 
 private:
+	HINSTANCE m_hInst;
+	HWND m_hWnd;
+
 	Player* m_pPlayer;
 	Player* m_pPlayer2; // 2P
 	std::list<Object*> m_lObjectList;
@@ -54,6 +60,8 @@ private:
 	class Papyrus* m_Papyrus;
 
 	class Castle* m_pCastle;
+
+	class Shop* m_Shop;
 
 	// 게임이 시작했는지
 	bool m_bStart;

@@ -605,51 +605,51 @@ void Player::PlusUltimate()
 		m_iUltimate = ULTIMATESKILL;
 }
 
-void Player::MakeCard(int randomValue, int** tripord)
+void Player::MakeCard(int randomValue)
 {
 	Card* temp = nullptr;
 	Card* temp1 = nullptr;
 	switch (randomValue)
 	{
 	case (int)CardName::N_rhlddufvk:
-		temp = new Rhlddufvk(tripord);
-		temp1 = new Rhlddufvk(tripord);
+		temp = new Rhlddufvk(m_ppTripord[(int)CardName::N_rhlddufvk]);
+		temp1 = new Rhlddufvk(m_ppTripord[(int)CardName::N_rhlddufvk]);
 		break;
 	case (int)CardName::N_sktjsckd:
-		temp = new Sktjsckd(tripord);
-		temp1 = new Sktjsckd(tripord);
+		temp = new Sktjsckd(m_ppTripord[(int)CardName::N_sktjsckd]);
+		temp1 = new Sktjsckd(m_ppTripord[(int)CardName::N_sktjsckd]);
 		break;
 	case (int)CardName::N_dbtjdrkdcjs:
-		temp = new Dbtjdrkdcjs(tripord);
-		temp1 = new Dbtjdrkdcjs(tripord);
+		temp = new Dbtjdrkdcjs(m_ppTripord[(int)CardName::N_dbtjdrkdcjs]);
+		temp1 = new Dbtjdrkdcjs(m_ppTripord[(int)CardName::N_dbtjdrkdcjs]);
 		break;
 	case (int)CardName::N_wjrfydvh:
-		temp = new Wjrfydvh(tripord);
-		temp1 = new Wjrfydvh(tripord);
+		temp = new Wjrfydvh(m_ppTripord[(int)CardName::N_wjrfydvh]);
+		temp1 = new Wjrfydvh(m_ppTripord[(int)CardName::N_wjrfydvh]);
 		break;
 	case (int)CardName::N_aodfyddufvk:
-		temp = new Aodfyddufvk(tripord);
-		temp1 = new Aodfyddufvk(tripord);
+		temp = new Aodfyddufvk(m_ppTripord[(int)CardName::N_aodfyddufvk]);
+		temp1 = new Aodfyddufvk(m_ppTripord[(int)CardName::N_aodfyddufvk]);
 		break;
 	case (int)CardName::N_qksdnjftja:
-		temp = new Qksdnjftja(tripord);
-		temp1 = new Qksdnjftja(tripord);
+		temp = new Qksdnjftja(m_ppTripord[(int)CardName::N_qksdnjftja]);
+		temp1 = new Qksdnjftja(m_ppTripord[(int)CardName::N_qksdnjftja]);
 		break;
 	case (int)CardName::N_dusghkstja:
-		temp = new Dusghkstja(tripord);
-		temp1 = new Dusghkstja(tripord);
+		temp = new Dusghkstja(m_ppTripord[(int)CardName::N_dusghkstja]);
+		temp1 = new Dusghkstja(m_ppTripord[(int)CardName::N_dusghkstja]);
 		break;
 	case (int)CardName::N_cjdfydwls:
-		temp = new Cjdfydwls(tripord);
-		temp1 = new Cjdfydwls(tripord);
+		temp = new Cjdfydwls(m_ppTripord[(int)CardName::N_cjdfydwls]);
+		temp1 = new Cjdfydwls(m_ppTripord[(int)CardName::N_cjdfydwls]);
 		break;
 	case (int)CardName::N_cjdfydcnftn:
-		temp = new Cjdfydcnftn(tripord);
-		temp1 = new Cjdfydcnftn(tripord);
+		temp = new Cjdfydcnftn(m_ppTripord[(int)CardName::N_cjdfydcnftn]);
+		temp1 = new Cjdfydcnftn(m_ppTripord[(int)CardName::N_cjdfydcnftn]);
 		break;
 	case (int)CardName::N_ghltjsckd:
-		temp = new Ghltjsckd(tripord);
-		temp1 = new Ghltjsckd(tripord);
+		temp = new Ghltjsckd(m_ppTripord[(int)CardName::N_ghltjsckd]);
+		temp1 = new Ghltjsckd(m_ppTripord[(int)CardName::N_ghltjsckd]);
 		break;
 	case (int)CardName::N_dmsgkdbtjdxks:
 		temp = new Dmsgkdbtjdxks();
@@ -682,4 +682,16 @@ void Player::SetImg(const TCHAR* str)
 	m_iFrameMax = m_pImg->GetHeight() / 32;
 	m_iFrameIdx = 0;
 	m_fFrameTime = 0;
+}
+
+void Player::SetCardTripod(int cardEnum)
+{
+	for (int i = 0; i < m_iCardCount; i++)
+	{
+		CardName CN = m_pCard[i]->GetCardName();
+		if ((int)CN == cardEnum) {
+			m_pCard[i]->SetTripord(m_ppTripord[(int)CN]);
+			m_pCard[i]->__init__();
+		}
+	}
 }

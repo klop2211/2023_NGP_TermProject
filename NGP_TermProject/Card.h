@@ -24,7 +24,7 @@ protected:
 	bool m_bIsValid, m_bCheep;
 
 	//카드의 트라이포드 확인
-	int** m_iTripord = nullptr;
+	int* m_iTripord = nullptr;
 
 public:
 	virtual void __init__() { }
@@ -44,6 +44,8 @@ public:
 	RECT* GetRect()				{ return m_rRect; }
 	CardName GetCardName()		{ return m_eCardname; }
 	//string* GetCardname();	// enum을 한글로 바꿔서 출력하기 위함
+	CImage* GetImg()			{ return m_cImg; }
+	TCHAR* GetStr(int index)	{ return m_tStr[index]; }
 
 	int GetDamage()				{ return m_iDamage; }
 	int GetMana()				{ return m_iMana; }
@@ -56,4 +58,5 @@ public:
 	void SetIsValid(bool Valid) { m_bIsValid = Valid; }
 	void SetPoint(int x, int y) { m_pPoint.x = x; m_pPoint.y = y; }
 	void SetPoint(POINT rect)	{ m_pPoint = rect; }
+	void SetTripord(int* tripord);
 };

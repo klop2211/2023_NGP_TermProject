@@ -169,10 +169,14 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         RECT winRect = { 0,0,WINWIDTH,WINHEIGHT };
         AdjustWindowRect(&winRect, WS_OVERLAPPEDWINDOW, false);
         MoveWindow(hWnd, 100, 50, winRect.right - winRect.left, winRect.bottom - winRect.top, false);
+
+        gameFramework.SetInstance(hInst);
     }
         break;
     case WM_COMMAND:
         {
+            gameFramework.OnProcessingCommandMessage(hWnd, message, wParam, lParam);
+
             int wmId = LOWORD(wParam);
             // 메뉴 선택을 구문 분석합니다:
             switch (wmId)
