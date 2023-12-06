@@ -1,5 +1,6 @@
 #pragma once
 #include "Monster.h"
+#include "StateMessage.h"
 
 class MonsterState;
 
@@ -10,6 +11,8 @@ public:
 
 	virtual void ChangeState(MonsterState* pNewState);
 	void Update(float) = 0;
+
+	MonsterStateType GetStateType();
 
 protected:
 	MonsterState* m_pMonsterState;

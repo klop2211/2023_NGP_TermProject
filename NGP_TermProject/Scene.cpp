@@ -88,19 +88,19 @@ void Scene::Update(float elapsed)
 			case StateMsgType::MonsterLocation:
 			{
 				MonsterLocationMsg* temp = (MonsterLocationMsg*)SMI.pStateMsgArgu;
-				MonsterLocation(temp->Type, temp->SerialId, temp->Location);
+				UpdateMonsterLocation(temp->Type, temp->SerialId, temp->Location);
 			}
 				break;
 			case StateMsgType::MonsterHp:
 			{
 				MonsterHpMsg* temp = (MonsterHpMsg*)SMI.pStateMsgArgu;
-				MonsterHp(temp->Type, temp->SerialId, temp->Hp);
+				UpdateMonsterHp(temp->Type, temp->SerialId, temp->Hp);
 			}
 				break;
 			case StateMsgType::MonsterState:
 			{
 				MonsterStateMsg* temp = (MonsterStateMsg*)SMI.pStateMsgArgu;
-				MonsterState(temp->Type, temp->SerialId, temp->State);
+				UpdateMonsterState(temp->Type, temp->SerialId, temp->State);
 			}
 				break;
 			case StateMsgType::PlayerLocation:
@@ -117,7 +117,7 @@ void Scene::Update(float elapsed)
 			case StateMsgType::CastleHp:
 			{
 				CastleHpStateMsg* temp = (CastleHpStateMsg*)SMI.pStateMsgArgu;
-				CastleHp(temp->Hp);
+				UpdateCastleHp(temp->Hp);
 			}
 				break;
 			case StateMsgType::UseCard:
@@ -128,7 +128,7 @@ void Scene::Update(float elapsed)
 				break; 
 			case StateMsgType::BossState:
 			{
-				BossPatternMsg* temp = (BossPatternMsg*)SMI.pStateMsgArgu;
+				BossStateMsg* temp = (BossStateMsg*)SMI.pStateMsgArgu;
 
 			}
 				break;
@@ -404,6 +404,7 @@ void Scene::DrawGameStart(HDC& memdc)
 
 void Scene::UpdateGameStart(float elapsed)
 {
+	m_pCastle->Update(elapsed);
 	//TODO 플레이어에서 처리
 	{
 		//카드를 다쓰면 덱 초기화
@@ -468,7 +469,7 @@ void Scene::UpdateChangeStart(float elapsed)
 }
 
 //===================Msg 읽어와 상태 적용하는 코드들===========================
-void Scene::MonsterLocation(MonsterType MT, int SN, POINT Location)
+void Scene::UpdateMonsterLocation(MonsterType MT, int SN, POINT Location)
 {
 	switch (MT)
 	{
@@ -515,7 +516,7 @@ void Scene::MonsterLocation(MonsterType MT, int SN, POINT Location)
 	}
 }
 
-void Scene::MonsterHp(MonsterType MT, int SN, int Hp)
+void Scene::UpdateMonsterHp(MonsterType MT, int SN, int Hp)
 {
 	switch (MT)
 	{
@@ -539,16 +540,16 @@ void Scene::MonsterHp(MonsterType MT, int SN, int Hp)
 	}
 }
 
-void Scene::MonsterState(MonsterType MT, int SN, MonsterStateType SMT)
+void Scene::UpdateMonsterState(MonsterType MT, int SN, MonsterStateType SMT)
 {
-	MonsterStatus ms = MonsterStatus::Move;
+	MonsterState ms = MonsterState::Move;
 	switch (SMT)
 	{
 	case MonsterStateType::Move:
-		ms = MonsterStatus::Move;
+		ms = MonsterState::Move;
 		break;
 	case MonsterStateType::Attack:
-		ms = MonsterStatus::Attack;
+		ms = MonsterState::Attack;
 		break;
 	case MonsterStateType::Ice:
 		break;
@@ -575,7 +576,7 @@ void Scene::MonsterState(MonsterType MT, int SN, MonsterStateType SMT)
 	}
 }
 
-void Scene::CastleHp(int Hp)
+void Scene::UpdateCastleHp(int Hp)
 {
 	m_pCastle->SetCurrentHp(Hp);
 }

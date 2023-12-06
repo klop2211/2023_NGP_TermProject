@@ -17,12 +17,14 @@ Wolf::Wolf()
 	// m_rRect = { WINWIDTH - 200, 634 - m_pPoint.y, WINWIDTH + m_pPoint.x - 200, 634 };
 	// m_Location = { (float)(WINWIDTH - 200), (float)(634 - m_pPoint.y) };
 
-	status = MonsterStatus::Move;
+	status = MonsterState::Move;
 	m_iSpeed = 6;
 	m_iCurrentHp = 20;
 	m_iMaxHp = 20;
 	m_iDamage = 20, m_iExperi = 20, m_iCount = 0, m_fWait = 0;
 	m_bCanDie = false;
+
+	m_iFrame = 6;
 }
 
 void Wolf::Draw(HDC& memdc)
@@ -33,30 +35,9 @@ void Wolf::Draw(HDC& memdc)
 
 void Wolf::ImgDraw(HDC& memdc)
 {
-	int frame;
-
-	switch (status)
-	{
-	case MonsterStatus::Move:
-		frame = 6;
-		break;
-	case MonsterStatus::Dead:
-		frame = 8;
-		break;
-	case MonsterStatus::Attack:
-		frame = 10;
-		break;
-	case MonsterStatus::Hit:
-		frame = 6;
-		break;
-	default:
-		frame = 1;
-		break;
-	}
-
-	if (status != MonsterStatus::Die)
+	if (status != MonsterState::Die)
 		m_cImg.Draw(memdc, m_rRect.left, m_rRect.top, m_Size.x, m_Size.y,
-			0 + m_pOffset.x * (m_iCount % frame), 1 + m_pOffset.y * (int)(status), m_pOffset.x - 2, m_pOffset.y - 2);
+			0 + m_pOffset.x * (m_iCount % m_iFrame), 1 + m_pOffset.y * (int)(status), m_pOffset.x - 2, m_pOffset.y - 2);
 	else
 		m_cImg.AlphaBlend(memdc, m_rRect.left, m_rRect.top, m_Size.x, m_Size.y,
 			0 + m_pOffset.x * (7), 1 + m_pOffset.y * (1), m_pOffset.x - 2, m_pOffset.y - 2, 255 - m_iCount, AC_SRC_OVER);
@@ -71,30 +52,70 @@ void Wolf::HpDraw(HDC& memdc)
 	SelectObject(memdc, oldBrush); DeleteObject(hBrush);
 }
 
+void Wolf::SetStatus(MonsterState MS)
+{
+	bool IsChanged = status != MS;
+
+	switch (MS)
+	{
+	case MonsterState::Move:
+		m_iFrame = 6;
+		break;
+	case MonsterState::Dead:
+		m_iFrame = 8;
+		break;
+	case MonsterState::Attack:
+		if (IsChanged)
+		{
+			m_iCount = 0;
+		}
+		m_iFrame = 10;
+		m_bCanAttack = true;
+		break;
+	case MonsterState::Hit:
+		m_iFrame = 6;
+		break;
+	default:
+		m_iFrame = 1;
+		break;
+	}
+
+	status = MS;
+}
+
 void Wolf::Update(float elapsed)
 {
-	//m_fWait += elapsed;
-	//if (m_fWait > 0.016)
-	//{
-	//	m_fWait = 0.f;
+	m_fWait += elapsed;
+	if (m_fWait > .1f)
+	{
+		m_fWait = 0.f;
 		m_iCount++;
 
 		switch (status)
 		{
-		case MonsterStatus::Move:
+		case MonsterState::Move:
 			break;
-		case MonsterStatus::Dead:
+		case MonsterState::Dead:
 			break;
-		case MonsterStatus::Attack:
+		case MonsterState::Attack:
+			if (!m_bCanAttack)
+			{
+				m_iCount = 0;
+			}
+			if (m_iCount > m_iFrame)
+			{
+				m_iCount = 0;
+				m_bCanAttack = false;
+			}
 			break;
-		case MonsterStatus::Hit:
+		case MonsterState::Hit:
 			break;
-		case MonsterStatus::Die:
+		case MonsterState::Die:
 			break;
 		default:
 			break;
 		}
-	//}
+	}
 	SyncLocationAtRect();
 
 	// 60프레임 기준 초당 20번 if 문 통과 및 m_iCount 증가
@@ -176,11 +197,11 @@ void Wolf::Update(float elapsed)
 
 bool Wolf::Hit(int att)
 {
-	status = MonsterStatus::Hit;
+	status = MonsterState::Hit;
 	m_iCurrentHp -= att;
 	if (m_iCurrentHp <= 0) {
 		m_iCurrentHp = 0;
-		status = MonsterStatus::Dead;
+		status = MonsterState::Dead;
 		return true;
 	}
 	return false;

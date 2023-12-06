@@ -39,6 +39,8 @@ Papyrus::Papyrus()
 	m_rHpRect = { 350 + 134, 50 + 54, 1250 , 50 + 87 };
 
 	m_bCanDie = false;
+
+	m_iFrame = 4;
 }
 
 void Papyrus::Update(float elapsed)
@@ -203,20 +205,18 @@ void Papyrus::Draw(HDC& memdc)
 
 void Papyrus::ImgDraw(HDC& memdc)
 {
-	int frame = 1;
-
 	if (!m_bBreaked)
 	{
 		switch (m_Status)
 		{
 		case UP_Breaking:
-			frame = 8;
+			m_iFrame = 8;
 			break;
 		case UP_Move:
-			frame = 4;
+			m_iFrame = 4;
 			break;
 		case UP_Pattern:
-			frame = 2;
+			m_iFrame = 2;
 			break;
 		}
 	}
@@ -226,22 +226,22 @@ void Papyrus::ImgDraw(HDC& memdc)
 		switch (m_Status)
 		{
 		case P_Move:
-			frame = 4;
+			m_iFrame = 4;
 			break;
 		case P_Down:
-			frame = 11;
+			m_iFrame = 11;
 			break;
 		case P_Pattern1:
-			frame = 5;
+			m_iFrame = 5;
 			break;
 		case P_Pattern2:
-			frame = 5;
+			m_iFrame = 5;
 			break;
 		case P_Die:
-			frame = 1;
+			m_iFrame = 1;
 			break;
 		default:
-			frame = 1;
+			m_iFrame = 1;
 			break;
 		}
 	}

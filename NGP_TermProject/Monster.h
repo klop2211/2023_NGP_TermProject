@@ -4,7 +4,7 @@
 
 class CastleInteraction;
 
-enum class MonsterStatus : BYTE { Move, Dead, Attack, Hit, Die };
+enum class MonsterState : BYTE { Move, Dead, Attack, Hit, Die };
 enum class StatusEffect : BYTE { Ice_s = 1, Fire_s, NULL_S };
 
 class Monster : public Object
@@ -50,6 +50,8 @@ protected:
 
 	int m_iCount;
 	float m_fWait;
+
+	int m_iFrame;
 
 	// int m_iSize;
 

@@ -21,6 +21,7 @@ public:
 	int GetSerialNum()		{ return m_iSerialNum; }
 
 	bool GetCanAttack()		{ return m_bCanAttack; }
+	bool GetChangedState()	{ return m_bChangedState; }
 	float GetAttackTimer()	{ return m_fAttackTimer; }
 
 	FPOINT GetLocation()	{ return m_Location; }
@@ -31,7 +32,9 @@ public:
 	void SetDamage(int damage)			{ m_iDamage = damage; }
 	void SetExperi(int exp)				{ m_iExperi = exp; }
 	void SetSpeed(int speed)			{ m_iSpeed = speed; }
+
 	void SetCanAttack(bool attack)		{ m_bCanAttack = attack; }
+	void SetChangedState(bool changed)	{ m_bChangedState = changed; }
 
 	void SetLocation(FPOINT Location)	{ m_Location = Location; }
 	void SetSize(POINT Size)			{ m_Size = Size; }
@@ -49,6 +52,8 @@ protected:
 	int		m_iSpeed;
 
 	bool	m_bCanAttack;
+	bool	m_bChangedState;
+
 	float	m_fAttackTimer;
 	float	m_fAttackCoolTime;
 

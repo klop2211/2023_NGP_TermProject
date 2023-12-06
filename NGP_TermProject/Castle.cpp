@@ -16,7 +16,10 @@ void Castle::Update(float elapsed)
 {
 	if (m_iCastleMovement >= 1)
 	{
-		++m_iCastleMovement;
+		if (++m_iCastleMovement == 6)
+		{
+			m_iCastleMovement = 0;
+		}
 	}
 }
 
@@ -30,15 +33,12 @@ void Castle::Draw(HDC& memdc)
 {
 	HBRUSH hBrush, oldBrush;
 	// 성 그리기
-	if (m_iCastleMovement >= 1) {
+	if (m_iCastleMovement >= 1)
+	{
 		int move = 4;
 		move *= m_iCastleMovement % 2 ? 1 : -1;
 		m_cImg.Draw(memdc, 0 + move, 0, 259 + move, 635,
 			0, 0, m_cImg.GetWidth(), m_cImg.GetHeight());
-		if (m_iCastleMovement == 6)
-		{
-			m_iCastleMovement = 0;
-		}
 	}
 	else
 	{

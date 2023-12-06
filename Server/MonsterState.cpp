@@ -17,6 +17,11 @@ void MonsterMoveState::Execute(Monster* monster, float ElapsedTime)
 	monster->SetLocation(FPOINT(NewLocation, monster->GetLocation().y));
 }
 
+MonsterStateType MonsterMoveState::GetStateType()
+{
+	return MonsterStateType::Move;
+}
+
 MonsterAttackState* MonsterAttackState::Instance()
 {
 	static MonsterAttackState instance;
@@ -31,6 +36,11 @@ void MonsterAttackState::Execute(Monster* monster, float ElapsedTime)
 		monster->SetCanAttack(true);
 		monster->InitAttackCoolTime();
 	}
+}
+
+MonsterStateType MonsterAttackState::GetStateType()
+{
+	return MonsterStateType::Attack;
 }
 
 //=======================================Papyrus========================================
@@ -53,23 +63,23 @@ void BossMoveState::Execute(Papyrus* papyrus, float ElapsedTime)
 		{
 			if (Random::GetFRandom() > 0.5)
 			{
-				papyrus->ChangeState(BossPatternType::BPattern1);
+				papyrus->ChangeState(BossStateType::BPattern1);
 			}
 			else
 			{
-				papyrus->ChangeState(BossPatternType::BPattern2);
+				papyrus->ChangeState(BossStateType::BPattern2);
 			}
 		}
 		else
 		{
-			papyrus->ChangeState(BossPatternType::UBPattern);
+			papyrus->ChangeState(BossStateType::UBPattern);
 		}
 	}
 }
 
-BossPatternType BossMoveState::GetStateType()
+BossStateType BossMoveState::GetStateType()
 {
-	return BossPatternType::Move;
+	return BossStateType::Move;
 }
 
 BossUnBreakPatternState* BossUnBreakPatternState::Instance()
@@ -83,13 +93,13 @@ void BossUnBreakPatternState::Execute(Papyrus* papyrus, float ElapsedTime)
 	papyrus->MinusRemainTimer(ElapsedTime);
 	if (papyrus->GetRemainTimer() < 0.f)
 	{
-		papyrus->ChangeState(BossPatternType::Move);
+		papyrus->ChangeState(BossStateType::Move);
 	}
 }
 
-BossPatternType BossUnBreakPatternState::GetStateType()
+BossStateType BossUnBreakPatternState::GetStateType()
 {
-	return BossPatternType::UBPattern;
+	return BossStateType::UBPattern;
 }
 
 BossBreakPattern1State* BossBreakPattern1State::Instance()
@@ -103,13 +113,13 @@ void BossBreakPattern1State::Execute(Papyrus* papyrus, float ElapsedTime)
 	papyrus->MinusRemainTimer(ElapsedTime);
 	if (papyrus->GetRemainTimer() < 0.f)
 	{
-		papyrus->ChangeState(BossPatternType::Move);
+		papyrus->ChangeState(BossStateType::Move);
 	}
 }
 
-BossPatternType BossBreakPattern1State::GetStateType()
+BossStateType BossBreakPattern1State::GetStateType()
 {
-	return BossPatternType::BPattern1;
+	return BossStateType::BPattern1;
 }
 
 BossBreakPattern2State* BossBreakPattern2State::Instance()
@@ -123,13 +133,13 @@ void BossBreakPattern2State::Execute(Papyrus* papyrus, float ElapsedTime)
 	papyrus->MinusRemainTimer(ElapsedTime);
 	if (papyrus->GetRemainTimer() < 0.f)
 	{
-		papyrus->ChangeState(BossPatternType::Move);
+		papyrus->ChangeState(BossStateType::Move);
 	}
 }
 
-BossPatternType BossBreakPattern2State::GetStateType()
+BossStateType BossBreakPattern2State::GetStateType()
 {
-	return BossPatternType::BPattern2;
+	return BossStateType::BPattern2;
 }
 
 BossCantMoveState* BossCantMoveState::Instance()
@@ -143,11 +153,11 @@ void BossCantMoveState::Execute(Papyrus* papyrus, float ElapsedTime)
 	papyrus->MinusRemainTimer(ElapsedTime);
 	if (papyrus->GetRemainTimer() < 0.f)
 	{
-		papyrus->ChangeState(BossPatternType::Move);
+		papyrus->ChangeState(BossStateType::Move);
 	}
 }
 
-BossPatternType BossCantMoveState::GetStateType()
+BossStateType BossCantMoveState::GetStateType()
 {
-	return BossPatternType::CantMove;
+	return BossStateType::CantMove;
 }

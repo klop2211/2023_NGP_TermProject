@@ -16,13 +16,15 @@ Bat::Bat()
 	// m_Location = { (float)m_rRect.left, (float)m_rRect.top };
 
 	//m_cImg = BatImg;
-	status = MonsterStatus::Move;
+	status = MonsterState::Move;
 	m_iMaxHp = 10;
 	m_iCurrentHp = 10;
 	m_iDamage = 15, m_iExperi = 15;
 
 	m_iCount = 0, m_fWait = 0, m_iSpeed = 5;
 	m_bCanDie = false;
+
+	m_iFrame = 6;
 }
 
 void Bat::Draw(HDC& memdc)
@@ -33,11 +35,9 @@ void Bat::Draw(HDC& memdc)
 
 void Bat::ImgDraw(HDC& memdc)
 {
-	int frame = 6;
-
-	if (status != MonsterStatus::Die)
+	if (status != MonsterState::Die)
 		m_cImg.Draw(memdc, m_rRect.left, m_rRect.top, m_Size.x, m_Size.y,
-			0 + m_pOffset.x * (m_iCount % frame), 0 + m_pOffset.y * (int)status, m_pOffset.x - 2, m_pOffset.y - 2);
+			0 + m_pOffset.x * (m_iCount % m_iFrame), 0 + m_pOffset.y * (int)status, m_pOffset.x - 2, m_pOffset.y - 2);
 	else
 		m_cImg.AlphaBlend(memdc, m_rRect.left, m_rRect.top, m_Size.x, m_Size.y,
 			0 + m_pOffset.x * 5, 0 + m_pOffset.y * 1, m_pOffset.x - 2, m_pOffset.y - 2, 255 - m_iCount, AC_SRC_OVER);
@@ -53,6 +53,26 @@ void Bat::HpDraw(HDC& memdc)
 	SelectObject(memdc, oldBrush); DeleteObject(hBrush);
 }
 
+void Bat::SetStatus(MonsterState MS)
+{
+	status = MS;
+	switch (MS)
+	{
+	case MonsterState::Move:
+		break;
+	case MonsterState::Dead:
+		break;
+	case MonsterState::Attack:
+		break;
+	case MonsterState::Hit:
+		break;
+	case MonsterState::Die:
+		break;
+	default:
+		break;
+	}
+}
+
 void Bat::Update(float elapsed)
 {
 	m_fWait += elapsed;
@@ -63,15 +83,15 @@ void Bat::Update(float elapsed)
 	
 		switch (status)
 		{
-		case MonsterStatus::Move:
+		case MonsterState::Move:
 			break;
-		case MonsterStatus::Dead:
+		case MonsterState::Dead:
 			break;
-		case MonsterStatus::Attack:
+		case MonsterState::Attack:
 			break;
-		case MonsterStatus::Hit:
+		case MonsterState::Hit:
 			break;
-		case MonsterStatus::Die:
+		case MonsterState::Die:
 				break;
 			default:
 				break;
@@ -133,12 +153,12 @@ void Bat::Update(float elapsed)
 
 bool Bat::Hit(int att)
 {
-	status = MonsterStatus::Hit;
+	status = MonsterState::Hit;
 	m_iCount = 0, m_fWait = 0;
 	m_iCurrentHp -= att;
 	if (m_iCurrentHp <= 0) {
 		m_iCurrentHp = 0;
-		status = MonsterStatus::Dead;
+		status = MonsterState::Dead;
 		m_iCount = 0, m_fWait = 0;
 		return true;
 	}

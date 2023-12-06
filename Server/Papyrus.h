@@ -14,11 +14,12 @@ public:
 	void MinusBreakTimer(float ElapsedTime) { m_fBreakTimer -= ElapsedTime; }
 	void MinusRemainTimer(float ElapsedTime) { m_fRemainTimeToChangeState -= ElapsedTime; }
 
-	void ChangeState(BossPatternType State);
+	void ChangeState(BossStateType State);
 	void ChangeState(BossState* pNewState);
 	virtual void Update(float ElaspedTime);
 
 	virtual bool GetDamageAndIsDead(int Damage, int StunDamage, int Destuction, int NamedDamage, int Type);
+	
 
 private:
 
@@ -31,7 +32,7 @@ public:
 	float	GetRemainTimer() { return m_fRemainTimeToChangeState; }
 	bool	GetIsStateChanged() { return m_bIsStateChanged; }
 
-	BossPatternType GetStateType();
+	BossStateType GetStateType();
 
 	void	SetBreaked(bool bBreaked) { m_bBreaked = bBreaked; };
 	void	SetCanDown(bool bCandown) { m_bCanDown = bCandown; };

@@ -23,27 +23,27 @@ Papyrus::~Papyrus()
 {
 }
 
-void Papyrus::ChangeState(BossPatternType State)
+void Papyrus::ChangeState(BossStateType State)
 {
 	switch (State)
 	{
-	case BossPatternType::Move:
+	case BossStateType::Move:
 		m_fRemainTimeToChangeState = 3.f;
 		ChangeState(BossMoveState::Instance());
 		break;
-	case BossPatternType::UBPattern:
+	case BossStateType::UBPattern:
 		m_fRemainTimeToChangeState = 3.f;
 		ChangeState(BossUnBreakPatternState::Instance());
 		break;
-	case BossPatternType::BPattern1:
+	case BossStateType::BPattern1:
 		m_fRemainTimeToChangeState = 3.f;
 		ChangeState(BossBreakPattern1State::Instance());
 		break;
-	case BossPatternType::BPattern2:
+	case BossStateType::BPattern2:
 		m_fRemainTimeToChangeState = 3.f;
 		ChangeState(BossBreakPattern2State::Instance());
 		break;
-	case BossPatternType::CantMove:
+	case BossStateType::CantMove:
 		// m_fRemainTimeToChangeState = 3.f;
 		ChangeState(BossCantMoveState::Instance());
 		break;
@@ -84,19 +84,19 @@ bool Papyrus::GetDamageAndIsDead(int Damage, int KnockDamage, int Destuction, in
 	{
 		m_bCanDown = true;
 		m_fRemainTimeToChangeState = 1.f;
-		ChangeState(BossPatternType::CantMove);
+		ChangeState(BossStateType::CantMove);
 	}
 	if (m_iBreakCount <= 0)
 	{
 		m_bBreaked = true;
 		m_fRemainTimeToChangeState = 1.f;
-		ChangeState(BossPatternType::CantMove);
+		ChangeState(BossStateType::CantMove);
 	}
 
 	return false;
 }
 
-BossPatternType Papyrus::GetStateType()
+BossStateType Papyrus::GetStateType()
 {
 	return m_State->GetStateType();
 }

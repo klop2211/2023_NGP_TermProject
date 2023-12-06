@@ -5,7 +5,7 @@ enum class MonsterType : BYTE { Wolf, Bat, Papyrus, END };
 enum class CardType : BYTE { N_rhlddufvk, N_sktjsckd, N_dbtjdrkdcjs, N_wjrfydvh, N_aodfyddufvk, N_qksdnjftja, N_dusghkstja, N_cjdfydwls, N_cjdfydcnftn, N_ghltjsckd, N_dmsgkdbtjdxks };
 enum class StateMsgType : BYTE {MonsterLocation, MonsterHp, MonsterState, PlayerLocation, CastleHp, UseCard, GameStart, BossState, BossHp};
 enum class MonsterStateType : BYTE {Move, Attack, Ice, Fire};
-enum class BossPatternType : BYTE { Move, UBPattern, BPattern1, BPattern2, CantMove };
+enum class BossStateType : BYTE { Move, UBPattern, BPattern1, BPattern2, CantMove };
 enum class PStateName : BYTE { Move, Stay, Stun, Skill };
 
 // 메세지의 헤더 역할, 이거보고 다음에 뭐가 올지 알 수 있음
@@ -90,9 +90,9 @@ struct BossHpMsg : StateMsgArgu
 	BYTE KnockDown;
 };
 
-struct BossPatternMsg : StateMsgArgu
+struct BossStateMsg : StateMsgArgu
 {
-	BossPatternType Pattern;
+	BossStateType Pattern;
 };
 
 // 서버에서 배열로 관리하기위해

@@ -112,15 +112,7 @@ void GameRoom::UpdateEnemy()
 		POINT location = { int(bat->GetLocation().x), int(bat->GetLocation().y) };
 		WriteMonsterLocation(MonsterType::Bat, MonNum, location);
 
-		if (bat->GetCanAttack())
-		{
-			bat->SetCanAttack(false);
-
-			WriteMonsterState(MonsterType::Bat, MonNum, MonsterStateType::Attack);
-
-			m_pCastle->GetDamage(bat->GetDamage());
-			WriteCastleHp();
-		}
+		CheckMonsterChangeState(bat, MonsterType::Bat, MonNum);
 	}
 	for (const auto& it : m_WolfMap)
 	{
@@ -132,15 +124,7 @@ void GameRoom::UpdateEnemy()
 		POINT location = { int(wolf->GetLocation().x), int(wolf->GetLocation().y) };
 		WriteMonsterLocation(MonsterType::Wolf, MonNum, location);
 
-		if (wolf->GetCanAttack())
-		{
-			wolf->SetCanAttack(false);
-
-			WriteMonsterState(MonsterType::Wolf, it.first, MonsterStateType::Attack);
-
-			m_pCastle->GetDamage(wolf->GetDamage());
-			WriteCastleHp();
-		}
+		CheckMonsterChangeState(wolf, MonsterType::Wolf, MonNum);
 	}
 
 	if (m_Papyrus)
@@ -150,16 +134,7 @@ void GameRoom::UpdateEnemy()
 		POINT location = { int(m_Papyrus->GetLocation().x), int(m_Papyrus->GetLocation().y) };
 		WriteMonsterLocation(MonsterType::Papyrus, 0, location);
 
-		if (m_Papyrus->GetIsStateChanged())
-		{
-			m_Papyrus->SetIsStateChanged(false);
-
-			BossPatternMsg BPM;
-			BPM.Pattern = m_Papyrus->GetStateType();
-
-			m_pStream->Write(StateMsgType::BossState);
-			m_pStream->Write(BPM);
-		}
+		CheckMonsterChangeState(m_Papyrus);
 	}
 
 	if (m_pCastle->IsOver())
@@ -393,6 +368,15 @@ void GameRoom::WriteBossHp()
 	m_pStream->Write(BHM);
 }
 
+void GameRoom::WriteBossState(BossStateType BST)
+{
+	BossStateMsg BPM;
+	BPM.Pattern = BST;
+
+	m_pStream->Write(StateMsgType::BossState);
+	m_pStream->Write(BPM);
+}
+
 //=========================Read==================================
 //
 void GameRoom::ReadPlayerLocation(StateMsgArgu* SMA)
@@ -434,6 +418,44 @@ void GameRoom::ReadUseCard(StateMsgArgu* SMA)
 		UCSM->NamedDamage,
 		UCSM->Type
 	);
+}
+
+void GameRoom::CheckMonsterChangeState(CommonMonster* monster, MonsterType MT, int SN)
+{
+	if (monster->GetCanAttack())
+	{
+		monster->SetCanAttack(false);
+
+		WriteMonsterState(MT, SN, MonsterStateType::Attack);
+
+		m_pCastle->GetDamage(monster->GetDamage());
+		WriteCastleHp();
+	}
+	if (monster->GetChangedState())
+	{
+		monster->SetChangedState(false);
+
+		WriteMonsterState(MT, SN, monster->GetStateType());
+	}
+}
+
+void GameRoom::CheckMonsterChangeState(Papyrus* papyrus)
+{
+	if (papyrus->GetCanAttack())
+	{
+		papyrus->SetCanAttack(false);
+
+		WriteBossState(papyrus->GetStateType());
+
+		//m_pCastle->GetDamage(papyrus->GetDamage());
+		//WriteCastleHp();
+	}
+	if (papyrus->GetChangedState())
+	{
+		papyrus->SetChangedState(false);
+
+		WriteBossState(papyrus->GetStateType());
+	}
 }
 
 //===============================Getter================================

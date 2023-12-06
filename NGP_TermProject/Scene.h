@@ -35,10 +35,10 @@ public:
 	bool IsGameStart() const { return m_bStart; }
 
 	// Msg 읽어와 상태 적용하는 코드들
-	void MonsterLocation(MonsterType MT, int SN, POINT Location);
-	void MonsterHp(MonsterType MT, int SN, int Hp);
-	void MonsterState(MonsterType MT, int SN, MonsterStateType SMT);
-	void CastleHp(int Hp);
+	void UpdateMonsterLocation(MonsterType MT, int SN, POINT Location);
+	void UpdateMonsterHp(MonsterType MT, int SN, int Hp);
+	void UpdateMonsterState(MonsterType MT, int SN, MonsterStateType SMT);
+	void UpdateCastleHp(int Hp);
 
 private:
 	static DWORD WINAPI ReceiveThread(LPVOID arg);

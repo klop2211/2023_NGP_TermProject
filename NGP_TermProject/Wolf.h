@@ -20,6 +20,8 @@ public:
 public:
 	virtual CImage GetImg() const { return m_cImg; };
 
+	virtual void SetStatus(MonsterState MS);
+
 private:
 	static CImage m_cImg;
 };

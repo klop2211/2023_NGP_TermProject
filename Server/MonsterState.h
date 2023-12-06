@@ -13,6 +13,8 @@ public:
 	virtual void Execute(Monster*, float) = 0;
 
 	virtual void Exit(Monster*) = 0;
+
+	virtual MonsterStateType GetStateType() = 0;
 };
 
 class MonsterMoveState :public MonsterState
@@ -25,6 +27,8 @@ public:
 	virtual void Execute(Monster*, float);
 
 	virtual void Exit(Monster*) {};
+
+	virtual MonsterStateType GetStateType();
 };
 
 class MonsterAttackState :public MonsterState
@@ -37,6 +41,8 @@ public:
 	virtual void Execute(Monster*, float);
 
 	virtual void Exit(Monster*) {};
+
+	virtual MonsterStateType GetStateType();
 };
 
 // ================PAPYRUS==================
@@ -49,7 +55,7 @@ public:
 
 	virtual void Exit(Papyrus*) = 0;
 
-	virtual BossPatternType GetStateType() = 0;
+	virtual BossStateType GetStateType() = 0;
 };
 
 class BossMoveState :public BossState
@@ -63,7 +69,7 @@ public:
 
 	virtual void Exit(Papyrus*) {};
 
-	virtual BossPatternType GetStateType();
+	virtual BossStateType GetStateType();
 };
 
 class BossUnBreakPatternState :public BossState
@@ -77,7 +83,7 @@ public:
 
 	virtual void Exit(Papyrus*) {};
 
-	virtual BossPatternType GetStateType();
+	virtual BossStateType GetStateType();
 };
 
 class BossBreakPattern1State :public BossState
@@ -91,7 +97,7 @@ public:
 
 	virtual void Exit(Papyrus*) {};
 
-	virtual BossPatternType GetStateType();
+	virtual BossStateType GetStateType();
 };
 
 class BossBreakPattern2State :public BossState
@@ -105,7 +111,7 @@ public:
 
 	virtual void Exit(Papyrus*) {};
 
-	virtual BossPatternType GetStateType();
+	virtual BossStateType GetStateType();
 };
 
 class BossCantMoveState :public BossState
@@ -119,5 +125,5 @@ public:
 
 	virtual void Exit(Papyrus*) {};
 
-	virtual BossPatternType GetStateType();
+	virtual BossStateType GetStateType();
 };

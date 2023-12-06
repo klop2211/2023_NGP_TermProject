@@ -5,6 +5,8 @@
 #include "StateMessage.h"
 
 class PlayerInfo;
+class Papyrus;
+class CommonMonster;
 
 class GameRoom
 {
@@ -31,15 +33,19 @@ public:
 	void DoCollisionCheck();
 
 	// 송수신 관련 함수
-	void WriteMonsterState(MonsterType, BYTE, MonsterStateType);
-	void WritePlayerLocation();
 	void WriteMonsterLocation(MonsterType, BYTE, POINT location = {0, 0});
-	void WriteCastleHp();
+	void WriteMonsterState(MonsterType, BYTE, MonsterStateType);
 	void WriteMonsterHp(MonsterType, BYTE, BYTE);
+	void WritePlayerLocation();
+	void WriteCastleHp();
 	void WriteBossHp();
+	void WriteBossState(BossStateType);
 
 	void ReadPlayerLocation(StateMsgArgu*);
 	void ReadUseCard(StateMsgArgu*);
+
+	void CheckMonsterChangeState(CommonMonster* monster, MonsterType ,int SN);
+	void CheckMonsterChangeState(Papyrus* papyrus);
 
 	// 킬카운트 Gameover시 사용
 	array<array<WORD, (int)MonsterType::END>, MAX_CLIENTS> GetKillCount();
