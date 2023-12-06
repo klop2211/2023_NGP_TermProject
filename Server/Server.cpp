@@ -3,6 +3,7 @@
 #include "GameRoom.h"
 #include "StateMessage.h"
 #include "MemoryReadStream.h"
+#include "MemoryWriteStream.h"
 
 // 최대 방 개수만큼 이벤트 생성
 array<Events, MAX_ROOMS> events;
@@ -14,6 +15,18 @@ array<SOCKET, MAX_CLIENTS> client_sockets;
 array<array<queue<StateMsgInfo>, MAX_CLIENTS>, MAX_ROOMS> SharedBuffer;
 
 array<MemoryReadStream*, MAX_ROOMS> ReadStreamArr;
+
+MemoryWriteStream* m_pStream;
+void GameOver(array<array<WORD, (int)MonsterType::END>, MAX_CLIENTS> KillCntArr)
+{
+	GameOverMsg GOM;
+	GOM.KillScore = KillCntArr;
+
+	m_pStream = new MemoryWriteStream(client_sockets);
+	m_pStream->Write(StateMsgType::GameOver);
+	m_pStream->Write(GOM);
+	m_pStream->Send();
+}
 
 bool IsGameOver(BYTE StateMsg, StateMsgArgu* arg)
 {
@@ -137,6 +150,7 @@ DWORD WINAPI ProcessRoom(LPVOID arg)
 
 		pGameRoom->Update(SharedBuffer[RoomNum]);
 
+		//GameOver(pGameRoom->GetKillCount());
 		SetEvent(events[RoomNum].hClient1Event);
 	}
 

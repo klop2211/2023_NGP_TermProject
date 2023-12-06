@@ -3,7 +3,7 @@
 
 enum class MonsterType : BYTE { Wolf, Bat, Papyrus, END };
 enum class CardType : BYTE { N_rhlddufvk, N_sktjsckd, N_dbtjdrkdcjs, N_wjrfydvh, N_aodfyddufvk, N_qksdnjftja, N_dusghkstja, N_cjdfydwls, N_cjdfydcnftn, N_ghltjsckd, N_dmsgkdbtjdxks };
-enum class StateMsgType : BYTE {MonsterLocation, MonsterHp, MonsterState, PlayerLocation, CastleHp, UseCard, GameStart, BossState, BossHp};
+enum class StateMsgType : BYTE {MonsterLocation, MonsterHp, MonsterState, PlayerLocation, CastleHp, UseCard, GameStart, BossState, BossHp, GameOver};
 enum class MonsterStateType : BYTE {Move, Attack, Ice, Fire};
 enum class BossStateType : BYTE { Move, UBPattern, BPattern1, BPattern2, CantMove };
 enum class PStateName : BYTE { Move, Stay, Stun, Skill };
@@ -93,6 +93,12 @@ struct BossHpMsg : StateMsgArgu
 struct BossStateMsg : StateMsgArgu
 {
 	BossStateType Pattern;
+};
+
+// 서버->클라
+struct GameOverMsg : StateMsgArgu
+{
+	array<array<WORD, (int)MonsterType::END>, MAX_CLIENTS> KillScore;
 };
 
 // 서버에서 배열로 관리하기위해
