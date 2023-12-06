@@ -41,7 +41,7 @@ public:
 	void UpdateMonsterState(MonsterType MT, int SN, MonsterStateType SMT);
 	void UpdateCastleHp(int Hp);
 
-	void SetInstance(HINSTANCE& Inst) { m_hInst = Inst; }
+	void SetWndAndInstance(HWND hWnd, HINSTANCE& Inst);
 
 private:
 	static DWORD WINAPI ReceiveThread(LPVOID arg);

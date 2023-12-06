@@ -18,7 +18,7 @@ void GameFramework::Init(HWND hWnd)
 	m_hWnd = hWnd;
 	m_tPreviousTime = std::chrono::system_clock::now();
 
-	m_pScene->SetInstance(m_hInst);
+	m_pScene->SetWndAndInstance(hWnd, m_hInst);
 }
 
 void GameFramework::Update()

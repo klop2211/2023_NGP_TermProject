@@ -19,6 +19,8 @@ private:
 
 	HWND m_hWnd;
 	HINSTANCE m_hInst;
+	HBITMAP m_hFreeButton;
+	HWND m_hButton[3];
 
 	// 랜덤한 카드를 생성하기 위함
 	int m_iRandValue[3];
@@ -29,5 +31,7 @@ private:
 
 	// 정한 카드 그림들
 	CImage m_cSkills[3];
+	// 그거의 텍스트들
+	TCHAR m_tStr[3][10];
 };
 

@@ -4,8 +4,8 @@
 
 Wjrfydvh::Wjrfydvh(int* Tripord)
 {
+	this->m_iTripord = Tripord;
 	__init__();
-	this->m_iTripord = m_iTripord;
 }
 
 void Wjrfydvh::setTier1()
@@ -107,8 +107,8 @@ void Wjrfydvh::__init__()
 
 Sktjsckd::Sktjsckd(int* Tripord)
 {
+	this->m_iTripord = Tripord;
 	__init__();
-	this->m_iTripord = m_iTripord;
 }
 
 void Sktjsckd::setTier1() {
@@ -205,8 +205,8 @@ void Sktjsckd::__init__() {
 
 Rhlddufvk::Rhlddufvk(int* Tripord)
 {
+	this->m_iTripord = Tripord;
 	__init__();
-	this->m_iTripord = m_iTripord;
 }
 
 void Rhlddufvk::setTier1() {
@@ -306,8 +306,8 @@ void Rhlddufvk::__init__() {
 
 
 Dbtjdrkdcjs::Dbtjdrkdcjs(int* Tripord) {
+	this->m_iTripord = Tripord;
 	__init__();
-	this->m_iTripord = m_iTripord;
 }
 
 void Dbtjdrkdcjs::setTier1() {
@@ -406,8 +406,8 @@ void Dbtjdrkdcjs::__init__() {
 //==========================³­¹«======================================
 
 Aodfyddufvk::Aodfyddufvk(int* Tripord) {
+	this->m_iTripord = Tripord;
 	__init__();
-	this->m_iTripord = m_iTripord;
 }
 
 void Aodfyddufvk::setTier1() {
@@ -505,8 +505,8 @@ void Aodfyddufvk::__init__() {
 }
 
 Qksdnjftja::Qksdnjftja(int* Tripord) {
+	this->m_iTripord = Tripord;
 	__init__();
-	this->m_iTripord = m_iTripord;
 }
 
 void Qksdnjftja::setTier1() {
@@ -603,8 +603,8 @@ void Qksdnjftja::__init__() {
 }
 
 Dusghkstja::Dusghkstja(int* Tripord) {
+	this->m_iTripord = Tripord;
 	__init__();
-	this->m_iTripord = m_iTripord;
 }
 
 void Dusghkstja::setTier1() {
@@ -703,8 +703,8 @@ void Dusghkstja::__init__() {
 }
 
 Cjdfydwls::Cjdfydwls(int* Tripord) {
+	this->m_iTripord = Tripord;
 	__init__();
-	this->m_iTripord = m_iTripord;
 }
 
 void Cjdfydwls::setTier1() {
@@ -802,8 +802,8 @@ void Cjdfydwls::__init__() {
 }
 
 Cjdfydcnftn::Cjdfydcnftn(int* Tripord) {
+	this->m_iTripord = Tripord;
 	__init__();
-	this->m_iTripord = m_iTripord;
 }
 
 void Cjdfydcnftn::setTier1() {
@@ -901,8 +901,8 @@ void Cjdfydcnftn::__init__() {
 
 Ghltjsckd::Ghltjsckd(int* Tripord, bool BOnce) {
 	once = BOnce;
+	this->m_iTripord = Tripord;
 	__init__();
-	this->m_iTripord = m_iTripord;
 }
 
 //Ghltjsckd(bool a) : Card() {

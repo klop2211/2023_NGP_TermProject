@@ -10,6 +10,9 @@ Shop::Shop(HWND& m_hWnd, HINSTANCE& Inst) :
 {
 	m_cImg.Load(TEXT("상점관련\\상점UI.png"));
 	m_cBuyButtonImg.Load(TEXT("상점관련\\상점버튼.png"));
+
+	m_hFreeButton = (HBITMAP)LoadImage(m_hInst, TEXT("상점관련//상점버튼Free.bmp"), 
+	IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE | LR_CREATEDIBSECTION);
 }
 
 Shop::~Shop()
@@ -21,18 +24,11 @@ Shop::~Shop()
 void Shop::StartShop(HDC& memdc)
 {
 	HFONT hFont, oldFont;
-	CImage shop, m_cBuyButtonImg, skill, tri;
-	HWND hButton[3];
+	CImage m_cBuyButtonImg, tri;
 	HDC bitDC;
 	HBITMAP hBit, oldBit;
 
 	RECT textRect;
-
-	for (int i = 0; i < 3; i++)
-	{
-		m_iRandValue[i] = -1;
-		m_iCardPrice[i] = 0;
-	}
 
 	m_cImg.Draw(memdc, 0, 0, WINWIDTH, WINHEIGHT,
 		0, 0, WINWIDTH, WINHEIGHT);
@@ -47,90 +43,14 @@ void Shop::StartShop(HDC& memdc)
 	for (int i = 0; i < 3; i++)
 	{
 		textRect = { 475 + 300 * i, 259, 474 + 300 * i + 75,  259 + 75 };
-		switch (m_iRandValue[i])
-		{
-		case (int)CardName::N_rhlddufvk:
-			skill.Load(TEXT("카드관련//스킬초상화//굉열파.png"));
-			skill.Draw(memdc, 474 + 300 * i, 360, 75, 75,
-				0, 0, 100, 100);
-			DrawText(memdc, L"굉열파", lstrlen(L"굉열파"), &textRect, DT_BOTTOM | DT_SINGLELINE | DT_CENTER);
-			break;
-		case (int)CardName::N_sktjsckd:
-			skill.Load(TEXT("카드관련//스킬초상화//나선창.png"));
-			skill.Draw(memdc, 474 + 300 * i, 360, 75, 75,
-				0, 0, 100, 100);
-			DrawText(memdc, L"나선창", lstrlen(L"나선창"), &textRect, DT_BOTTOM | DT_SINGLELINE | DT_CENTER);
-			break;
-		case (int)CardName::N_dbtjdrkdcjs:
-			skill.Load(TEXT("카드관련//스킬초상화//유성강천.png"));
-			skill.Draw(memdc, 474 + 300 * i, 360, 75, 75,
-				0, 0, 100, 100);
-			DrawText(memdc, L"유성강천", lstrlen(L"유성강천"), &textRect, DT_BOTTOM | DT_SINGLELINE | DT_CENTER);
-			break;
-		case (int)CardName::N_wjrfydvh:
-			skill.Load(TEXT("카드관련//스킬초상화//적룡포.png"));
-			skill.Draw(memdc, 474 + 300 * i, 360, 75, 75,
-				0, 0, 100, 100);
-			DrawText(memdc, L"적룡포", lstrlen(L"적룡포"), &textRect, DT_BOTTOM | DT_SINGLELINE | DT_CENTER);
-			break;
-		case (int)CardName::N_aodfyddufvk:
-			skill.Load(TEXT("카드관련//스킬초상화//맹룡열파.png"));
-			skill.Draw(memdc, 474 + 300 * i, 360, 75, 75,
-				0, 0, 100, 100);
-			DrawText(memdc, L"맹룡열파", lstrlen(L"맹룡열파"), &textRect, DT_BOTTOM | DT_SINGLELINE | DT_CENTER);
-			break;
-		case (int)CardName::N_qksdnjftja:
-			skill.Load(TEXT("카드관련//스킬초상화//반월섬.png"));
-			skill.Draw(memdc, 474 + 300 * i, 360, 75, 75,
-				0, 0, 100, 100);
-			DrawText(memdc, L"반월섬", lstrlen(L"반월섬"), &textRect, DT_BOTTOM | DT_SINGLELINE | DT_CENTER);
-			break;
-		case (int)CardName::N_dusghkstja:
-			skill.Load(TEXT("카드관련//스킬초상화//연환섬.png"));
-			skill.Draw(memdc, 474 + 300 * i, 360, 75, 75,
-				0, 0, 100, 100);
-			DrawText(memdc, L"연환섬", lstrlen(L"연환섬"), &textRect, DT_BOTTOM | DT_SINGLELINE | DT_CENTER);
-			break;
-		case (int)CardName::N_cjdfydwls:
-			skill.Load(TEXT("카드관련//스킬초상화//청룡진.png"));
-			skill.Draw(memdc, 474 + 300 * i, 360, 75, 75,
-				0, 0, 100, 100);
-			DrawText(memdc, L"청룡진", lstrlen(L"청룡진"), &textRect, DT_BOTTOM | DT_SINGLELINE | DT_CENTER);
-			break;
-		case (int)CardName::N_cjdfydcnftn:
-			skill.Load(TEXT("카드관련//스킬초상화//청룡출수.png"));
-			skill.Draw(memdc, 474 + 300 * i, 360, 75, 75,
-				0, 0, 100, 100);
-			DrawText(memdc, L"청룡출수", lstrlen(L"청룡출수"), &textRect, DT_BOTTOM | DT_SINGLELINE | DT_CENTER);
-			break;
-		case (int)CardName::N_ghltjsckd:
-			skill.Load(TEXT("카드관련//스킬초상화//회선창.png"));
-			skill.Draw(memdc, 474 + 300 * i, 360, 75, 75,
-				0, 0, 100, 100);
-			DrawText(memdc, L"회선창", lstrlen(L"회선창"), &textRect, DT_BOTTOM | DT_SINGLELINE | DT_CENTER);
-			break;
-			/*case N_dmsgkdbtjdxks:
-				skill.Load(TEXT(".//카드관련//스킬초상화//은하유성탄.png"));
-				skill.Draw(memdc, 474 + 300 * i, 360, 75, 75,
-					0, 0, 100, 100);
-				break;*/
-		default:
-			break;
-		}
-		skill.Destroy();
+
+		m_cSkills[i].Draw(memdc, 474 + 300 * i, 360, 75, 75, 0, 0, 100, 100);
+		DrawText(memdc, m_tStr[i], lstrlen(m_tStr[i]), &textRect, DT_BOTTOM | DT_SINGLELINE | DT_CENTER);
 	}
 
-	hBit = (HBITMAP)LoadImage(m_hInst, TEXT("상점관련//상점버튼Free.bmp"), IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE | LR_CREATEDIBSECTION);
-	hButton[0] = CreateWindow(L"button", L"OK", WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON | BS_BITMAP, 450, 650, 135, 55,
-		m_hWnd, (HMENU)IDC_BUTTON_BUY1, m_hInst, NULL);
-	hButton[1] = CreateWindow(L"button", L"OK", WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON | BS_BITMAP, 750, 650, 135, 55,
-		m_hWnd, (HMENU)IDC_BUTTON_BUY2, m_hInst, NULL);
-	hButton[2] = CreateWindow(L"button", L"OK", WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON | BS_BITMAP, 1050, 650, 135, 55,
-		m_hWnd, (HMENU)IDC_BUTTON_BUY3, m_hInst, NULL);
-
-	SendMessage(hButton[0], BM_SETIMAGE, IMAGE_BITMAP, (LPARAM)hBit);
-	SendMessage(hButton[1], BM_SETIMAGE, IMAGE_BITMAP, (LPARAM)hBit);
-	SendMessage(hButton[2], BM_SETIMAGE, IMAGE_BITMAP, (LPARAM)hBit);
+	SendMessage(m_hButton[0], BM_SETIMAGE, IMAGE_BITMAP, (LPARAM)m_hFreeButton);
+	SendMessage(m_hButton[1], BM_SETIMAGE, IMAGE_BITMAP, (LPARAM)m_hFreeButton);
+	SendMessage(m_hButton[2], BM_SETIMAGE, IMAGE_BITMAP, (LPARAM)m_hFreeButton);
 
 	SelectObject(memdc, oldFont); DeleteObject(hFont);
 
@@ -138,7 +58,7 @@ void Shop::StartShop(HDC& memdc)
 
 void Shop::ShowShop(HDC& memdc, Player* player)
 {
-	CImage shop, buyButton, skill;// , tri;
+	CImage buyButton, skill;// , tri;
 	HWND hButton[4];
 	HDC bitDC;
 	HBITMAP hBit[4] = { NULL };// oldBit;
@@ -146,14 +66,7 @@ void Shop::ShowShop(HDC& memdc, Player* player)
 								{725,450,900,600},
 								{1025,450,1200,600} };
 
-	for (int i = 0; i < 3; i++)
-	{
-		m_iRandValue[i] = -1;
-		m_iCardPrice[i] = 0;
-	}
-
-	shop.Load(TEXT("상점관련//상점UI.png"));
-	shop.Draw(memdc, 0, 0, WINWIDTH, WINHEIGHT,
+	m_cImg.Draw(memdc, 0, 0, WINWIDTH, WINHEIGHT,
 		0, 0, WINWIDTH, WINHEIGHT);
 	//buyButton.Load(TEXT("상점관련//상점버튼.png"));
 	hButton[0] = CreateWindow(L"button", L"OK", WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON | BS_BITMAP, 450, 650, 135, 55,
@@ -853,6 +766,8 @@ void Shop::OnProcessingCommandMessage(HWND hWnd, WPARAM wParam, Player* player)
 				player->SetCardTripod(m_iRandValue[0]);
 			}
 			player->MinusMoney(m_iCardPrice[0]);
+
+			SetRandValue();
 		}
 		break;
 	case IDC_BUTTON_BUY2:
@@ -873,6 +788,8 @@ void Shop::OnProcessingCommandMessage(HWND hWnd, WPARAM wParam, Player* player)
 				player->SetCardTripod(m_iRandValue[1]);
 			}
 			player->MinusMoney(m_iCardPrice[1]);
+
+			SetRandValue();
 		}
 		break;
 	case IDC_BUTTON_BUY3:
@@ -893,6 +810,8 @@ void Shop::OnProcessingCommandMessage(HWND hWnd, WPARAM wParam, Player* player)
 				player->SetCardTripod(m_iRandValue[2]);
 			}
 			player->MinusMoney(m_iCardPrice[2]);
+
+			SetRandValue();
 		}
 		break;
 	case IDC_BUTTON_BUY4:
@@ -906,12 +825,19 @@ void Shop::OnProcessingCommandMessage(HWND hWnd, WPARAM wParam, Player* player)
 		DestroyWindow(GetDlgItem(hWnd, IDC_BUTTON_BUY2));
 		DestroyWindow(GetDlgItem(hWnd, IDC_BUTTON_BUY3));
 		DestroyWindow(GetDlgItem(hWnd, IDC_BUTTON_BUY4));
-		SetTimer(hWnd, 0, 17, NULL);
 	}
 }
 
 void Shop::SetRandValue()
 {
+
+	for (int i = 0; i < 3; i++)
+	{
+		m_iRandValue[i] = -1;
+		m_iCardPrice[i] = 0;
+		m_cSkills[i].Destroy();
+	}
+
 	// 상점에 띄울 카드 3개 선택
 	m_iRandValue[0] = RandomGen::GetRand(CARDVARIABLE);
 	for (int i = 1; i < 3; i++)
@@ -928,77 +854,59 @@ void Shop::SetRandValue()
 		}
 	}
 
-	//for (int i = 0; i < 3; i++)
-	//{
-	//	switch (m_iRandValue[i])
-	//	{
-	//	case (int)CardName::N_rhlddufvk:
-	//		skill.Load(TEXT("카드관련//스킬초상화//굉열파.png"));
-	//		skill.Draw(memdc, 474 + 300 * i, 360, 75, 75,
-	//			0, 0, 100, 100);
-	//		DrawText(memdc, L"굉열파", lstrlen(L"굉열파"), &textRect, DT_BOTTOM | DT_SINGLELINE | DT_CENTER);
-	//		break;
-	//	case (int)CardName::N_sktjsckd:
-	//		skill.Load(TEXT("카드관련//스킬초상화//나선창.png"));
-	//		skill.Draw(memdc, 474 + 300 * i, 360, 75, 75,
-	//			0, 0, 100, 100);
-	//		DrawText(memdc, L"나선창", lstrlen(L"나선창"), &textRect, DT_BOTTOM | DT_SINGLELINE | DT_CENTER);
-	//		break;
-	//	case (int)CardName::N_dbtjdrkdcjs:
-	//		skill.Load(TEXT("카드관련//스킬초상화//유성강천.png"));
-	//		skill.Draw(memdc, 474 + 300 * i, 360, 75, 75,
-	//			0, 0, 100, 100);
-	//		DrawText(memdc, L"유성강천", lstrlen(L"유성강천"), &textRect, DT_BOTTOM | DT_SINGLELINE | DT_CENTER);
-	//		break;
-	//	case (int)CardName::N_wjrfydvh:
-	//		skill.Load(TEXT("카드관련//스킬초상화//적룡포.png"));
-	//		skill.Draw(memdc, 474 + 300 * i, 360, 75, 75,
-	//			0, 0, 100, 100);
-	//		DrawText(memdc, L"적룡포", lstrlen(L"적룡포"), &textRect, DT_BOTTOM | DT_SINGLELINE | DT_CENTER);
-	//		break;
-	//	case (int)CardName::N_aodfyddufvk:
-	//		skill.Load(TEXT("카드관련//스킬초상화//맹룡열파.png"));
-	//		skill.Draw(memdc, 474 + 300 * i, 360, 75, 75,
-	//			0, 0, 100, 100);
-	//		DrawText(memdc, L"맹룡열파", lstrlen(L"맹룡열파"), &textRect, DT_BOTTOM | DT_SINGLELINE | DT_CENTER);
-	//		break;
-	//	case (int)CardName::N_qksdnjftja:
-	//		skill.Load(TEXT("카드관련//스킬초상화//반월섬.png"));
-	//		skill.Draw(memdc, 474 + 300 * i, 360, 75, 75,
-	//			0, 0, 100, 100);
-	//		DrawText(memdc, L"반월섬", lstrlen(L"반월섬"), &textRect, DT_BOTTOM | DT_SINGLELINE | DT_CENTER);
-	//		break;
-	//	case (int)CardName::N_dusghkstja:
-	//		skill.Load(TEXT("카드관련//스킬초상화//연환섬.png"));
-	//		skill.Draw(memdc, 474 + 300 * i, 360, 75, 75,
-	//			0, 0, 100, 100);
-	//		DrawText(memdc, L"연환섬", lstrlen(L"연환섬"), &textRect, DT_BOTTOM | DT_SINGLELINE | DT_CENTER);
-	//		break;
-	//	case (int)CardName::N_cjdfydwls:
-	//		skill.Load(TEXT("카드관련//스킬초상화//청룡진.png"));
-	//		skill.Draw(memdc, 474 + 300 * i, 360, 75, 75,
-	//			0, 0, 100, 100);
-	//		DrawText(memdc, L"청룡진", lstrlen(L"청룡진"), &textRect, DT_BOTTOM | DT_SINGLELINE | DT_CENTER);
-	//		break;
-	//	case (int)CardName::N_cjdfydcnftn:
-	//		skill.Load(TEXT("카드관련//스킬초상화//청룡출수.png"));
-	//		skill.Draw(memdc, 474 + 300 * i, 360, 75, 75,
-	//			0, 0, 100, 100);
-	//		DrawText(memdc, L"청룡출수", lstrlen(L"청룡출수"), &textRect, DT_BOTTOM | DT_SINGLELINE | DT_CENTER);
-	//		break;
-	//	case (int)CardName::N_ghltjsckd:
-	//		skill.Load(TEXT("카드관련//스킬초상화//회선창.png"));
-	//		skill.Draw(memdc, 474 + 300 * i, 360, 75, 75,
-	//			0, 0, 100, 100);
-	//		DrawText(memdc, L"회선창", lstrlen(L"회선창"), &textRect, DT_BOTTOM | DT_SINGLELINE | DT_CENTER);
-	//		break;
-	//		/*case N_dmsgkdbtjdxks:
-	//			skill.Load(TEXT(".//카드관련//스킬초상화//은하유성탄.png"));
-	//			skill.Draw(memdc, 474 + 300 * i, 360, 75, 75,
-	//				0, 0, 100, 100);
-	//			break;*/
-	//	default:
-	//		break;
-	//	}
-	//}
+	for (int i = 0; i < 3; i++)
+	{
+		switch (m_iRandValue[i])
+		{
+		case (int)CardName::N_rhlddufvk:
+			m_cSkills[i].Load(TEXT("카드관련//스킬초상화//굉열파.png"));
+			wsprintf(m_tStr[i], L"굉열파");
+			break;
+		case (int)CardName::N_sktjsckd:
+			m_cSkills[i].Load(TEXT("카드관련//스킬초상화//나선창.png"));
+			wsprintf(m_tStr[i], L"나선창");
+			break;
+		case (int)CardName::N_dbtjdrkdcjs:
+			m_cSkills[i].Load(TEXT("카드관련//스킬초상화//유성강천.png"));
+			wsprintf(m_tStr[i], L"유성강천");
+			break;
+		case (int)CardName::N_wjrfydvh:
+			m_cSkills[i].Load(TEXT("카드관련//스킬초상화//적룡포.png"));
+			wsprintf(m_tStr[i], L"적룡포");
+			break;
+		case (int)CardName::N_aodfyddufvk:
+			m_cSkills[i].Load(TEXT("카드관련//스킬초상화//맹룡열파.png"));
+			wsprintf(m_tStr[i], L"맹룡열파");
+			break;
+		case (int)CardName::N_qksdnjftja:
+			m_cSkills[i].Load(TEXT("카드관련//스킬초상화//반월섬.png"));
+			wsprintf(m_tStr[i], L"반월섬");
+			break;
+		case (int)CardName::N_dusghkstja:
+			m_cSkills[i].Load(TEXT("카드관련//스킬초상화//연환섬.png"));
+			wsprintf(m_tStr[i], L"연환섬");
+			break;
+		case (int)CardName::N_cjdfydwls:
+			m_cSkills[i].Load(TEXT("카드관련//스킬초상화//청룡진.png"));
+			wsprintf(m_tStr[i], L"청룡진");
+			break;
+		case (int)CardName::N_cjdfydcnftn:
+			m_cSkills[i].Load(TEXT("카드관련//스킬초상화//청룡출수.png"));
+			wsprintf(m_tStr[i], L"청룡출수");
+			break;
+		case (int)CardName::N_ghltjsckd:
+			m_cSkills[i].Load(TEXT("카드관련//스킬초상화//회선창.png"));
+			wsprintf(m_tStr[i], L"회선창");
+			break;
+		default:
+			break;
+		}
+	}
+
+	m_hButton[0] = CreateWindow(L"button", L"OK", WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON | BS_BITMAP, 450, 650, 135, 55,
+		m_hWnd, (HMENU)IDC_BUTTON_BUY1, m_hInst, NULL);
+	m_hButton[1] = CreateWindow(L"button", L"OK", WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON | BS_BITMAP, 750, 650, 135, 55,
+		m_hWnd, (HMENU)IDC_BUTTON_BUY2, m_hInst, NULL);
+	m_hButton[2] = CreateWindow(L"button", L"OK", WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON | BS_BITMAP, 1050, 650, 135, 55,
+		m_hWnd, (HMENU)IDC_BUTTON_BUY3, m_hInst, NULL);
 }
