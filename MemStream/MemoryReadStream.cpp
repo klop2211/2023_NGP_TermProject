@@ -68,6 +68,10 @@ StateMsgArgu* MemoryReadStream::GetStateMsg(StateMsgType smt, int& size)
 	case StateMsgType::UseCard:
 		size= sizeof(UseCardStateMsg);
 		return new UseCardStateMsg();
+
+	case StateMsgType::BossState:
+		size = sizeof(BossStateMsg);
+		return new BossStateMsg();
 	default:
 		std::cout << "MemoryReadStream::GetStateMsg Err\n";
 		return nullptr;

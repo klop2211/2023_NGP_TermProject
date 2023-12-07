@@ -30,7 +30,6 @@ public:
 	int		GetKnockDown() { return m_iKnockDown; }
 	float	GetBreakTimer() { return m_fBreakTimer; }
 	float	GetRemainTimer() { return m_fRemainTimeToChangeState; }
-	bool	GetIsStateChanged() { return m_bIsStateChanged; }
 
 	BossStateType GetStateType();
 
@@ -39,7 +38,6 @@ public:
 	void	SetBreakCount(int iBreakcount) { m_iBreakCount = iBreakcount; };
 	void	SetKnockDown(int iKnockDown) { m_iKnockDown = iKnockDown; };
 	void	SetBreakTimer(float fBreakTimer) { m_fBreakTimer = fBreakTimer; };
-	void	SetIsStateChanged(bool bChanged) { m_bIsStateChanged = bChanged; };
 
 private:
 	BossState* m_State;
@@ -59,7 +57,4 @@ private:
 
 	// 다음 상태로 넘어가기까지 필요한 타이머
 	float m_fRemainTimeToChangeState;
-
-	// 상태가 바뀌어서 메세지를 보내야하는가/
-	bool m_bIsStateChanged;
 };

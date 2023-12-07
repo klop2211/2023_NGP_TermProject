@@ -134,7 +134,7 @@ void Scene::Update(float elapsed)
 			case StateMsgType::BossState:
 			{
 				BossStateMsg* temp = (BossStateMsg*)SMI.pStateMsgArgu;
-
+				UpdateBossState(temp->Pattern);
 			}
 				break;
 			default:
@@ -601,6 +601,11 @@ void Scene::UpdateMonsterState(MonsterType MT, int SN, MonsterStateType SMT)
 void Scene::UpdateCastleHp(int Hp)
 {
 	m_pCastle->SetCurrentHp(Hp);
+}
+
+void Scene::UpdateBossState(BossStateType BST)
+{
+	m_Papyrus->SetStatus(BST);
 }
 
 void Scene::SetWndAndInstance(HWND hWnd, HINSTANCE& Inst)

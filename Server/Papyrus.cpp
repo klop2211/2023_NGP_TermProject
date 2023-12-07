@@ -52,7 +52,7 @@ void Papyrus::ChangeState(BossStateType State)
 		break;
 	}
 
-	m_bIsStateChanged = true;
+	m_bChangedState = true;
 }
 
 void Papyrus::ChangeState(BossState* pNewState)

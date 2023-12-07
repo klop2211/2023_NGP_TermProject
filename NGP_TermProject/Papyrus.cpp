@@ -302,9 +302,9 @@ void Papyrus::HpDraw(HDC& memdc)
 	}
 }
 
-void Papyrus::SetStatus(BossStateType MS)
+void Papyrus::SetStatus(BossStateType BST)
 {
-	switch (MS)
+	switch (BST)
 	{
 	case BossStateType::Move:
 		m_Status = PapyrusState::UP_Move;
