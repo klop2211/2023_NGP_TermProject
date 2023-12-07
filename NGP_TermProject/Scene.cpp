@@ -10,6 +10,7 @@
 #include "Bat.h"
 #include "Wolf.h"
 #include "Papyrus.h"
+#include "Bone.h"
 
 #include "Shop.h"
 
@@ -203,6 +204,10 @@ void Scene::Update(float elapsed)
 	if (m_Papyrus)
 	{
 		m_Papyrus->Update(elapsed);
+		for (const auto& b : m_BoneMap)
+		{
+			b.second->Update(elapsed);
+		}
 	}
 }
 
@@ -246,6 +251,10 @@ void Scene::Draw(HDC& memDc)
 	if (m_Papyrus)
 	{
 		m_Papyrus->Draw(memDc);
+		for (const auto& b : m_BoneMap)
+		{
+			b.second->Draw(memDc);
+		}
 	}
 }
 
@@ -533,6 +542,29 @@ void Scene::UpdateMonsterLocation(MonsterType MT, int SN, POINT Location)
 		}
 	}
 		break;
+	case MonsterType::UBBone:
+	case MonsterType::BBone1:
+	case MonsterType::BBone2:
+	{
+		if (m_BoneMap.find(SN) != m_BoneMap.end())
+		{
+			if (Location.x == -1 && Location.y == -1)
+			{
+				delete m_BoneMap[SN];
+				m_BoneMap.erase(SN);
+			}
+			else
+			{
+				m_BoneMap[SN]->SetLocation(Location);
+			}
+		}
+		else
+		{
+			Bone* bone = new Bone(MT, Location.x, Location.y);
+			m_BoneMap.insert({ SN, bone });
+		}
+	}
+	break;
 	default:
 		break;
 	}
@@ -545,11 +577,21 @@ void Scene::UpdateMonsterHp(MonsterType MT, int SN, int Hp)
 	case MonsterType::Wolf:
 	{
 		m_WolfMap[SN]->SetCurrentHp(Hp);
+		if (m_WolfMap[SN]->GetCurrentHp() <= 0)
+		{
+			delete m_WolfMap[SN];
+			m_WolfMap.erase(SN);
+		}
 	}
 	break;
 	case MonsterType::Bat:
 	{
 		m_BatMap[SN]->SetCurrentHp(Hp);
+		if (m_BatMap[SN]->GetCurrentHp() <= 0)
+		{
+			delete m_BatMap[SN];
+			m_BatMap.erase(SN);
+		}
 	}
 	break;
 	case MonsterType::Papyrus:

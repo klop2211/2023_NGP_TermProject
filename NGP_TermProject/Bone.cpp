@@ -7,70 +7,97 @@
 
 CImage Bone::m_cImg;
 
-Bone::Bone(int m_iNum, int x, int y)
+Bone::Bone(MonsterType MT, int x, int y)
 {
 	if (m_cImg.IsNull())
 	{
 		m_cImg.Load(TEXT("적관련\\파피루스.png"));
 	}
 
-	this->m_iNum = m_iNum;
-	/*if (m_iNum == 0) {
-		m_pPoint = { 49, 54 };
+	switch (MT)
+	{
+	case MonsterType::UBBone:
+		m_iNum = 0;
+		break;
+	case MonsterType::BBone1:
+		m_iNum = 1;
+		break;
+	case MonsterType::BBone2:
+		m_iNum = 2;
+		break;
+	default:
+		break;
+	}
+
+	m_Location = { (float)x, (float)y };
+	m_iCount = 0;
+
+	if (m_iNum == 0) {
+		m_pOffset = { 49, 54 }; 
 		m_pStart = POINT{ 99, 109 };
-		m_pOffset = { m_pPoint.x * 4, m_pPoint.y * 4 };
-		m_rRect = { x - m_pOffset.x, y - m_pOffset.y, x , y };
-		m_iSpeed = 16;
-		m_bCanDown = false;
+		m_Size = { m_pOffset.x * 4, m_pOffset.y * 4 };
+		m_fLifeTimer = 1.5f;
 	}
 	else if (m_iNum == 1) {
-		m_pPoint = { 33, 8 };
+		m_pOffset = { 33, 8 }; 
 		m_pStart = { 246, 371 };
-		m_iRandValue = RandomGen::GetRand(5) + 5;
-		m_pOffset = { 1, m_pPoint.y * m_iRandValue };
-		m_rRect = { x - m_pOffset.x, y - m_pOffset.y - 100, x , y - 100 };
-		m_iSpeed = 40;
-		m_bCanDown = false;
+		m_iRandValue = 7;
+		m_Size = { m_iRandValue * m_iRandValue * m_iRandValue, m_pOffset.y * m_iRandValue };
 	}
 	else if (m_iNum == 2) {
-		m_pPoint = { 11, 11 };
+		m_pOffset = { 11, 11 }; 
 		m_pStart = { 246, 325 };
-		m_pOffset = { m_pPoint.x * 3, m_pPoint.y * 3 };
-		m_rRect = { x , y , x + m_pOffset.x , y + m_pOffset.y };
-		m_iSpeed = 40;
-		m_bCanDown = false;
+		m_Size = { m_pOffset.x * 3, m_pOffset.y * 3 };
+		m_iCount = RandomGen::GetRand(4);
 	}
 
-	m_iCount = 0, m_fWait = 0;
+	m_fWait = 0;
 	m_iCurrentHp = m_iMaxHp = 0;
 
-	m_bCanDie = false;*/
+	m_bCanDie = false;
 }
 
 void Bone::Draw(HDC& memdc)
 {
-	POINT abc = { 1,1 };
-	//switch (m_iNum)
-	//{
-	//case 0:
-	//	m_cImg.Draw(memdc, m_rRect.left, m_rRect.top, m_pOffset.x, m_pOffset.y,
-	//		m_pStart.x, m_pStart.y, m_pPoint.x - 1, m_pPoint.y - 1);
-	//	break;
-	//case 1:
-	//	m_cImg.Draw(memdc, m_rRect.left, m_rRect.top, m_pOffset.x, m_pOffset.y,
-	//		m_pStart.x, m_pStart.y, m_pPoint.x - 1, m_pPoint.y - 1);
-	//	break;
-	//case 2:
-	//	m_cImg.Draw(memdc, m_rRect.left, m_rRect.top, m_pOffset.x, m_pOffset.y,
-	//		m_pStart.x + m_pPoint.x * (m_iCount % 4), m_pStart.y, m_pPoint.x - 1, m_pPoint.y - 1);
-	//	break;
-	//default:
-	//	break;
-	//}
+	switch (m_iNum)
+	{
+	case 0:
+		m_cImg.Draw(memdc, m_Location.x, m_Location.y, m_Size.x, m_Size.y,
+			m_pStart.x, m_pStart.y, m_pOffset.x - 1, m_pOffset.y - 1);
+		break;
+	case 1:
+		m_cImg.Draw(memdc, m_Location.x, m_Location.y, m_Size.x, m_Size.y,
+			m_pStart.x, m_pStart.y, m_pOffset.x - 1, m_pOffset.y - 1);
+		break;
+	case 2:
+		m_cImg.Draw(memdc, m_Location.x, m_Location.y, m_Size.x, m_Size.y,
+			m_pStart.x + m_pOffset.x * (m_iCount % 4), m_pStart.y, m_pOffset.x - 1, m_pOffset.y - 1);
+		break;
+	default:
+		break;
+	}
 }
 
 void Bone::Update(float elapsed)
 {
+	m_fWait += elapsed;
+	if(m_fWait > 0.25f)
+	{
+		m_fWait = 0.f;
+		switch (m_iNum)
+		{
+		case 0:
+			break;
+		case 1:
+			break;
+		case 2:
+			m_iCount++;
+			break;
+		default:
+			break;
+		}
+	}
+
 	//m_fWait += elapsed;
 	//switch (m_iNum)
 	//{
@@ -134,4 +161,5 @@ void Bone::Update(float elapsed)
 	//default:
 	//	break;
 	//}
+	SyncLocationAtRect();
 }

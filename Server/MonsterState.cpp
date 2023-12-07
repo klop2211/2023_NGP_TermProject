@@ -2,7 +2,7 @@
 #include "Monster.h"
 #include "Papyrus.h"
 #include "Random.h"
-
+#include "Bone.h"
 
 MonsterMoveState* MonsterMoveState::Instance()
 {
@@ -88,6 +88,11 @@ BossUnBreakPatternState* BossUnBreakPatternState::Instance()
 	return &instance;
 }
 
+void BossUnBreakPatternState::Enter(Papyrus* papyrus)
+{
+	papyrus->MakeBone(Bone::BoneType::UnBreak);
+}
+
 void BossUnBreakPatternState::Execute(Papyrus* papyrus, float ElapsedTime)
 {
 	papyrus->MinusRemainTimer(ElapsedTime);
@@ -106,6 +111,11 @@ BossBreakPattern1State* BossBreakPattern1State::Instance()
 {
 	static BossBreakPattern1State instance;
 	return &instance;
+}
+
+void BossBreakPattern1State::Enter(Papyrus* papyrus)
+{
+	papyrus->MakeBone(Bone::BoneType::Break1);
 }
 
 void BossBreakPattern1State::Execute(Papyrus* papyrus, float ElapsedTime)
@@ -128,12 +138,25 @@ BossBreakPattern2State* BossBreakPattern2State::Instance()
 	return &instance;
 }
 
+void BossBreakPattern2State::Enter(Papyrus* papyrus)
+{
+}
+
 void BossBreakPattern2State::Execute(Papyrus* papyrus, float ElapsedTime)
 {
-	papyrus->MinusRemainTimer(ElapsedTime);
-	if (papyrus->GetRemainTimer() < 0.f)
+	static int Count = 0;
+	static float Timer = 0.f;
+	
+	Timer += ElapsedTime;
+	if (Timer > 0.25f)
 	{
-		papyrus->ChangeState(BossStateType::Move);
+		Timer = 0.f;
+		papyrus->MakeMiniBone(Count++);
+		if (Count >= 15)
+		{
+			Count = 0;
+			papyrus->ChangeState(BossStateType::Move);
+		}
 	}
 }
 
@@ -160,4 +183,44 @@ void BossCantMoveState::Execute(Papyrus* papyrus, float ElapsedTime)
 BossStateType BossCantMoveState::GetStateType()
 {
 	return BossStateType::CantMove;
+}
+
+BossBreakingState* BossBreakingState::Instance()
+{
+	static BossBreakingState instance;
+	return &instance;
+}
+
+void BossBreakingState::Execute(Papyrus* papyrus, float ElapsedTime)
+{
+	papyrus->MinusRemainTimer(ElapsedTime);
+	if (papyrus->GetRemainTimer() < 0.f)
+	{
+		papyrus->ChangeState(BossStateType::Move);
+	}
+}
+
+BossStateType BossBreakingState::GetStateType()
+{
+	return BossStateType::Breaking;
+}
+
+BossStunningState* BossStunningState::Instance()
+{
+	static BossStunningState instance;
+	return &instance;
+}
+
+void BossStunningState::Execute(Papyrus* papyrus, float ElapsedTime)
+{
+	papyrus->MinusRemainTimer(ElapsedTime);
+	if (papyrus->GetRemainTimer() < 0.f)
+	{
+		papyrus->ChangeState(BossStateType::Move);
+	}
+}
+
+BossStateType BossStunningState::GetStateType()
+{
+	return BossStateType::Stunning;
 }

@@ -77,7 +77,7 @@ class BossUnBreakPatternState :public BossState
 public:
 	static BossUnBreakPatternState* Instance();
 
-	virtual void Enter(Papyrus*) {};
+	virtual void Enter(Papyrus*);
 
 	virtual void Execute(Papyrus*, float);
 
@@ -91,7 +91,7 @@ class BossBreakPattern1State :public BossState
 public:
 	static BossBreakPattern1State* Instance();
 
-	virtual void Enter(Papyrus*) {};
+	virtual void Enter(Papyrus*);
 
 	virtual void Execute(Papyrus*, float);
 
@@ -104,6 +104,34 @@ class BossBreakPattern2State :public BossState
 {
 public:
 	static BossBreakPattern2State* Instance();
+
+	virtual void Enter(Papyrus*);
+
+	virtual void Execute(Papyrus*, float);
+
+	virtual void Exit(Papyrus*) {};
+
+	virtual BossStateType GetStateType();
+};
+
+class BossBreakingState :public BossState
+{
+public:
+	static BossBreakingState* Instance();
+
+	virtual void Enter(Papyrus*) {};
+
+	virtual void Execute(Papyrus*, float);
+
+	virtual void Exit(Papyrus*) {};
+
+	virtual BossStateType GetStateType();
+};
+
+class BossStunningState :public BossState
+{
+public:
+	static BossStunningState* Instance();
 
 	virtual void Enter(Papyrus*) {};
 

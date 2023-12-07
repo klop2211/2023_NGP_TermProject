@@ -58,6 +58,7 @@ private:
 	// 현재 가지고 있는 몬스터 리스트
 	std::map<int, class Bat*> m_BatMap;
 	std::map<int, class Wolf*> m_WolfMap;
+	std::map<int, class Bone*> m_BoneMap;
 	class Papyrus* m_Papyrus;
 
 	class Castle* m_pCastle;

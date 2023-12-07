@@ -39,9 +39,6 @@
     <ClCompile Include="Common.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="MsgInstence.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="Monster.cpp">
       <Filter>2019180016\Source</Filter>
     </ClCompile>
@@ -72,8 +69,14 @@
     <ClCompile Include="..\MemStream\MemoryWriteStream.cpp">
       <Filter>2019180016\Stream</Filter>
     </ClCompile>
-    <ClCompile Include="MemoryStream.cpp">
-      <Filter>2019180016\Stream</Filter>
+    <ClCompile Include="..\MemStream\MemoryStream.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Random.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Bone.cpp">
+      <Filter>2019180016\Source</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -84,9 +87,6 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="StateMessage.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="MsgInstence.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Monster.h">
@@ -124,6 +124,12 @@
     </ClInclude>
     <ClInclude Include="MemoryStream.h">
       <Filter>2019180016\Stream</Filter>
+    </ClInclude>
+    <ClInclude Include="Random.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Bone.h">
+      <Filter>2019180016\Header</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

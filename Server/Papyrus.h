@@ -3,6 +3,8 @@
 #include "StateMessage.h"
 
 class BossState;
+class Bone;
+enum BoneType;
 
 class Papyrus : public Monster
 {
@@ -18,8 +20,14 @@ public:
 	void ChangeState(BossState* pNewState);
 	virtual void Update(float ElaspedTime);
 
-	virtual bool GetDamageAndIsDead(int Damage, int StunDamage, int Destuction, int NamedDamage, int Type);
+	void BoneUpdate(float ElaspedTime);
+	void BoneGarbageCollector();
+
+	virtual bool GetDamageAndIsDead(int Damage, int StunDamage, int Destuction, int NamedDamage, int Type = 0);
 	
+	void MakeBone(int BoneType);
+	void MakeMiniBone();
+	void MakeMiniBone(int Count);
 
 private:
 
@@ -32,6 +40,9 @@ public:
 	float	GetRemainTimer() { return m_fRemainTimeToChangeState; }
 
 	BossStateType GetStateType();
+
+	Bone** GetBone();
+	Bone** GetMiniBone();
 
 	void	SetBreaked(bool bBreaked) { m_bBreaked = bBreaked; };
 	void	SetCanDown(bool bCandown) { m_bCanDown = bCandown; };
@@ -57,4 +68,9 @@ private:
 
 	// 다음 상태로 넘어가기까지 필요한 타이머
 	float m_fRemainTimeToChangeState;
+
+	int m_iBoneNum;
+	int m_iMaxUpdateMiniBone;
+	Bone* m_pBone[2] = { nullptr, };
+	Bone* m_pMiniBone[15] = { nullptr, };
 };

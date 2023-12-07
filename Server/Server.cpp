@@ -17,7 +17,7 @@ array<array<queue<StateMsgInfo>, MAX_CLIENTS>, MAX_ROOMS> SharedBuffer;
 array<MemoryReadStream*, MAX_ROOMS> ReadStreamArr;
 
 MemoryWriteStream* m_pStream;
-void GameOver(array<array<WORD, (int)MonsterType::END>, MAX_CLIENTS> KillCntArr)
+void GameOver(array<array<WORD, 3>, MAX_CLIENTS> KillCntArr)
 {
 	GameOverMsg GOM;
 	GOM.KillScore = KillCntArr;

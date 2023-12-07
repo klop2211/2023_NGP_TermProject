@@ -29,7 +29,7 @@ public:
 	int GetDestuction() const { return m_iDestuction; }
 	int GetNamedDamage() const { return m_iNamedDamage; }
 	int GetType() const { return m_iType; }
-	array<WORD, (int)MonsterType::END> GetKillCount() { return m_KillCount; };
+	array<WORD, 3> GetKillCount() { return m_KillCount; };
 
 	void SetLocation(FPOINT point) { m_PlayerLocation = point; };
 	void SetState(PStateName name) { m_PlayerState = name; };
@@ -53,6 +53,6 @@ private:
 	bool m_bShouldCollisionCheck;
 
 	// 잡은 몬스터 수
-	array<WORD, (int)MonsterType::END> m_KillCount;
+	array<WORD, 3> m_KillCount;
 };
 

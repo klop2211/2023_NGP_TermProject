@@ -40,6 +40,7 @@ public:
 	void WriteCastleHp();
 	void WriteBossHp();
 	void WriteBossState(BossStateType);
+	void WriteBones();
 
 	void ReadPlayerLocation(StateMsgArgu*);
 	void ReadUseCard(StateMsgArgu*);
@@ -48,7 +49,7 @@ public:
 	void CheckMonsterChangeState(Papyrus* papyrus);
 
 	// 킬카운트 Gameover시 사용
-	array<array<WORD, (int)MonsterType::END>, MAX_CLIENTS> GetKillCount();
+	array<array<WORD, 3>, MAX_CLIENTS> GetKillCount();
 
 public:
 	char GetIsOver() { return m_bIsOver; }

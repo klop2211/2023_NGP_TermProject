@@ -9,3 +9,12 @@ float Random::GetFRandom()
 
     return (float)(uid(rd)) / 100;
 }
+
+int Random::GetRand(int num)
+{
+	static std::random_device rd;
+	static std::uniform_int_distribution<int> uid(0, 999);
+
+	//int rand = uid(rd) % num;
+	return uid(rd) % num;
+}

@@ -6,6 +6,7 @@
 #include "Papyrus.h"
 #include "MonsterState.h"
 #include "Castle.h"
+#include "Bone.h"
 
 #include "PlayerInfo.h"
 #include "MemoryWriteStream.h"
@@ -70,7 +71,6 @@ void GameRoom::SpawnEnemy()
 		{
 			m_Papyrus = new Papyrus();
 		}
-		// break
 		break;
 	case BatPhase:
 		m_fBatSpawnTimer += m_fElapsedTime;
@@ -82,7 +82,6 @@ void GameRoom::SpawnEnemy()
 			m_fBatSpawnTimer = 0.f;
 		}
 		// break
-		break;
 	case WolfPhase:
 		m_fWolfSpawnTimer += m_fElapsedTime;
 
@@ -133,6 +132,8 @@ void GameRoom::UpdateEnemy()
 		WriteMonsterLocation(MonsterType::Papyrus, 0, location);
 
 		CheckMonsterChangeState(m_Papyrus);
+
+		WriteBones();
 	}
 
 	if (m_pCastle->IsOver())
@@ -377,6 +378,61 @@ void GameRoom::WriteBossState(BossStateType BST)
 	m_pStream->Write(BPM);
 }
 
+void GameRoom::WriteBones()
+{
+	Bone** bone;
+
+	MonsterLocationMsg MLM;
+
+	StateMsgType SMT = StateMsgType::MonsterLocation;
+
+	bone = m_Papyrus->GetBone();
+	for (int i = 0; i < 2; i++)
+	{
+		if (bone[i])
+		{
+			if (bone[i]->GetCanDie())
+			{
+				MLM.Location.x = -1;
+				MLM.Location.y = -1;
+			}
+			else
+			{
+				MLM.Location.x = bone[i]->GetLocation().x;
+				MLM.Location.y = bone[i]->GetLocation().y;
+			}
+			MLM.SerialId = bone[i]->GetSerialNum();
+			MLM.Type = i == 0 ? MonsterType::UBBone : MonsterType::BBone1;
+
+			m_pStream->Write(SMT);
+			m_pStream->Write(MLM);
+		}
+	}
+
+	bone = m_Papyrus->GetMiniBone();
+	for (int i = 0; i < 15; i++)
+	{
+		if (bone[i])
+		{
+			if (bone[i]->GetCanDie())
+			{
+				MLM.Location.x = -1;
+				MLM.Location.y = -1;
+			}
+			else
+			{
+				MLM.Location.x = bone[i]->GetLocation().x;
+				MLM.Location.y = bone[i]->GetLocation().y;
+			}
+			MLM.SerialId = bone[i]->GetSerialNum();
+			MLM.Type = MonsterType::BBone2;
+
+			m_pStream->Write(SMT);
+			m_pStream->Write(MLM);
+		}
+	}
+}
+
 //=========================Read==================================
 //
 void GameRoom::ReadPlayerLocation(StateMsgArgu* SMA)
@@ -446,9 +502,6 @@ void GameRoom::CheckMonsterChangeState(Papyrus* papyrus)
 		papyrus->SetCanAttack(false);
 
 		WriteBossState(papyrus->GetStateType());
-
-		//m_pCastle->GetDamage(papyrus->GetDamage());
-		//WriteCastleHp();
 	}
 	if (papyrus->GetChangedState())
 	{
@@ -459,9 +512,9 @@ void GameRoom::CheckMonsterChangeState(Papyrus* papyrus)
 }
 
 //===============================Getter================================
-array<array<WORD, (int)MonsterType::END>, MAX_CLIENTS> GameRoom::GetKillCount()
+array<array<WORD, 3>, MAX_CLIENTS> GameRoom::GetKillCount()
 {
-	array<array<WORD, (int)MonsterType::END>, MAX_CLIENTS> ReturnValue;
+	array<array<WORD, 3>, MAX_CLIENTS> ReturnValue;
 
 	for (int i = 0; i < MAX_CLIENTS; i++)
 	{
