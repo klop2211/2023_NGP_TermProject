@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Object.h"
+#include "../Server/StateMessage.h"
 
 class CastleInteraction;
 

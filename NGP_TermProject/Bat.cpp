@@ -63,6 +63,8 @@ void Bat::SetStatus(MonsterState MS)
 	case MonsterState::Dead:
 		break;
 	case MonsterState::Attack:
+		m_iCount = 0;
+		m_bCanAttack = true;
 		break;
 	case MonsterState::Hit:
 		break;
@@ -76,7 +78,7 @@ void Bat::SetStatus(MonsterState MS)
 void Bat::Update(float elapsed)
 {
 	m_fWait += elapsed;
-	if (m_fWait > 0.016)
+	if (m_fWait > .05f)
 	{
 		m_fWait = 0.f;
 		m_iCount++;
@@ -88,6 +90,12 @@ void Bat::Update(float elapsed)
 		case MonsterState::Dead:
 			break;
 		case MonsterState::Attack:
+			if (m_iCount > m_iFrame)
+			{
+				m_iCount = 0;
+				m_bCanAttack = false;
+				SetStatus(MonsterState::Move);
+			}
 			break;
 		case MonsterState::Hit:
 			break;
@@ -97,6 +105,7 @@ void Bat::Update(float elapsed)
 				break;
 		}
 	}
+	SyncLocationAtRect();
 
 
 	// 60프레임 기준 초당 20번 if 문 통과 및 m_iCount 증가

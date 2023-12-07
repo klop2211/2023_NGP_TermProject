@@ -1,7 +1,7 @@
 #pragma once
 #include "Monster.h"
 
-enum PapyrusStatus {
+enum PapyrusState {
 	UP_Breaking = 0, UP_Move, UP_Pattern,
 	P_Move = 0, P_Down, P_Pattern1, P_Pattern2, P_Die
 };
@@ -26,7 +26,9 @@ public:
 
 	//Gettor, Settor
 public:
-	virtual CImage GetImg() const { return m_cImg; };
+	virtual CImage GetImg() const { return m_cImg; }
+
+	virtual void SetStatus(BossStateType MS);
 
 private:
 	CImage m_cImg, m_cBossHpBar;
@@ -38,7 +40,7 @@ private:
 	float m_fBreakTimer;
 	float m_fAttackTimer;
 
-	PapyrusStatus m_Status;
+	PapyrusState m_Status;
 
 	TCHAR m_sName[9], m_sHpStr[10];
 	RECT m_rNameRect;

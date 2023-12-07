@@ -45,23 +45,64 @@ Papyrus::Papyrus()
 
 void Papyrus::Update(float elapsed)
 {
-	static float Timer = .0f;
-	Timer += elapsed;
-	m_fAttackTimer += elapsed;
-	if (Timer > 0.166 * 5)
+	m_fWait += elapsed;
+	if (m_fWait > .1f)
 	{
+		m_fWait = 0.f;
 		m_iCount++;
-		Timer = 0.f;
-	}
 
-	if (m_bBreaked)
-	{
-		BreakingUpdate(elapsed);
+		if (m_bBreaked)
+		{
+			switch (m_Status)
+			{
+			case P_Move:
+				break;
+			case P_Down:
+				break;
+			case P_Pattern1:
+				break;
+			case P_Pattern2:
+				break;
+			case P_Die:
+				break;
+			default:
+				break;
+			}
+		}
+		else
+		{
+			switch (m_Status)
+			{
+			case UP_Breaking:
+				break;
+			case UP_Move:
+				break;
+			case UP_Pattern:
+				break;
+			default:
+				break;
+			}
+		}
 	}
-	else
-	{
-		UnBreakingUpdate(elapsed);
-	}
+	SyncLocationAtRect();
+
+	//static float Timer = .0f;
+	//Timer += elapsed;
+	//m_fAttackTimer += elapsed;
+	//if (Timer > 0.166 * 5)
+	//{
+	//	m_iCount++;
+	//	Timer = 0.f;
+	//}
+
+	//if (m_bBreaked)
+	//{
+	//	BreakingUpdate(elapsed);
+	//}
+	//else
+	//{
+	//	UnBreakingUpdate(elapsed);
+	//}
 }
 
 void Papyrus::BreakingUpdate(float elapsed)
@@ -206,58 +247,18 @@ void Papyrus::Draw(HDC& memdc)
 void Papyrus::ImgDraw(HDC& memdc)
 {
 	if (!m_bBreaked)
-	{
-		switch (m_Status)
-		{
-		case UP_Breaking:
-			m_iFrame = 8;
-			break;
-		case UP_Move:
-			m_iFrame = 4;
-			break;
-		case UP_Pattern:
-			m_iFrame = 2;
-			break;
+		m_cImg.Draw(memdc, m_rRect.left, m_rRect.top, m_Size.x, m_Size.y,
+			1 + m_pOffset.x * (m_iCount % m_iFrame), 1 + m_pOffset.y * (int)m_Status, m_pOffset.x - 1, m_pOffset.y - 1);
+	else {
+		if (m_Status == P_Die) {
+			m_cImg.AlphaBlend(memdc, m_rRect.left, m_rRect.top, m_Size.x, m_Size.y,
+				1 + m_pOffset.x * 10, 163 + m_pOffset.y * 1, m_pOffset.x - 1, m_pOffset.y - 1, 255 - m_iCount, AC_SRC_OVER);
+		}
+		else {
+			m_cImg.Draw(memdc, m_rRect.left, m_rRect.top, m_Size.x, m_Size.y,
+				1 + m_pOffset.x * (m_iCount % m_iFrame), 163 + m_pOffset.y * (int)m_Status, m_pOffset.x - 1, m_pOffset.y - 1);
 		}
 	}
-	else
-	{
-
-		switch (m_Status)
-		{
-		case P_Move:
-			m_iFrame = 4;
-			break;
-		case P_Down:
-			m_iFrame = 11;
-			break;
-		case P_Pattern1:
-			m_iFrame = 5;
-			break;
-		case P_Pattern2:
-			m_iFrame = 5;
-			break;
-		case P_Die:
-			m_iFrame = 1;
-			break;
-		default:
-			m_iFrame = 1;
-			break;
-		}
-	}
-	//if (!m_bBreaked)
-	//	m_cImg.Draw(memdc, m_rRect.left, m_rRect.top, m_pPoint.x, m_pPoint.y,
-	//		1 + m_pPoint.x * (m_iCount % frame), 1 + m_pPoint.y * (int)m_Status, m_pPoint.x - 1, m_pPoint.y - 1);
-	//else {
-	//	if (m_Status == P_Die) {
-	//		m_cImg.AlphaBlend(memdc, m_rRect.left, m_rRect.top, m_pPoint.x, m_pPoint.y,
-	//			1 + m_pPoint.x * 10, 163 + m_pPoint.y * 1, m_pPoint.x - 1, m_pPoint.y - 1, 255 - m_iCount, AC_SRC_OVER);
-	//	}
-	//	else {
-	//		m_cImg.Draw(memdc, m_rRect.left, m_rRect.top, m_pPoint.x, m_pPoint.y,
-	//			1 + m_pPoint.x * (m_iCount % frame), 163 + m_pPoint.y * (int)m_Status, m_pPoint.x - 1, m_pPoint.y - 1);
-	//	}
-	//}
 }
 
 void Papyrus::HpDraw(HDC& memdc)
@@ -298,6 +299,70 @@ void Papyrus::HpDraw(HDC& memdc)
 		hBrush = CreateSolidBrush(RGB(163, 73, 164));
 		oldBrush = (HBRUSH)SelectObject(memdc, hBrush);
 		Rectangle(memdc, m_rNameRect.left + 5, m_rHpRect.bottom, m_rNameRect.left + 5 + ((m_rNameRect.right - m_rNameRect.left + 5 - 40) * m_iKnockDown / 100), m_rHpRect.bottom + 5);
+	}
+}
+
+void Papyrus::SetStatus(BossStateType MS)
+{
+	switch (MS)
+	{
+	case BossStateType::Move:
+		m_Status = PapyrusState::UP_Move;
+		break;
+	case BossStateType::UBPattern:
+		m_Status = PapyrusState::UP_Pattern;
+		break;
+	case BossStateType::BPattern1:
+		m_Status = PapyrusState::P_Pattern1;
+		break;
+	case BossStateType::BPattern2:
+		m_Status = PapyrusState::P_Pattern2;
+		break;
+	case BossStateType::CantMove:
+		m_Status = PapyrusState::P_Down;
+		break;
+	default:
+		break;
+	}
+
+	if (!m_bBreaked)
+	{
+		switch (m_Status)
+		{
+		case UP_Breaking:
+			m_iFrame = 8;
+			break;
+		case UP_Move:
+			m_iFrame = 4;
+			break;
+		case UP_Pattern:
+			m_iFrame = 2;
+			break;
+		}
+	}
+	else
+	{
+		switch (m_Status)
+		{
+		case P_Move:
+			m_iFrame = 4;
+			break;
+		case P_Down:
+			m_iFrame = 11;
+			break;
+		case P_Pattern1:
+			m_iFrame = 5;
+			break;
+		case P_Pattern2:
+			m_iFrame = 5;
+			break;
+		case P_Die:
+			m_iFrame = 1;
+			break;
+		default:
+			m_iFrame = 1;
+			break;
+		}
 	}
 }
 

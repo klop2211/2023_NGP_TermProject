@@ -153,14 +153,13 @@ DWORD WINAPI ProcessRoom(LPVOID arg)
 		SetEvent(events[RoomNum].hClient1Event);
 	}
 
-	if (pGameRoom->GetIsOver() == WIN || pGameRoom->GetIsOver() == LOSE)
-	{
-		GameOver(pGameRoom->GetKillCount());
-		CloseHandle(GetCurrentThread());
-	}
+	GameOver(pGameRoom->GetKillCount());
+
 	// TODO: 적당한 위치로 옮기기
 	//delete ReadStreamArr[RoomNum];
 	delete pGameRoom;
+
+	CloseHandle(GetCurrentThread());
 	return NULL;
 }
 

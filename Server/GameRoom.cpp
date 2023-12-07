@@ -13,7 +13,7 @@
 GameRoom::GameRoom(array<SOCKET, MAX_CLIENTS>& ClientSocket) :
 	m_iWolfSN(0),
 	m_iBatSN(0),
-	m_iPhase(GameRoom::WolfPhase),
+	m_iPhase(GameRoom::BossPhase),
 	m_Papyrus(nullptr),
 	m_bIsOver(NotYet)
 {
@@ -65,34 +65,32 @@ void GameRoom::SpawnEnemy()
 {
 	switch (m_iPhase)
 	{
-	case WolfPhase:
-		m_fWolfSpawnTimer += m_fElapsedTime;
-
-		if (m_fWolfSpawnTimer >= 5.f)
+	case BossPhase:
+		if (!m_Papyrus)
 		{
-			// WriteMonsterLocation(MonsterType::Wolf, m_iWolfSN);
-
-			m_WolfMap.insert({ m_iWolfSN, new Wolf(m_iWolfSN)});
-			m_iWolfSN++;
-			m_fWolfSpawnTimer = 0.f;
+			m_Papyrus = new Papyrus();
 		}
+		// break
 		break;
 	case BatPhase:
 		m_fBatSpawnTimer += m_fElapsedTime;
 
 		if (m_fBatSpawnTimer >= 5.f)
 		{
-			// WriteMonsterLocation(MonsterType::Bat, m_iBatSN);
-
 			m_BatMap.insert({ m_iBatSN, new Bat(m_iBatSN) });
 			m_iBatSN++;
 			m_fBatSpawnTimer = 0.f;
 		}
+		// break
 		break;
-	case BossPhase:
-		if (!m_Papyrus)
+	case WolfPhase:
+		m_fWolfSpawnTimer += m_fElapsedTime;
+
+		if (m_fWolfSpawnTimer >= 5.f)
 		{
-			m_Papyrus = new Papyrus();
+			m_WolfMap.insert({ m_iWolfSN, new Wolf(m_iWolfSN)});
+			m_iWolfSN++;
+			m_fWolfSpawnTimer = 0.f;
 		}
 		break;
 	default:
@@ -158,17 +156,19 @@ void GameRoom::IsCollisionMonsterWithCastle()
 	RECT BB;
 	for (const auto& it : m_BatMap)
 	{
-		if (IsCollision(m_pCastle->GetBB(), it.second->GetBoundingBox()))
+		Bat* bat = it.second;
+		if (bat->GetStateType() == MonsterStateType::Move && IsCollision(m_pCastle->GetBB(), bat->GetBoundingBox()))
 		{
-			it.second->ChangeState(MonsterAttackState::Instance());
+			bat->ChangeState(MonsterAttackState::Instance());
 
 		}
 	}
 	for (const auto& it : m_WolfMap)
 	{
-		if (IsCollision(m_pCastle->GetBB(), it.second->GetBoundingBox()))
+		Wolf* wolf = it.second;
+		if (wolf->GetStateType() == MonsterStateType::Move && IsCollision(m_pCastle->GetBB(), wolf->GetBoundingBox()))
 		{
-			it.second->ChangeState(MonsterAttackState::Instance());
+			wolf->ChangeState(MonsterAttackState::Instance());
 		}
 	}
 }

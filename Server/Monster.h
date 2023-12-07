@@ -40,7 +40,7 @@ public:
 	void SetSize(POINT Size)			{ m_Size = Size; }
 
 	void MinusElapsedTime(float time)	{ m_fAttackTimer -= time; }
-	void InitAttackCoolTime()			{ m_fAttackTimer = m_fAttackCoolTime;	}
+	void InitAttackCoolTime()			{ m_fAttackTimer = m_fAttackCoolTime; }
 protected:
 	BYTE	m_iSerialNum;
 

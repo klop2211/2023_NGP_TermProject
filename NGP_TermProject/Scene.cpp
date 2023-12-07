@@ -13,7 +13,7 @@
 
 #include "Shop.h"
 
-//#define MULTI_PLAY
+#define MULTI_PLAY
 
 SOCKET*			Scene::m_pSock;
 HANDLE*			Scene::m_pReadEvent;
@@ -218,7 +218,11 @@ void Scene::Draw(HDC& memDc)
 		else
 		{
 			DrawGameStart(memDc);
-			m_Shop->StartShop(memDc);
+
+			if (m_pPlayer && m_pPlayer->GetCardCount() < 10)
+			{
+				m_Shop->StartShop(memDc);
+			}
 		}
 	}
 	else {

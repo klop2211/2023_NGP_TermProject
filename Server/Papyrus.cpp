@@ -14,6 +14,7 @@ Papyrus::Papyrus()
 	m_iKnockDown = 100, m_bCanDown = true;
 	m_fBreakTimer = 0.f;
 	m_Size = POINT{ 49 * 5, 54 * 5 };
+	m_Location = { (float)(CLIENTWINWIDTH),  (float)(634 - m_Size.y) };
 
 	m_fRemainTimeToChangeState = 0.f;
 	m_State = BossMoveState::Instance();

@@ -10,10 +10,10 @@ class CommonMonster;
 
 class GameRoom
 {
+public:
 	enum PhaseEnum : BYTE {WolfPhase, BatPhase, BossPhase};
 	enum GameOverFlag : char {Win = 1, NotYet = 0, Lose = -1};
 
-public:
 	GameRoom(array<SOCKET, MAX_CLIENTS>&);
 	~GameRoom();
 public:

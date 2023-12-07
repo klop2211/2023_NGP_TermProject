@@ -65,10 +65,7 @@ void Wolf::SetStatus(MonsterState MS)
 		m_iFrame = 8;
 		break;
 	case MonsterState::Attack:
-		if (IsChanged)
-		{
-			m_iCount = 0;
-		}
+		m_iCount = 0;
 		m_iFrame = 10;
 		m_bCanAttack = true;
 		break;
@@ -86,7 +83,7 @@ void Wolf::SetStatus(MonsterState MS)
 void Wolf::Update(float elapsed)
 {
 	m_fWait += elapsed;
-	if (m_fWait > .1f)
+	if (m_fWait > .05f)
 	{
 		m_fWait = 0.f;
 		m_iCount++;
