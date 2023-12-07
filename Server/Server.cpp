@@ -149,7 +149,7 @@ DWORD WINAPI ProcessRoom(LPVOID arg)
 		//printf("server Run\n");
 
 		pGameRoom->Update(SharedBuffer[RoomNum]);
-		if (pGameRoom->GetIsOver() == Win || pGameRoom->GetIsOver() == Lose)
+		if (pGameRoom->GetIsOver() == WIN || pGameRoom->GetIsOver() == LOSE)
 		{
 			GameOver(pGameRoom->GetKillCount());
 			CloseHandle(GetCurrentThread());
