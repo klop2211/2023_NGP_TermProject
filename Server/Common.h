@@ -29,6 +29,9 @@
 #define CLIENTWINWIDTH	1600
 #define CLIENTWINHEIGHT	900
 
+#define Win 1
+#define Lose -1
+
 using std::array;
 using std::queue;
 
