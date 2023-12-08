@@ -32,7 +32,7 @@ public:
 	bool GetCanDie()		{ return m_bCanDie; }
 	int  GetDamage()		{ return m_iDamage; }
 	int  GetExperi()		{ return m_iExperi; }
-	//int  GetMoney()		{ return m_iMoney; }
+	int  GetMoney()			{ return m_iMoney; }
 	int  GetCurrentHp()		{ return m_iCurrentHp; }
 	int  GetMaxHp()			{ return m_iMaxHp; }
 	int  GetSpeed()			{ return m_iSpeed; }
@@ -46,7 +46,7 @@ public:
 
 protected:
 	bool m_bCanDie;
-	int m_iDamage, m_iExperi; // , m_iMoney;
+	int m_iDamage, m_iExperi, m_iMoney;
 	int m_iCurrentHp, m_iMaxHp, m_iSpeed;
 
 	int m_iCount;

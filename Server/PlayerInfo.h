@@ -8,7 +8,8 @@
 class PlayerInfo
 {
 public:
-	PlayerInfo() :
+	PlayerInfo(int num) :
+		m_iPlayerNum(num),
 		m_iDamage(0),
 		m_iStunDamage(0),
 		m_iDestuction(0),
@@ -20,16 +21,17 @@ public:
 	void AddKillCount(MonsterType MT) { m_KillCount[(int)MT]++; }
 
 public:
-	FPOINT GetLocation() const { return m_PlayerLocation; }
-	PStateName GetState() const { return m_PlayerState; }
-	BYTE GetDirection()	const { return m_PlayerDirection; }
-	bool GetShouldCollisionCheck() const { return m_bShouldCollisionCheck; }
-	int GetDamage() const { return m_iDamage; }
-	int GetStunDamage() const { return m_iStunDamage; }
-	int GetDestuction() const { return m_iDestuction; }
-	int GetNamedDamage() const { return m_iNamedDamage; }
-	int GetType() const { return m_iType; }
-	array<WORD, 3> GetKillCount() { return m_KillCount; };
+	FPOINT GetLocation() const				{ return m_PlayerLocation; }
+	PStateName GetState() const				{ return m_PlayerState; }
+	BYTE GetDirection()	const				{ return m_PlayerDirection; }
+	bool GetShouldCollisionCheck() const	{ return m_bShouldCollisionCheck; }
+	int GetDamage() const					{ return m_iDamage; }
+	int GetStunDamage() const				{ return m_iStunDamage; }
+	int GetDestuction() const				{ return m_iDestuction; }
+	int GetNamedDamage() const				{ return m_iNamedDamage; }
+	int GetType() const						{ return m_iType; }
+	array<WORD, 3> GetKillCount()			{ return m_KillCount; };
+	int GetPlayerNum()						{ return m_iPlayerNum; }
 
 	void SetLocation(FPOINT point) { m_PlayerLocation = point; };
 	void SetState(PStateName name) { m_PlayerState = name; };
@@ -39,6 +41,8 @@ public:
 	void SetAllCardProperty(int Damage, int StunDamage, int Destuction, int NamedDamage, int Type);
 
 private:
+	unsigned char m_iPlayerNum;
+
 	// 플레이어의 위치
 	FPOINT m_PlayerLocation;
 	// 플레이어의 상태

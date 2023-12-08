@@ -11,18 +11,22 @@
 #include "PlayerInfo.h"
 #include "MemoryWriteStream.h"
 
+#include <algorithm>
+
 GameRoom::GameRoom(array<SOCKET, MAX_CLIENTS>& ClientSocket) :
 	m_iWolfSN(0),
 	m_iBatSN(0),
 	m_iPhase(GameRoom::BossPhase),
 	m_Papyrus(nullptr),
-	m_bIsOver(NotYet)
+	m_bIsOver(NotYet),
+	m_fPhaseInitTimer(15.f),
+	m_fPhaseChangeTimer(m_fPhaseInitTimer)
 {
 	m_pCastle = new Castle();
 	m_pStream = new MemoryWriteStream(ClientSocket);
-	for (auto& p : m_pPlayerList)
+	for (int i = 0; i < m_pPlayerList.size(); i++)
 	{
-		p = new PlayerInfo();
+		m_pPlayerList[i] = new PlayerInfo(i);
 	}
 
 	m_tPreviousTime = std::chrono::system_clock::now();
@@ -64,6 +68,15 @@ void GameRoom::Update(array<queue<StateMsgInfo>, MAX_CLIENTS> StateMsg)
 
 void GameRoom::SpawnEnemy()
 {
+	// 페이즈 변화
+	m_fPhaseChangeTimer -= m_fElapsedTime;
+	if (m_fPhaseChangeTimer < 0.f)
+	{
+		m_fPhaseChangeTimer = m_fPhaseInitTimer;
+
+		m_iPhase = min(++m_iPhase, (int)PhaseEnum::BossPhase);
+	}
+
 	switch (m_iPhase)
 	{
 	case BossPhase:
@@ -132,8 +145,6 @@ void GameRoom::UpdateEnemy()
 		WriteMonsterLocation(MonsterType::Papyrus, 0, location);
 
 		CheckMonsterChangeState(m_Papyrus);
-
-		WriteBones();
 	}
 
 	if (m_pCastle->IsOver())
@@ -192,6 +203,9 @@ void GameRoom::IsCollisionMonsterWithPlayer(PlayerInfo* p)
 			if (IsDead)
 			{
 				p->AddKillCount(MonsterType::Bat);
+				WriteMonsterKill(MonsterType::Bat, p);
+
+				delete bat;
 				m_BatMap.erase(SN);
 			}
 		}
@@ -212,6 +226,9 @@ void GameRoom::IsCollisionMonsterWithPlayer(PlayerInfo* p)
 			if (IsDead)
 			{
 				p->AddKillCount(MonsterType::Wolf);
+				WriteMonsterKill(MonsterType::Wolf, p);
+
+				delete wolf;
 				m_WolfMap.erase(SN);
 			}
 		}
@@ -239,6 +256,35 @@ void GameRoom::IsCollisionMonsterWithPlayer(PlayerInfo* p)
 	}
 }
 
+void GameRoom::IsCollisionBoneWithPlayer(PlayerInfo* player)
+{
+	Bone** bone;
+
+	bone = m_Papyrus->GetBone();
+	for (int i = 0; i < 2; i++)
+	{
+		if (bone[i] && IsCollision(player->GetBB(), bone[i]->GetBoundingBox()))
+		{
+			//TODO: 플레이어 스턴
+
+			bone[i]->SetCanDie(true);
+		}
+	}
+
+	bone = m_Papyrus->GetMiniBone();
+	for (int i = 0; i < 15; i++)
+	{
+		if (bone[i] && IsCollision(player->GetBB(), bone[i]->GetBoundingBox()))
+		{
+			//TODO: 플레이어 스턴
+
+			bone[i]->SetCanDie(true);
+		}
+	}
+
+	WriteBones();
+}
+
 void GameRoom::DoCollisionCheck()
 {
 	// TODO: Collision Group으로 개선 필요
@@ -248,7 +294,9 @@ void GameRoom::DoCollisionCheck()
 		{
 			IsCollisionMonsterWithPlayer(p);
 		}
+		IsCollisionBoneWithPlayer(p);
 	}
+
 	IsCollisionMonsterWithCastle();
 }
 
@@ -431,6 +479,16 @@ void GameRoom::WriteBones()
 			m_pStream->Write(MLM);
 		}
 	}
+}
+
+void GameRoom::WriteMonsterKill(MonsterType MT, PlayerInfo* player)
+{
+	MonsterKillMsg MKM;
+	MKM.PlayerId = player->GetPlayerNum();
+	MKM.type = MT;
+
+	m_pStream->Write(StateMsgType::MonsterKill);
+	m_pStream->Write(MKM);
 }
 
 //=========================Read==================================

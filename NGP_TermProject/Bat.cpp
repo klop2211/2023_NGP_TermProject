@@ -21,7 +21,7 @@ Bat::Bat()
 	m_iCurrentHp = 10;
 	m_iDamage = 15, m_iExperi = 15;
 
-	m_iCount = 0, m_fWait = 0, m_iSpeed = 5;
+	m_iCount = 0, m_fWait = 0, m_iSpeed = 5, m_iMoney = 5;
 	m_bCanDie = false;
 
 	m_iFrame = 6;

@@ -41,6 +41,8 @@ public:
 	bool IsSkillMsg() { return m_iSkillCheck; }
 
 	void MinusMoney(int money) { m_iMoney -= money; }
+	void AddMoney(int money) { m_iMoney += money; }
+	void AddExp(int exp) { m_iExperience += exp; }
 	void SetCardTripod(int cardEnum);
 
 public:

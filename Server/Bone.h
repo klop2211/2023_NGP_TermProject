@@ -16,8 +16,11 @@ public:
 	void BPattern1Update(float ElapsedTime);
 	void BPattern2Update(float ElapsedTime);
 
+public:
 	float GetLifeTimer() { return m_fLifeTimer; }
 	float GetCanDie() { return m_bCanDie; }
+
+	void SetCanDie(bool die) { m_bCanDie = die; }
 
 private:
 	BoneType m_BoneType;

@@ -30,6 +30,7 @@ public:
 	bool IsCollision(const RECT& a, const RECT& b);
 	void IsCollisionMonsterWithCastle();
 	void IsCollisionMonsterWithPlayer(PlayerInfo*);
+	void IsCollisionBoneWithPlayer(PlayerInfo*);
 	void DoCollisionCheck();
 
 	// 송수신 관련 함수
@@ -41,6 +42,7 @@ public:
 	void WriteBossHp();
 	void WriteBossState(BossStateType);
 	void WriteBones();
+	void WriteMonsterKill(MonsterType MT, PlayerInfo* player);
 
 	void ReadPlayerLocation(StateMsgArgu*);
 	void ReadUseCard(StateMsgArgu*);
@@ -75,6 +77,7 @@ private:
 	// TODO: 페이즈 증가하는 코드 필요 
 	// 현재 몇 페이즈 인지
 	int m_iPhase;
+	float m_fPhaseChangeTimer, m_fPhaseInitTimer;
 
 	// 스폰 타이머
 	float m_fBatSpawnTimer, m_fWolfSpawnTimer;

@@ -21,7 +21,7 @@ Wolf::Wolf()
 	m_iSpeed = 6;
 	m_iCurrentHp = 20;
 	m_iMaxHp = 20;
-	m_iDamage = 20, m_iExperi = 20, m_iCount = 0, m_fWait = 0;
+	m_iDamage = 20, m_iExperi = 20, m_iCount = 0, m_fWait = 0, m_iMoney = 3;
 	m_bCanDie = false;
 
 	m_iFrame = 6;

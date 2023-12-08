@@ -138,6 +138,12 @@ void Scene::Update(float elapsed)
 				UpdateBossState(temp->Pattern);
 			}
 				break;
+			case StateMsgType::MonsterKill:
+			{
+				MonsterKillMsg* temp = (MonsterKillMsg*)SMI.pStateMsgArgu;
+				UpdateBossState(temp->PlayerId, temp->type);
+			}
+			break;
 			default:
 				break;
 			}
@@ -648,6 +654,32 @@ void Scene::UpdateCastleHp(int Hp)
 void Scene::UpdateBossState(BossStateType BST)
 {
 	m_Papyrus->SetStatus(BST);
+}
+
+void Scene::UpdateMonsterKill(int Id, MonsterType MT)
+{
+	if (Id == m_iClientNum)
+	{
+		switch (MT)
+		{
+		case MonsterType::Wolf:
+		{
+			Wolf w;
+			m_pPlayer->AddMoney(w.GetMoney());
+			m_pPlayer->AddExp(w.GetExperi());
+		}
+			break;
+		case MonsterType::Bat:
+		{
+			Bat b;
+			m_pPlayer->AddMoney(b.GetMoney());
+			m_pPlayer->AddExp(b.GetExperi());
+		}
+			break;
+		default:
+			break;
+		}
+	}
 }
 
 void Scene::SetWndAndInstance(HWND hWnd, HINSTANCE& Inst)

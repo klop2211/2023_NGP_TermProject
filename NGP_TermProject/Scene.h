@@ -41,6 +41,7 @@ public:
 	void UpdateMonsterState(MonsterType MT, int SN, MonsterStateType SMT);
 	void UpdateCastleHp(int Hp);
 	void UpdateBossState(BossStateType BST);
+	void UpdateMonsterKill(int, MonsterType);
 
 	void SetWndAndInstance(HWND hWnd, HINSTANCE& Inst);
 

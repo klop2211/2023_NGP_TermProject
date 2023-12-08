@@ -85,6 +85,7 @@ void Papyrus::Update(float ElapsedTime)
 
 	BoneUpdate(ElapsedTime);
 
+	// TODO: 지워야함
 	static float timer = 0.f;
 	timer += ElapsedTime;
 	if (timer > 0.25)
