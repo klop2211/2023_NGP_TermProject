@@ -28,7 +28,6 @@ void GameFramework::Update()
 
 void GameFramework::Draw()
 {
-	PAINTSTRUCT ps;
 	HDC hDc = GetDC(m_hWnd);
 	HDC memDc = CreateCompatibleDC(hDc);
 	HBITMAP hBit = CreateCompatibleBitmap(hDc, WINWIDTH, WINHEIGHT);

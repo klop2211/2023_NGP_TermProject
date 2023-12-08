@@ -38,7 +38,8 @@ public:
 	void MakeCard(int randomValue);
 	int	ActivatedTripordNumber(CardName cardName, int num) { return m_ppTripord[(int)cardName][num]; }
 	void AddSkillObject(const SkillObject& skillObject);
-	bool IsSkillMsg() { return m_iSkillCheck; }
+	bool IsSkillMsg() { return m_bSkillCheck; }
+	UseCardStateMsg* CreateUseCardStateMsg(int clientNum);
 
 	void MinusMoney(int money) { m_iMoney -= money; }
 	void AddMoney(int money) { m_iMoney += money; }
@@ -56,6 +57,7 @@ public:
 	int GetType() const { return m_iType; }
 	int GetFrameIndex() const { return m_iFrameIdx; }
 	PStateName GetStateName() const { return m_pStateMachine->CurrentState()->GetName(); }
+	CardName GetCurrentCardName() const { return m_CurrentCardName; }
 	int GetCardCount() const { return m_iCardCount; }
 
 	int(*GetTripord())[4] {return m_ppTripord; }
@@ -74,6 +76,9 @@ public:
 		m_Location.x = point.x;
 		m_Location.y = point.y;
 	}
+	void SetSkillCheck(const bool b) { m_bIsClick = b; }
+	void SetCurrentCardName() { m_CurrentCardName = GetUseCardName(); }
+	void SetCurrentCardName(CardName cn) { m_CurrentCardName = cn; }
 	void SetRectByLocation() {
 		m_rRect.left = (int)m_Location.x;
 		m_rRect.top = (int)m_Location.y;
@@ -90,13 +95,15 @@ private:
 	int			m_iNamedDamage; // 네임드 추가데미지 기존 데미지에 이 수치를 + 하여 계산
 	int			m_iType;		// 현재 속성 타입
 
-	bool		m_iSkillCheck;	// 스킬 사용 및 종료시 메시지를 보내기 위한 트리거
+	bool		m_bSkillCheck;	// 스킬 사용 및 종료시 메시지를 보내기 위한 트리거
 
 	CImage*		m_pImg;			// 그릴 이미지
 
 	int			m_iFrameMax;	// 스프라이트 이미지의 프레임 수
 	int			m_iFrameIdx;	// 현재 스프라이트 이미지의 프레임 번호
 	float		m_fFrameTime;	// 현재 스프라이트가 사용된 시간
+
+	CardName	m_CurrentCardName; // 현재 사용중인 카드 이름
 
 	//========================================================================
 	CImage* m_pUltiImg;		// 각성기 이미지

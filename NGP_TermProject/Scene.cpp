@@ -129,6 +129,9 @@ void Scene::Update(float elapsed)
 			case StateMsgType::UseCard:
 			{
 				UseCardStateMsg* temp = (UseCardStateMsg*)SMI.pStateMsgArgu;
+				if (temp->PlayerId != m_iClientNum && m_pPlayer2 != NULL) {
+					m_pPlayer2->SetCurrentCardName((CardName)temp->Card);
+				}
 
 			}
 				break; 
@@ -141,7 +144,7 @@ void Scene::Update(float elapsed)
 			case StateMsgType::MonsterKill:
 			{
 				MonsterKillMsg* temp = (MonsterKillMsg*)SMI.pStateMsgArgu;
-				UpdateBossState(temp->PlayerId, temp->type);
+				UpdateMonsterKill(temp->PlayerId, temp->type);
 			}
 			break;
 			default:
@@ -151,7 +154,6 @@ void Scene::Update(float elapsed)
 		}
 
 		// 현 상황을 서버에게 전달
-
 		// 플레이어의 기본정보
 		StateMsgType smt = StateMsgType::PlayerLocation;
 		PlayerLocationMsg sma;
@@ -161,6 +163,16 @@ void Scene::Update(float elapsed)
 			sma.PlayerId = m_iClientNum;
 			sma.Direction = m_pPlayer->GetDir();
 			sma.State = m_pPlayer->GetStateName();
+			// 스킬을 사용했는가?
+			// 플레이어의 부가정보 Write
+			if (m_pPlayer->IsSkillMsg()) {
+				m_pPlayer->SetSkillCheck(false);
+				smt = StateMsgType::UseCard;
+				UseCardStateMsg* usm = m_pPlayer->CreateUseCardStateMsg(m_iClientNum);
+				m_WriteStream->Write(smt);
+				m_WriteStream->Write(sma);
+			}
+
 		}
 		else {
 			sma.Location.x = 100;
@@ -173,11 +185,6 @@ void Scene::Update(float elapsed)
 		m_WriteStream->Write(smt);
 		m_WriteStream->Write(sma);
 
-		// 스킬을 사용했는가?
-		//if (m_pPlayer->IsSkillMsg()) {
-
-		//}
-		// 플레이어의 부가정보 Write
 
 
 

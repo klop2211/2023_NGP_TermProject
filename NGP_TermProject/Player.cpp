@@ -76,8 +76,10 @@ void Player::Update(float elapsed)
 	m_fFrameTime += FRAME_SPEED * elapsed;
 	m_iFrameIdx = (int)m_fFrameTime;
 	if (m_fFrameTime > m_iFrameMax) {
-		if (m_pStateMachine->isInState(*PSkill::Instance()))
+		if (m_pStateMachine->isInState(*PSkill::Instance())) {
+			m_bSkillCheck = true;
 			ChangeState(PStateName::Stay);
+		}
 		m_fFrameTime = 0.f;
 		m_iFrameIdx = 0;
 	}
@@ -298,52 +300,11 @@ void Player::UseCard()
 	{
 		//TODO: 카드 실행
 		bool canNull = true;
+		m_bSkillCheck = true;
+		m_CurrentCardName = GetUseCardName();
 		ChangeState(PSkill::Instance());
 		//switch (m_pHandCard[m_iClickSelect]->GetCardName())
 		//{
-		//case CardName::N_wjrfydvh: // 적룡포
-		//	if (player.GetDirection() == Left)
-		//		player.SetImage(L"./\\윈플 텀프 이미지\\창술사_적룡포_이펙트(left).png");
-		//	else
-		//		player.SetImage(L"./\\윈플 텀프 이미지\\창술사_적룡포_이펙트.png");
-		//	for (int i = 0; i < player.GetFrame_Max(); i++) {
-		//		player.SetOder(i, { 0, 0 }, -1);
-		//	}
-		//	player.SetOder(player.GetFrame_Max() - 2, { 0,0 }, Red_Spear);
-		//	player.SetBaseDelay(3);
-		//	player.SetSpeed(player.GetOder(0).speed.x, player.GetOder(0).speed.y);
-		//	player.SetDamage(15);
-		//	player.SetNeutralization(5);
-		//	player.SetDestruction(1);
-
-		//	if (m_ppTripord[(int)CardName::N_wjrfydvh][0] == 1) {
-		//		player.SetBaseDelay(2);
-		//	}
-		//	else if (m_ppTripord[(int)CardName::N_wjrfydvh][0] == 2) {
-		//		// 사거리증가는 Insert_Object에서 처리합니다
-		//	}
-		//	else if (m_ppTripord[(int)CardName::N_wjrfydvh][0] == 3) {
-		//		player.SetDamage(player.GetDamage() + 3);
-		//	}
-
-		//	if (m_ppTripord[(int)CardName::N_wjrfydvh][1] == 1) {
-		//		//TODO:마나감소
-		//	}
-		//	else if (m_ppTripord[(int)CardName::N_wjrfydvh][(int)TriIndex::I_Tier2] == 2) {
-		//		DrawCard(false);
-		//	}
-		//	else if (m_ppTripord[(int)CardName::N_wjrfydvh][1] == 3) {
-		//		player.SetDestruction(player.GetDestruction() + 1);
-		//	}
-
-		//	if (m_ppTripord[(int)CardName::N_wjrfydvh][2] == 1) {
-		//		// 2층에 추가 창생성 Insert_Object에서 처리합니다
-		//	}
-		//	else if (m_ppTripord[(int)CardName::N_wjrfydvh][2] == 2) {
-		//		player.SetNamed_Damage(player.GetNamed_Damage() + 15);
-		//	}
-
-		//	break;
 		//case CardName::N_dbtjdrkdcjs: // 유성강천
 		//	if (player.GetDirection() == Left)
 		//		player.SetImage(L"./\\윈플 텀프 이미지\\창술사_유성강천_이펙트(left).png");
@@ -670,6 +631,22 @@ void Player::AddSkillObject(const SkillObject& skillObject)
 {
 	m_lSkillObjects.push_back(skillObject);
 }
+
+UseCardStateMsg* Player::CreateUseCardStateMsg(int clientNum)
+{
+	UseCardStateMsg* temp = new UseCardStateMsg;
+	temp->PlayerId = clientNum;
+	temp->Card = (CardType)m_CurrentCardName;
+	temp->Damage = m_iDamage;
+	temp->StunDamage = m_iStunDamage;
+	temp->NamedDamage = m_iNamedDamage;
+	temp->Destuction = m_iDestruction;
+	temp->Type = m_iType;
+
+	return temp;
+}
+
+
 
 CardName Player::GetUseCardName() const
 {

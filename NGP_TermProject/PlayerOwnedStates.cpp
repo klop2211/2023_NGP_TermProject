@@ -106,6 +106,7 @@ void PSkill::Enter(Player* player)
 	int tripordNum = 0;
 	int dx, dy;
 	CardName test = TEST_CARDNAME;
+	// switch(player->GetCurrentCardName())
 	switch (test)
 	{
 	case CardName::N_cjdfydwls: // 청룡진
@@ -141,9 +142,7 @@ void PSkill::Enter(Player* player)
 		else if (tripordNum == 3) {
 			dx = player->GetDir() == Left ? -100 : 200;
 			dy = 0;
-			player->AddSkillObject(SkillObject{ Wall,
-				FPOINT{player->GetLocation().x + dx, player->GetLocation().y - dy}, 0,
-				0, 0, 0 });
+			player->AddSkillObject(SkillObject{ Wall, player });
 		}
 
 		tripordNum = player->ActivatedTripordNumber(CardName::N_cjdfydwls, 2); // 청룡진 3트포 체크
@@ -326,17 +325,58 @@ void PSkill::Enter(Player* player)
 		else
 			player->SetImg(L"./\\윈플 텀프 이미지\\창술사_은하유성탄_이펙트.png");
 
-		// 5프레임 동안 하늘로 이동?
 		player->SetDamage(20);
 		player->SetStunDamage(40);
 		player->SetDestruction(2);
-
-
 	break;
+	case CardName::N_wjrfydvh: // 적룡포
+	if (player->GetDir() == Left)
+		player->SetImg(L"./\\윈플 텀프 이미지\\창술사_적룡포_이펙트(left).png");
+	else
+		player->SetImg(L"./\\윈플 텀프 이미지\\창술사_적룡포_이펙트.png");
+	player->SetSpeed(0);
+	player->SetDamage(15);
+	player->SetStunDamage(5);
+	player->SetDestruction(1);
+
+	tripordNum = player->ActivatedTripordNumber(CardName::N_wjrfydvh, 0);
+	if (tripordNum == 1) {
+		// 공속증가
+	}
+	else if (tripordNum == 2) {
+		// 사거리증가는 Insert_Object에서 처리합니다
+	}
+	else if (tripordNum == 3) {
+		player->SetDamage(player->GetDamage() + 3);
+	}
+
+	tripordNum = player->ActivatedTripordNumber(CardName::N_wjrfydvh, 1);
+	if (tripordNum == 1) {
+		//TODO:마나감소
+	}
+	else if (tripordNum == 2) {
+		player->DrawCard(false);
+	}
+	else if (tripordNum == 3) {
+		player->SetDestruction(player->GetDestruction() + 1);
+	}
+
+	tripordNum = player->ActivatedTripordNumber(CardName::N_wjrfydvh, 2);
+	if (tripordNum == 1) {
+		// 2층에 추가 창생성 Insert_Object에서 처리합니다
+	}
+	else if (tripordNum == 2) {
+		player->SetNamedDamage(player->GetNamedDamage() + 15);
+	}
+	break;
+
+
 
 	default:
 		break;
 	}
+
+
 
 }
 
@@ -364,34 +404,21 @@ void PSkill::Exit(Player* player)
 	case CardName::N_cjdfydwls:
 		tripordNum = player->ActivatedTripordNumber(CardName::N_cjdfydwls, 1); // 청룡진 2트포 체크
 		if (tripordNum == 1) {
-			dx = player->GetDir() == Left ? -100 : 200;
-			dy = 400;
-			player->AddSkillObject(SkillObject{ Drop_Spear,
-				FPOINT{player->GetLocation().x + dx, player->GetLocation().y - dy}, 70,
-				player->GetDamage(), player->GetStunDamage(), player->GetDestruction() });
+			player->AddSkillObject(SkillObject{ Drop_Spear, player });
 		}
 		break;
 	case CardName::N_qksdnjftja:
 		tripordNum = player->ActivatedTripordNumber(CardName::N_qksdnjftja, 2);
 		if (tripordNum == 1) {
-			dx = player->GetDir() == Left ? -100 : 200;
-			dy = 0;
-			player->AddSkillObject(SkillObject{ Hurricane,
-				FPOINT{player->GetLocation().x + dx, player->GetLocation().y - dy}, 0,
-				player->GetDamage(), player->GetStunDamage(), player->GetDestruction() });
+			player->AddSkillObject(SkillObject{ Hurricane, player });
 		}
 		else if (tripordNum == 2) {
-			dx = player->GetDir() == Left ? -100 : 200;
-			dy = 0;
-			speed = player->GetDir() == Left ? -130 : 130;
-			player->AddSkillObject(SkillObject{ Hurricane,
-				FPOINT{player->GetLocation().x + dx, player->GetLocation().y - dy}, speed,
-				player->GetDamage(), player->GetStunDamage(), player->GetDestruction() });
+			player->AddSkillObject(SkillObject{ Hurricane, player });
 		}
 		break;
 	case CardName::N_aodfyddufvk:
 		tripordNum = player->ActivatedTripordNumber(CardName::N_aodfyddufvk, 2);
-		if (tripordNum == 1) {
+		if (tripordNum == 1 && m_bOnemore) {
 			m_bOnemore = false;
 			player->ChangeState(PStateName::Skill);
 		}
@@ -399,48 +426,26 @@ void PSkill::Exit(Player* player)
 	case CardName::N_dusghkstja:
 		tripordNum = player->ActivatedTripordNumber(CardName::N_dusghkstja, 2);
 		if (tripordNum == 2) {
-			dx = player->GetDir() == Left ? -100 : 200;
-			dy = 0;
-			speed = 500;
-			player->AddSkillObject(SkillObject{ SowrdLight,
-				FPOINT{player->GetLocation().x + dx, player->GetLocation().y - dy}, speed,
-				player->GetDamage(), player->GetStunDamage(), player->GetDestruction() });
+			player->AddSkillObject(SkillObject{ SowrdLight, player });
 		}
 		break;
 	case CardName::N_cjdfydcnftn:
 		tripordNum = player->ActivatedTripordNumber(CardName::N_cjdfydcnftn, 2);
 		if (tripordNum == 1) {
-			dx = 0;
-			dy = 0;
-			speed = 0;
-			player->AddSkillObject(SkillObject{ Rotation_Spear,
-				FPOINT{player->GetLocation().x + dx, player->GetLocation().y - dy}, speed,
-				player->GetDamage(), player->GetStunDamage(), player->GetDestruction() });
+			player->AddSkillObject(SkillObject{ Rotation_Spear, player });
 		}
 		else if (tripordNum == 2) {
-			dx = 25;
-			dy = -75;
-			speed = 0;
-			player->AddSkillObject(SkillObject{ Airborne_Spear,
-				FPOINT{player->GetLocation().x + dx, player->GetLocation().y - dy}, speed,
-				player->GetDamage(), player->GetStunDamage(), player->GetDestruction() });
+			player->AddSkillObject(SkillObject{ Airborne_Spear1, player });
 
-			dx = -75;
-			dy = 25;
-			speed = 0;
-			player->AddSkillObject(SkillObject{ Airborne_Spear,
-				FPOINT{player->GetLocation().x + dx, player->GetLocation().y - dy}, speed,
-				player->GetDamage(), player->GetStunDamage(), player->GetDestruction() });
+			player->AddSkillObject(SkillObject{ Airborne_Spear2, player });
 
-			dx = 125;
-			dy = 25;
-			speed = 0;
-			player->AddSkillObject(SkillObject{ Airborne_Spear,
-				FPOINT{player->GetLocation().x + dx, player->GetLocation().y - dy}, speed,
-				player->GetDamage(), player->GetStunDamage(), player->GetDestruction() });
+			player->AddSkillObject(SkillObject{ Airborne_Spear3, player });
 		}
 	case CardName::N_dmsgkdbtjdxks:
 		player->SetLocation(POINT{ (int)player->GetLocation().x, GROUNDYPOINT - 100 });
+		break;
+	case CardName::N_wjrfydvh: // 적룡포
+		player->AddSkillObject(SkillObject{ Red_Spear, player });
 		break;
 	default:
 		break;
