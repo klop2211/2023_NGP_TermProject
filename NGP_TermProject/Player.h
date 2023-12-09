@@ -128,6 +128,7 @@ private:
 	bool		m_bIsClick;				// 카드를 집고있는지
 	int			m_iStartX, m_iStartY;	// 카드를 집은 위치
 	int			m_iClickSelect;			// 잡고있는 카드
+	int			m_iSelectCard;			// 마우스로 인해 커지는 카드
 	POINT		m_pPrevCardPoint;		// 카드를 놓았을때 돌아가야하는 위치
 
 	Card*		m_pCard[30] = { nullptr };		// 덱 카드

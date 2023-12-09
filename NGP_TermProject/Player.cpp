@@ -125,6 +125,8 @@ void Player::OnProcessingMouseMessage(HWND hWnd, UINT message, WPARAM wParam, LP
 	int mx = LOWORD(lParam);
 	int my = HIWORD(lParam);
 
+	m_iSelectCard = -1;
+
 	// 마우스 입력처리
 	switch (message)
 	{
@@ -146,6 +148,25 @@ void Player::OnProcessingMouseMessage(HWND hWnd, UINT message, WPARAM wParam, LP
 
 			m_iStartX = mx;
 			m_iStartY = my;
+		}
+		else
+		{
+			//마우스와 카드 연관 처리
+			for (int i = 0; i < m_iHandCardCount; i++)
+			{
+				if (mx > m_pHandCard[i]->GetPoint().x && mx < m_pHandCard[i]->GetPoint().x + CARDMINIWIDTH\
+					&& my > m_pHandCard[i]->GetPoint().y && my < m_pHandCard[i]->GetPoint().y + CARDMINIHEIGHT)
+				{
+					if (m_bIsClick) {
+						m_iClickSelect = i;
+						if (m_pPrevCardPoint.x == -1)
+							m_pPrevCardPoint = m_pHandCard[i]->GetPoint();
+					}
+					else
+						m_iSelectCard = i;
+					break;
+				}
+			}
 		}
 		break;
 	case WM_LBUTTONUP:
@@ -269,6 +290,16 @@ void Player::UiDraw(HDC& memDc)
 	Ellipse(memDc, deckText.left, deckText.top, deckText.right, deckText.bottom);
 	swprintf_s(numStr, L"%d", m_iCardCount - (m_iHandCardCount + m_iDeadCardCount));
 	DrawText(memDc, numStr, lstrlen(numStr), &deckText, DT_CENTER | DT_SINGLELINE | DT_VCENTER);
+
+	//카드 출력
+	for (int i = 0; i < m_iHandCardCount; i++) {
+		if (i == m_iSelectCard)
+			m_pHandCard[i]->closeDraw(memDc);
+		else if (i == m_iClickSelect)
+			m_pHandCard[i]->dragDraw(memDc);
+		else
+			m_pHandCard[i]->handDraw(memDc);
+	}
 
 	//경험치바 출력
 	hBrush = CreateSolidBrush(RGB(0, 255, 255));

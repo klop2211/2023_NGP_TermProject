@@ -14,7 +14,7 @@
 
 #include "Shop.h"
 
-#define MULTI_PLAY
+//#define MULTI_PLAY
 
 SOCKET*			Scene::m_pSock;
 HANDLE*			Scene::m_pReadEvent;
@@ -273,6 +273,10 @@ void Scene::Draw(HDC& memDc)
 
 void Scene::OnProcessingMouseMessage(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
+	if (m_pPlayer)
+	{
+		m_pPlayer->OnProcessingMouseMessage(hWnd, message, wParam, lParam);
+	}
 	// 마우스 입력처리
 	switch (message)
 	{
@@ -358,6 +362,10 @@ void Scene::OnProcessingKeyboardMessage(HWND hWnd, UINT message, WPARAM wParam, 
 	case WM_KEYDOWN:
 		switch (wParam)
 		{
+		case 'p':
+		case 'P':
+			m_pPlayer->DrawCard();
+			m_pPlayer->SetCardPoint();
 		default:
 			break;
 		}
