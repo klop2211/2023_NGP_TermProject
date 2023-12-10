@@ -283,7 +283,6 @@ void PSkill::Enter(Player* player)
 		}
 		break;
 		case CardName::N_cjdfydcnftn: // 청룡출수
-
 		if (player->GetDir() == Left)
 			player->SetImg(L"./\\윈플 텀프 이미지\\창술사_청룡출수_이펙트(left).png");
 		else
@@ -319,6 +318,7 @@ void PSkill::Enter(Player* player)
 		else if (tripordNum == 3) {
 			player->SetDamage(player->GetDamage() + 2);
 		}
+		break;
 	case CardName::N_dmsgkdbtjdxks: // 은하유성탄
 		if (player->GetDir() == Left)
 			player->SetImg(L"./\\윈플 텀프 이미지\\창술사_은하유성탄_이펙트(left).png");
