@@ -460,32 +460,7 @@ void Scene::DrawGameStart(HDC& memdc)
 void Scene::UpdateGameStart(float elapsed)
 {
 	m_pCastle->Update(elapsed);
-	//TODO 플레이어에서 처리
-	{
-		//카드를 다쓰면 덱 초기화
-		//if (cardCount == deadCardCount) {
-		//	resetCard();
-		//	m_bCardDrawing = true;
-		//	wait = 0;
-		//}
 
-		//if (m_bCardDrawing) {
-		//	if (cardCount < 10) {
-		//		startShop(hDC, memdc);
-		//	}
-		//	else {
-		//		//시작용 4장 뽑기
-		//		for (int i = 0; i < 4; i++) {
-		//			drawCard();
-		//		}
-		//		m_bCardDrawing = false;
-		//		m_bStart = clock();
-
-		//		//4장의 자리배치
-		//		setCardPoint();
-		//	}
-		//}
-	}
 }
 
 void Scene::DrawChangeStart(HDC& memdc) {

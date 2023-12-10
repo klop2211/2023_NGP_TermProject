@@ -35,6 +35,8 @@ Player::Player()
 	m_iLevel = 0;
 	m_bOnemore = false;
 	m_iMoney = 0;
+	m_fDrawTimer = 0.f;
+	m_fManaTimer = 0.f;
 
 	m_bSkillCheck = false;
 
@@ -98,17 +100,47 @@ void Player::Update(float elapsed)
 			if (p == m_lSkillObjects.end())
 				break;
 		}
+	}	
+
+	// 카드를 다쓰면 덱 초기화
+	if (m_iCardCount == m_iDeadCardCount) {
+		ResetCard();
+		m_bCardDrawing = true;
 	}
 
-	m_fDrawTimer += elapsed;
-	if (m_fDrawTimer >= 2.5f)
-	{
-		DrawCard();
+	if (m_bCardDrawing) {
+		if (m_iCardCount >= 10)
+		{
+			//시작용 4장 뽑기
+			for (int i = 0; i < 4; i++) {
+				DrawCard();
+			}
+			m_bCardDrawing = false;
+
+			//4장의 자리배치
+			SetCardPoint();
+		}
 	}
-	m_fManaTimer += elapsed;
-	if (m_fManaTimer >= 1.f)
+
+	if (m_iCardCount >= 10 && m_iHandCardCount < 7)
 	{
-		m_iManaCount = min(++m_iManaCount, m_iMaxMana);
+		m_fDrawTimer += elapsed;
+		if (m_fDrawTimer >= 2.5f)
+		{
+			DrawCard();
+			SetCardPoint();
+			m_fDrawTimer = 0;
+		}
+	}
+
+	if (m_iManaCount < m_iMaxMana)
+	{
+		m_fManaTimer += elapsed;
+		if (m_fManaTimer >= 1.f)
+		{
+			++m_iManaCount;
+			m_fManaTimer = 0;
+		}
 	}
 }
 
@@ -119,7 +151,6 @@ void Player::Draw(HDC& memDc)
 	for (auto& obj : m_lSkillObjects) {
 		obj.Draw(memDc);
 	}
-	
 }
 
 void Player::ChangeState(State<Player>* cState)
@@ -310,6 +341,10 @@ void Player::OnProcessingKeyboardMessage(HWND hWnd, UINT message, WPARAM wParam,
 		break;
 	}
 
+}
+
+void Player::OnProcessingCommandMessage(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+{
 }
 
 void Player::UiDraw(HDC& memDc)
@@ -599,4 +634,14 @@ void Player::SetCardTripod(int cardEnum)
 			m_pCard[i]->__init__();
 		}
 	}
+}
+
+void Player::ResetCard()
+{
+	for (int i = 0; i < m_iCardCount; i++)
+	{
+		m_pCard[i]->SetIsValid(true);
+	}
+	m_iDeadCardCount = 0;
+	m_iHandCardCount = 0;
 }

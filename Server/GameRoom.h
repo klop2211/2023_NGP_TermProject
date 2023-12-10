@@ -43,6 +43,7 @@ public:
 	void WriteBossState(BossStateType);
 	void WriteBones();
 	void WriteMonsterKill(MonsterType MT, PlayerInfo* player);
+	void WriteUseCard(UseCardStateMsg UCSM, int ClientNum);
 
 	void ReadPlayerLocation(StateMsgArgu*);
 	void ReadUseCard(StateMsgArgu*);

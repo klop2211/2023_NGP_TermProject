@@ -63,7 +63,7 @@ void MemoryWriteStream::Write(const Type& data, int bytes)
 		Send();
 	}
 
-	memcpy_s(buf + m_iNowWriteIndex, STREAMBUFFERSIZE - (m_iNowWriteIndex + size), &data, size);
+	memcpy_s(buf + m_iNowWriteIndex, STREAMBUFFERSIZE - (m_iNowWriteIndex/* + size*/), &data, size);
 	m_iNowWriteIndex += size;
 	// buf[m_iNowWriteIndex] = '\0';
 }

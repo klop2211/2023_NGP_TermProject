@@ -337,6 +337,7 @@ void GameRoom::UpdateUseStateMsg(array<queue<StateMsgInfo>, MAX_CLIENTS> StateMs
 				break;
 			case StateMsgType::UseCard:
 				ReadUseCard(SMI.pStateMsgArgu);
+
 				break;
 			default:
 				printf("GameRoom::UpdateEnemy Error!\n");
@@ -491,6 +492,12 @@ void GameRoom::WriteMonsterKill(MonsterType MT, PlayerInfo* player)
 	m_pStream->Write(MKM);
 }
 
+void GameRoom::WriteUseCard(UseCardStateMsg UCSM, int ClientNum)
+{
+	m_pStream->Write(StateMsgType::UseCard);
+	m_pStream->Write(UCSM);
+}
+
 //=========================Read==================================
 //
 void GameRoom::ReadPlayerLocation(StateMsgArgu* SMA)
@@ -532,6 +539,8 @@ void GameRoom::ReadUseCard(StateMsgArgu* SMA)
 		UCSM->NamedDamage,
 		UCSM->Type
 	);
+
+	//WriteUseCard(*UCSM, ClientNum);
 }
 
 void GameRoom::CheckMonsterChangeState(CommonMonster* monster, MonsterType MT, int SN)

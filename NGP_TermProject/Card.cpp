@@ -69,6 +69,8 @@ void Card::handDraw(HDC& memdc)
 
 void Card::closeDraw(HDC& memdc)
 {
+	SetBkMode(memdc, TRANSPARENT);
+	SetTextColor(memdc, RGB(0, 0, 0));
 	int tempX = m_pPoint.x - (CARDWIDTH - CARDMINIWIDTH) / 2;
 	int tempY = m_pPoint.y - CARDHEIGHT;
 	mainDraw(memdc, tempX, tempY);

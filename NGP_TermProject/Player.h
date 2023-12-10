@@ -29,6 +29,7 @@ public:
 
 	void OnProcessingMouseMessage(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 	void OnProcessingKeyboardMessage(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
+	void OnProcessingCommandMessage(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 
 	void UiDraw(HDC& memDc);
 	void UseCard();
@@ -47,6 +48,7 @@ public:
 	void AddMoney(int money) { m_iMoney += money; }
 	void AddExp(int exp) { m_iExperience += exp; }
 	void SetCardTripod(int cardEnum);
+	void ResetCard();
 
 public:
 	CImage GetImg() const { return *m_pImg; }
@@ -129,6 +131,7 @@ private:
 	int			m_iExperienceBar[10];	// 현 레벨의 경험치 최대량
 
 	bool		m_bIsClick;				// 카드를 집고있는지
+	bool		m_bCardDrawing;			// 카드를 뽑아야하는지
 	int			m_iStartX, m_iStartY;	// 카드를 집은 위치
 	int			m_iClickSelect;			// 잡고있는 카드
 	int			m_iSelectCard;			// 마우스로 인해 커지는 카드
