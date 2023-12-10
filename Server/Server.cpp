@@ -17,26 +17,34 @@ array<array<queue<StateMsgInfo>, MAX_CLIENTS>, MAX_ROOMS> SharedBuffer;
 array<MemoryReadStream*, MAX_ROOMS> ReadStreamArr;
 
 MemoryWriteStream* m_pStream;
-void GameOver(array<array<WORD, 3>, MAX_CLIENTS> KillCntArr)
+void GameOver(array<array<WORD, 3>, MAX_CLIENTS> KillCntArr, char GameOverFlag)
 {
 	GameOverMsg GOM;
-	GOM.Clients[Client1].ClientScore = KillCntArr[Client1][0];
-	GOM.Clients[Client2].ClientScore = KillCntArr[Client2][0];
+	GOM.Clients[Client1].ClientNum = Client1;
+	GOM.Clients[Client2].ClientNum = Client2;
 
-	if (GOM.Clients[Client1].ClientScore > GOM.Clients[Client2].ClientScore)
+	GOM.Clients[Client1].KillWolf = KillCntArr[Client1][WOLF];
+	GOM.Clients[Client1].KillBat = KillCntArr[Client1][BAT];
+	GOM.Clients[Client1].KillPapyrus = KillCntArr[Client1][PAPYRUS];
+
+	GOM.Clients[Client2].KillWolf = KillCntArr[Client2][WOLF];
+	GOM.Clients[Client2].KillBat = KillCntArr[Client2][BAT];
+	GOM.Clients[Client2].KillPapyrus = KillCntArr[Client2][PAPYRUS];
+
+	
+	//for(int i = 0; i < 3; i++)
+	//{
+	//	GOM.Clients[Client1].KillScore[i] = KillCntArr[Client1][i];
+	//	GOM.Clients[Client2].KillScore[i] = KillCntArr[Client2][i];
+	//}
+
+	if (GameOverFlag == WIN)
 	{
-		GOM.Clients[Client1].ClientState = WIN;
-		GOM.Clients[Client2].ClientState = LOSE;
-	}
-	else if (GOM.Clients[Client1].ClientScore < GOM.Clients[Client2].ClientScore)
-	{
-		GOM.Clients[Client1].ClientState = LOSE;
-		GOM.Clients[Client2].ClientState = WIN;
+		GOM.GameOverFlag = WIN;
 	}
 	else
 	{
-		GOM.Clients[Client1].ClientState = DRAW;
-		GOM.Clients[Client2].ClientState = DRAW;
+		GOM.GameOverFlag = LOSE;
 	}
 
 	m_pStream = new MemoryWriteStream(client_sockets);
@@ -171,8 +179,8 @@ DWORD WINAPI ProcessRoom(LPVOID arg)
 		
 		SetEvent(events[RoomNum].hClient1Event);
 	}
-
-	GameOver(pGameRoom->GetKillCount());
+	
+	GameOver(pGameRoom->GetKillCount(), pGameRoom->GetIsOver());
 
 	// TODO: 적당한 위치로 옮기기
 	//delete ReadStreamArr[RoomNum];

@@ -31,7 +31,10 @@
 
 #define WIN 1
 #define LOSE -1
-#define DRAW 0
+
+#define WOLF 0
+#define BAT 1
+#define PAPYRUS 2
 
 using std::array;
 using std::queue;

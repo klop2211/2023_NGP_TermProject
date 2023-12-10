@@ -107,13 +107,19 @@ struct BossStateMsg : StateMsgArgu
 //game오버시 보낼 정보
 struct ClientInfo
 {
-	WORD ClientScore;
+	int ClientNum;
+	//array<WORD, 3>KillScore;
+	//WORD ClientScore;
+	WORD KillWolf;
+	WORD KillBat;
+	WORD KillPapyrus;
 	int ClientState;
 };
 // 서버->클라
 struct GameOverMsg : StateMsgArgu
 {
 	array<ClientInfo, 2> Clients;
+	char GameOverFlag;
 };
 
 struct MonsterKillMsg : StateMsgArgu
