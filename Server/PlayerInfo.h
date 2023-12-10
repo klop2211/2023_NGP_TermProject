@@ -20,11 +20,15 @@ public:
 	RECT GetBB() const;
 	void AddKillCount(MonsterType MT) { m_KillCount[(int)MT]++; }
 
+	// 충돌된 객체 추가
+	void AddSerialNum(MonsterType MT, int SerialNum);
+	void InitCollisionList();
+	std::vector<int>& GetCollisionList(int n) { return m_CollisionList[n]; }
+
 public:
 	FPOINT GetLocation() const				{ return m_PlayerLocation; }
 	PStateName GetState() const				{ return m_PlayerState; }
 	BYTE GetDirection()	const				{ return m_PlayerDirection; }
-	bool GetShouldCollisionCheck() const	{ return m_bShouldCollisionCheck; }
 	int GetDamage() const					{ return m_iDamage; }
 	int GetStunDamage() const				{ return m_iStunDamage; }
 	int GetDestuction() const				{ return m_iDestuction; }
@@ -36,7 +40,9 @@ public:
 	void SetLocation(FPOINT point) { m_PlayerLocation = point; };
 	void SetState(PStateName name) { m_PlayerState = name; };
 	void SetDirection(BYTE direction) { m_PlayerDirection = direction; };
-	void SetShouldCollisionCheck(bool ShouldCheck) { m_bShouldCollisionCheck = ShouldCheck; };
+	
+	//bool GetShouldCollisionCheck() const	{ return m_bShouldCollisionCheck; }
+	//void SetShouldCollisionCheck(bool ShouldCheck) { m_bShouldCollisionCheck = ShouldCheck; };
 
 	void SetAllCardProperty(int Damage, int StunDamage, int Destuction, int NamedDamage, int Type);
 
@@ -54,9 +60,12 @@ private:
 	BYTE m_iDamage, m_iStunDamage, m_iDestuction, m_iNamedDamage, m_iType;
 
 	//카드를 사용 중이라 몬스터와 충돌처리를 해야하는지
-	bool m_bShouldCollisionCheck;
+	// bool m_bShouldCollisionCheck;
 
 	// 잡은 몬스터 수
 	array<WORD, 3> m_KillCount;
+
+	// 두 번 충돌 되지않게
+	array<std::vector<int>, 3> m_CollisionList;
 };
 

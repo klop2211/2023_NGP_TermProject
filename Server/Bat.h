@@ -8,5 +8,7 @@ public:
 	~Bat() {};
 
 	virtual void Update(float ElaspedTime);
+
+	MonsterType GetMonsterType() { return MonsterType::Bat; }
 };
 

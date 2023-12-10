@@ -40,6 +40,7 @@ public:
 	float	GetRemainTimer() { return m_fRemainTimeToChangeState; }
 
 	BossStateType GetStateType();
+	MonsterType GetMonsterType() { return MonsterType::Papyrus; }
 
 	Bone** GetBone();
 	Bone** GetMiniBone();

@@ -8,5 +8,7 @@ public:
 	~Wolf() {};
 
 	virtual void Update(float ElaspedTime);
+
+	MonsterType GetMonsterType() { return MonsterType::Wolf; }
 };
 

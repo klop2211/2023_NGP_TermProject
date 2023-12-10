@@ -6,7 +6,7 @@
 
 class Player;
 
-enum ObjectType {
+enum ObjectType : BYTE {
 	Drop_Spear = 100, Meteor_Spear, Explosion, Wall, Hurricane, None, Ice, Fire, Knockdown, SowrdLight,
 	Rotation_Spear, Airborne_Spear1, Airborne_Spear2, Airborne_Spear3, Red_Spear, Earthquake, Flame_Zone, 
 	Drop_Red_Spear1, Drop_Red_Spear2, Yellow_Spear, Purple_Spear, Ulti_Spear, Ulti_Explosion

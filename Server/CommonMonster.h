@@ -1,6 +1,5 @@
 #pragma once
 #include "Monster.h"
-#include "StateMessage.h"
 
 class MonsterState;
 

@@ -2,7 +2,9 @@
 
 #include <chrono>
 #include <map>
+#include <list>
 #include "StateMessage.h"
+#include "SkillObject.h"
 
 class PlayerInfo;
 class Papyrus;
@@ -18,10 +20,10 @@ public:
 	~GameRoom();
 public:
 	void SetElapsedTime();
-	void Update(array<queue<StateMsgInfo>, MAX_CLIENTS> StateMsg);
+	void Update(array<queue<StateMsgInfo>, MAX_CLIENTS>& StateMsg);
 
 	void SpawnEnemy();
-	void UpdateUseStateMsg(array<queue<StateMsgInfo>, MAX_CLIENTS> StateMsg);
+	void UpdateUseStateMsg(array<queue<StateMsgInfo>, MAX_CLIENTS>& StateMsg);
 	void UpdateEnemy();
 
 	//void ProcessMonsterHpMsg(StateMsgArgu* Arg);
@@ -32,6 +34,8 @@ public:
 	void IsCollisionMonsterWithPlayer(PlayerInfo*);
 	void IsCollisionBoneWithPlayer(PlayerInfo*);
 	void DoCollisionCheck();
+	void CollisionSkillObject();
+	void DamageToMonsterUsingSkillObject(SkillObjectInfo, Monster*);
 
 	// 송수신 관련 함수
 	void WriteMonsterLocation(MonsterType, BYTE, POINT location = {0, 0});
@@ -47,6 +51,7 @@ public:
 
 	void ReadPlayerLocation(StateMsgArgu*);
 	void ReadUseCard(StateMsgArgu*);
+	void ReadSkillObjectLocation(StateMsgArgu*);
 
 	void CheckMonsterChangeState(CommonMonster* monster, MonsterType ,int SN);
 	void CheckMonsterChangeState(Papyrus* papyrus);
@@ -65,6 +70,7 @@ private:
 	std::map<int, class Bat*> m_BatMap;
 	std::map<int, class Wolf*> m_WolfMap;
 	class Papyrus* m_Papyrus;
+	std::list<SkillObjectInfo> m_SkillObject;
 
 	// 플레이어 리스트
 	std::array<class PlayerInfo* , MAX_CLIENTS> m_pPlayerList;

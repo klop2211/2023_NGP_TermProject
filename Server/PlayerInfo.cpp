@@ -12,6 +12,19 @@ RECT PlayerInfo::GetBB() const
     return ReturnBB;
 }
 
+void PlayerInfo::AddSerialNum(MonsterType MT, int SerialNum)
+{
+    m_CollisionList[(int)MT].push_back(SerialNum);
+}
+
+void PlayerInfo::InitCollisionList()
+{
+    for (auto& cList : m_CollisionList)
+    {
+        cList.clear();
+    }
+}
+
 void PlayerInfo::SetAllCardProperty(int Damage, int StunDamage, int Destuction, int NamedDamage, int Type)
 {
     m_iDamage = Damage;

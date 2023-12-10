@@ -7,6 +7,7 @@
 #include "MonsterState.h"
 #include "Castle.h"
 #include "Bone.h"
+#include "../NGP_TermProject/SkillObject.h"
 
 #include "PlayerInfo.h"
 #include "../MemStream/MemoryWriteStream.h"
@@ -16,12 +17,12 @@
 GameRoom::GameRoom(array<SOCKET, MAX_CLIENTS>& ClientSocket) :
 	m_iWolfSN(0),
 	m_iBatSN(0),
-	m_iPhase(GameRoom::BossPhase),
+	m_iPhase(GameRoom::WolfPhase),
 	m_Papyrus(nullptr),
 	m_bIsOver(NotYet),
-	m_fPhaseInitTimer(15.f),
-	m_fPhaseChangeTimer(m_fPhaseInitTimer)
+	m_fPhaseInitTimer(15.f)
 {
+	m_fPhaseChangeTimer = m_fPhaseInitTimer;
 	m_pCastle = new Castle();
 	m_pStream = new MemoryWriteStream(ClientSocket);
 	for (int i = 0; i < m_pPlayerList.size(); i++)
@@ -54,8 +55,9 @@ void GameRoom::SetElapsedTime()
 	m_fElapsedTime = elapsedSeconds.count();
 }
 
-void GameRoom::Update(array<queue<StateMsgInfo>, MAX_CLIENTS> StateMsg)
+void GameRoom::Update(array<queue<StateMsgInfo>, MAX_CLIENTS>& StateMsg)
 {
+
 	SetElapsedTime();
 	UpdateUseStateMsg(StateMsg);
 	WritePlayerLocation();
@@ -73,8 +75,8 @@ void GameRoom::SpawnEnemy()
 	if (m_fPhaseChangeTimer < 0.f)
 	{
 		m_fPhaseChangeTimer = m_fPhaseInitTimer;
-
-		m_iPhase = min(++m_iPhase, (int)PhaseEnum::BossPhase);
+		++m_iPhase;
+		std::clamp(m_iPhase, 0, (int)PhaseEnum::BossPhase);
 	}
 
 	switch (m_iPhase)
@@ -191,7 +193,10 @@ void GameRoom::IsCollisionMonsterWithPlayer(PlayerInfo* p)
 	{
 		int SN = it.first;
 		Bat* bat = it.second;
-		if (IsCollision(p->GetBB(), bat->GetBoundingBox()))
+		std::vector<int> CollisionList = p->GetCollisionList((int)MonsterType::Bat);
+		bool NotInList = std::find(CollisionList.begin(), CollisionList.end(), SN) == CollisionList.end();
+
+		if (NotInList && IsCollision(p->GetBB(), bat->GetBoundingBox()))
 		{
 			bool IsDead = bat->GetDamageAndIsDead(
 				p->GetDamage(),
@@ -214,7 +219,10 @@ void GameRoom::IsCollisionMonsterWithPlayer(PlayerInfo* p)
 	{
 		int SN = it.first;
 		Wolf* wolf = it.second;
-		if (IsCollision(p->GetBB(), wolf->GetBoundingBox()))
+		std::vector<int> CollisionList = p->GetCollisionList((int)MonsterType::Wolf);
+		bool NotInList = std::find(CollisionList.begin(), CollisionList.end(), SN) == CollisionList.end();
+
+		if (NotInList && IsCollision(p->GetBB(), wolf->GetBoundingBox()))
 		{
 			bool IsDead = wolf->GetDamageAndIsDead(
 				p->GetDamage(),
@@ -236,7 +244,10 @@ void GameRoom::IsCollisionMonsterWithPlayer(PlayerInfo* p)
 
 	if (m_Papyrus)
 	{
-		if (IsCollision(p->GetBB(), m_Papyrus->GetBoundingBox()))
+		std::vector<int> CollisionList = p->GetCollisionList((int)MonsterType::Papyrus);
+		bool NotInList = std::find(CollisionList.begin(), CollisionList.end(), 0) == CollisionList.end();
+
+		if (NotInList && IsCollision(p->GetBB(), m_Papyrus->GetBoundingBox()))
 		{
 			bool IsDead = m_Papyrus->GetDamageAndIsDead(
 				p->GetDamage(),
@@ -258,6 +269,11 @@ void GameRoom::IsCollisionMonsterWithPlayer(PlayerInfo* p)
 
 void GameRoom::IsCollisionBoneWithPlayer(PlayerInfo* player)
 {
+	if (!m_Papyrus)
+	{
+		return;
+	}
+
 	Bone** bone;
 
 	bone = m_Papyrus->GetBone();
@@ -290,14 +306,122 @@ void GameRoom::DoCollisionCheck()
 	// TODO: Collision Group으로 개선 필요
 	for (const auto& p : m_pPlayerList)
 	{
-		if (p->GetShouldCollisionCheck())
-		{
-			IsCollisionMonsterWithPlayer(p);
-		}
+		IsCollisionMonsterWithPlayer(p);
 		IsCollisionBoneWithPlayer(p);
 	}
-
+	CollisionSkillObject();
 	IsCollisionMonsterWithCastle();
+}
+
+void GameRoom::CollisionSkillObject()
+{
+	for (auto& SkillObject : m_SkillObject )
+	{	
+		for (const auto& it : m_WolfMap)
+		{
+			int SN = it.first;
+			Wolf* wolf = it.second;
+			std::vector<int> CollisionList = SkillObject.GetCollisionList((int)MonsterType::Wolf);
+
+			if (std::find(CollisionList.begin(), CollisionList.end(), SN) == CollisionList.end()
+				&& IsCollision(SkillObject.GetBoundingBox(), wolf->GetBoundingBox()))
+			{
+				DamageToMonsterUsingSkillObject(SkillObject, wolf);
+			}
+		}
+		for (const auto& it : m_BatMap)
+		{
+			int SN = it.first;
+			Bat* bat = it.second;
+			std::vector<int> CollisionList = SkillObject.GetCollisionList((int)MonsterType::Bat);
+
+			if (std::find(CollisionList.begin(), CollisionList.end(), SN) == CollisionList.end()
+				&& IsCollision(SkillObject.GetBoundingBox(), bat->GetBoundingBox()))
+			{
+				DamageToMonsterUsingSkillObject(SkillObject, bat);
+			}
+		}
+		if (m_Papyrus)
+		{
+			std::vector<int> CollisionList = SkillObject.GetCollisionList((int)MonsterType::Papyrus);
+
+			if (std::find(CollisionList.begin(), CollisionList.end(), 0) == CollisionList.end()
+				&& IsCollision(SkillObject.GetBoundingBox(), m_Papyrus->GetBoundingBox()))
+			{
+				DamageToMonsterUsingSkillObject(SkillObject, m_Papyrus);
+			}
+		}
+	}
+}
+
+void GameRoom::DamageToMonsterUsingSkillObject(SkillObjectInfo SOI, Monster* monster)
+{
+	PlayerInfo* OwnedPlayer = m_pPlayerList[SOI.GetOwnedClientNum()];
+	switch (SOI.GetObjectType())
+	{
+		// OVERLAP
+	case Drop_Spear:
+
+	case Meteor_Spear:
+
+	case Explosion:
+
+	case Hurricane:
+
+	case Knockdown:
+
+	case SowrdLight:
+
+	case Rotation_Spear:
+
+	case Airborne_Spear1:
+
+	case Airborne_Spear2:
+
+	case Airborne_Spear3:
+
+	case Red_Spear:
+
+	case Earthquake:
+
+	case Flame_Zone:
+
+	case Drop_Red_Spear1:
+
+	case Drop_Red_Spear2:
+
+	case Yellow_Spear:
+
+	case Purple_Spear:
+
+	case Ulti_Spear:
+
+	case Ulti_Explosion:
+	{
+		bool IsDead = monster->GetDamageAndIsDead(OwnedPlayer->GetDamage(),
+									OwnedPlayer->GetStunDamage(),
+									OwnedPlayer->GetDestuction(),
+									OwnedPlayer->GetNamedDamage(),
+									OwnedPlayer->GetType());
+		if(IsDead)
+		{
+			OwnedPlayer->AddKillCount(monster->GetMonsterType());
+		}
+	}
+		break;
+		// STATUS EFFECT
+	case Ice:
+		break;
+	case Fire:
+		break;
+	case None:
+		break;
+		// BLOCKING
+	case Wall:
+		break;
+	default:
+		break;
+	}
 }
 
 //void GameRoom::ProcessMonsterHpMsg(StateMsgArgu* Arg)
@@ -321,7 +445,7 @@ void GameRoom::DoCollisionCheck()
 //	}
 //}
 
-void GameRoom::UpdateUseStateMsg(array<queue<StateMsgInfo>, MAX_CLIENTS> StateMsg)
+void GameRoom::UpdateUseStateMsg(array<queue<StateMsgInfo>, MAX_CLIENTS>& StateMsg)
 {
 	for (int i = 0; i < MAX_CLIENTS; i++)
 	{
@@ -337,7 +461,9 @@ void GameRoom::UpdateUseStateMsg(array<queue<StateMsgInfo>, MAX_CLIENTS> StateMs
 				break;
 			case StateMsgType::UseCard:
 				ReadUseCard(SMI.pStateMsgArgu);
-
+				break;
+			case StateMsgType::SkillObjectLocation:
+				ReadSkillObjectLocation(SMI.pStateMsgArgu);
 				break;
 			default:
 				printf("GameRoom::UpdateEnemy Error!\n");
@@ -521,7 +647,7 @@ void GameRoom::ReadPlayerLocation(StateMsgArgu* SMA)
 	m_pPlayerList[ClientNum]->SetDirection(dirction);
 
 	// 충돌처리 off
-	m_pPlayerList[ClientNum]->SetShouldCollisionCheck(false);
+	//m_pPlayerList[ClientNum]->SetShouldCollisionCheck(false);
 	m_pPlayerList[ClientNum]->SetAllCardProperty(0, 0, 0, 0, 0);
 }
 
@@ -531,7 +657,7 @@ void GameRoom::ReadUseCard(StateMsgArgu* SMA)
 	int ClientNum = UCSM->PlayerId;
 
 	// 충돌처리 on
-	m_pPlayerList[ClientNum]->SetShouldCollisionCheck(true);
+	//m_pPlayerList[ClientNum]->SetShouldCollisionCheck(true);
 	m_pPlayerList[ClientNum]->SetAllCardProperty(
 		UCSM->Damage,
 		UCSM->StunDamage,
@@ -540,7 +666,19 @@ void GameRoom::ReadUseCard(StateMsgArgu* SMA)
 		UCSM->Type
 	);
 
+	// 스킬사용이 끝날때 0을 보낸다
+	if (UCSM->Damage == 0)
+	{
+		m_pPlayerList[ClientNum]->InitCollisionList();
+	}
+
 	WriteUseCard(*UCSM, ClientNum);
+}
+
+void GameRoom::ReadSkillObjectLocation(StateMsgArgu* SMA)
+{
+	SkillObjectLocationMsg* SOLM = (SkillObjectLocationMsg*)SMA;
+	m_SkillObject.emplace_back(SOLM->PlayerId, (ObjectType)SOLM->ObjectType, SOLM->Location, SOLM->Size);
 }
 
 void GameRoom::CheckMonsterChangeState(CommonMonster* monster, MonsterType MT, int SN)

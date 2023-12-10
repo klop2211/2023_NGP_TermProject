@@ -1,5 +1,6 @@
 #pragma once
 #include "Common.h"
+#include "StateMessage.h"
 
 class Monster
 {
@@ -26,6 +27,8 @@ public:
 
 	FPOINT GetLocation()	{ return m_Location; }
 	POINT GetSize()			{ return m_Size; };
+
+	MonsterType GetMonsterType() { return MonsterType::END; };
 
 	void SetMaxHp(int hp)				{ m_iMaxHp = hp; }
 	void SetCurrentHp(int hp)			{ m_iCurrentHp = hp; }

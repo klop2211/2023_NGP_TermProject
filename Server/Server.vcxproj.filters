@@ -78,6 +78,9 @@
     <ClCompile Include="Bone.cpp">
       <Filter>2019180016\Source</Filter>
     </ClCompile>
+    <ClCompile Include="SkillObject.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Common.h">
@@ -130,6 +133,9 @@
     </ClInclude>
     <ClInclude Include="Bone.h">
       <Filter>2019180016\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="SkillObject.h">
+      <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
