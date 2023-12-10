@@ -95,10 +95,16 @@ struct BossStateMsg : StateMsgArgu
 	BossStateType Pattern;
 };
 
+//game오버시 보낼 정보
+struct ClientInfo
+{
+	WORD ClientScore;
+	int ClientState;
+};
 // 서버->클라
 struct GameOverMsg : StateMsgArgu
 {
-	array<array<WORD, 3>, MAX_CLIENTS> KillScore;
+	array<ClientInfo, 2> Clients;
 };
 
 struct MonsterKillMsg : StateMsgArgu

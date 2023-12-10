@@ -20,12 +20,31 @@ MemoryWriteStream* m_pStream;
 void GameOver(array<array<WORD, 3>, MAX_CLIENTS> KillCntArr)
 {
 	GameOverMsg GOM;
-	GOM.KillScore = KillCntArr;
+	GOM.Clients[Client1].ClientScore = KillCntArr[Client1][0];
+	GOM.Clients[Client2].ClientScore = KillCntArr[Client2][0];
+
+	if (GOM.Clients[Client1].ClientScore > GOM.Clients[Client2].ClientScore)
+	{
+		GOM.Clients[Client1].ClientState = WIN;
+		GOM.Clients[Client2].ClientState = LOSE;
+	}
+	else if (GOM.Clients[Client1].ClientScore < GOM.Clients[Client2].ClientScore)
+	{
+		GOM.Clients[Client1].ClientState = LOSE;
+		GOM.Clients[Client2].ClientState = WIN;
+	}
+	else
+	{
+		GOM.Clients[Client1].ClientState = DRAW;
+		GOM.Clients[Client2].ClientState = DRAW;
+	}
 
 	m_pStream = new MemoryWriteStream(client_sockets);
 	m_pStream->Write(StateMsgType::GameOver);
 	m_pStream->Write(GOM);
 	m_pStream->Send();
+
+	delete m_pStream;
 }
 
 bool IsGameOver(BYTE StateMsg, StateMsgArgu* arg)
