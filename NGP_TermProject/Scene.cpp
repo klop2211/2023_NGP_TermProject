@@ -258,7 +258,8 @@ void Scene::Draw(HDC& memDc)
 		object->Draw(memDc);
 	}
 
-	m_pPlayer->UiDraw(memDc);
+	if(m_pPlayer != NULL)
+		m_pPlayer->UiDraw(memDc);
 
 	for (const auto& w : m_WolfMap)
 	{
