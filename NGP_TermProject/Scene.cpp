@@ -14,7 +14,7 @@
 
 #include "Shop.h"
 
-//#define MULTI_PLAY
+#define MULTI_PLAY
 
 SOCKET*			Scene::m_pSock;
 HANDLE*			Scene::m_pReadEvent;
@@ -170,9 +170,12 @@ void Scene::Update(float elapsed)
 				smt = StateMsgType::UseCard;
 				UseCardStateMsg* usm = m_pPlayer->CreateUseCardStateMsg(m_iClientNum);
 				m_WriteStream->Write(smt);
-				m_WriteStream->Write(sma);
+				m_WriteStream->Write(usm);
 			}
-
+			// 플레이어의 스킬 오브젝트 정	보
+			{
+				m_pPlayer->CreateSOLMsg(m_iClientNum, m_WriteStream);
+			}
 		}
 		else {
 			sma.Location.x = 100;
@@ -181,7 +184,7 @@ void Scene::Update(float elapsed)
 			sma.Direction = 0;
 			sma.State = PStateName::Move;
 		}
-
+		smt = StateMsgType::PlayerLocation;
 		m_WriteStream->Write(smt);
 		m_WriteStream->Write(sma);
 

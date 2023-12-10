@@ -99,7 +99,7 @@ PSkill* PSkill::Instance()
 	return &instance;
 }
 
-#define TEST_CARDNAME CardName::N_dmsgkdbtjdxks
+#define TEST_CARDNAME CardName::N_rhlddufvk
 
 void PSkill::Enter(Player* player)
 {
@@ -369,6 +369,122 @@ void PSkill::Enter(Player* player)
 		player->SetNamedDamage(player->GetNamedDamage() + 15);
 	}
 	break;
+	case CardName::N_dbtjdrkdcjs: // 유성강천
+	if (player->GetDir() == Left)
+		player->SetImg(L"./\\윈플 텀프 이미지\\창술사_유성강천_이펙트(left).png");
+	else
+		player->SetImg(L"./\\윈플 텀프 이미지\\창술사_유성강천_이펙트.png");
+
+	player->SetSpeed(0);
+	player->SetDamage(12);
+	player->SetStunDamage(5);
+	player->SetDestruction(0);
+
+	tripordNum = player->ActivatedTripordNumber(CardName::N_dbtjdrkdcjs, 0);
+	if (tripordNum == 1) {
+		//player.SetBaseDelay(4);
+	}
+	else if (tripordNum == 2) {
+		player->SetDamage(player->GetDamage() + 2);
+
+	}
+	else if (tripordNum == 3) {
+		player->SetNamedDamage(player->GetNamedDamage() + 4);
+	}
+
+	tripordNum = player->ActivatedTripordNumber(CardName::N_dbtjdrkdcjs, 2);
+	if (tripordNum == 2) {
+		player->SetSpeed(0);
+		if (player->GetDir() == Left)
+			player->SetImg(L"./\\윈플 텀프 이미지\\창술사_유성강천창사라지는_이펙트(left).png");
+		else
+			player->SetImg(L"./\\윈플 텀프 이미지\\창술사_유성강천창사라지는_이펙트.png");
+	}
+	break;
+	case CardName::N_rhlddufvk: // 굉열파
+	if (player->GetDir() == Left)
+		player->SetImg(L"./\\윈플 텀프 이미지\\창술사_굉열파_이펙트(left).png");
+	else
+		player->SetImg(L"./\\윈플 텀프 이미지\\창술사_굉열파_이펙트.png");
+	player->SetSpeed(0);
+	player->SetDamage(10);
+	player->SetStunDamage(5);
+	player->SetDestruction(1);
+
+	tripordNum = player->ActivatedTripordNumber(CardName::N_rhlddufvk, 0);
+	if (tripordNum == 1) {
+		player->SetDestruction(player->GetDestruction() + 1);
+	}
+	else if (tripordNum == 2) {
+		//player.SetBaseDelay(3);
+	}
+	else if (tripordNum == 3) {
+		//player.SetRuncount(100);
+	}
+
+	tripordNum = player->ActivatedTripordNumber(CardName::N_rhlddufvk, 1);
+	if (tripordNum == 1) {
+		if (player->GetDir() == Left)
+			player->SetImg(L"./\\윈플 텀프 이미지\\창술사_굉열파_화염이펙트(left).png");
+		else
+			player->SetImg(L"./\\윈플 텀프 이미지\\창술사_굉열파_화염이펙트.png");
+		player->SetType(Fire);
+	}
+	else if (tripordNum == 2) {
+		//적을 창끝까지 밀쳐냄
+	}
+	else if (tripordNum == 3) {
+		player->SetNamedDamage(player->GetNamedDamage() + 3);
+	}
+
+	tripordNum = player->ActivatedTripordNumber(CardName::N_rhlddufvk, 2);
+	if (tripordNum == 1) {
+		player->SetDamage(player->GetDamage() + 4);
+	}
+	else if (tripordNum == 2) {
+		//TODO:마나감소
+	}
+
+	break;
+	case CardName::N_sktjsckd: // 나선창
+	if (player->GetDir() == Left)
+		player->SetImg(L"./\\윈플 텀프 이미지\\창술사_나선창_이펙트(left).png");
+	else
+		player->SetImg(L"./\\윈플 텀프 이미지\\창술사_나선창_이펙트.png");
+	player->SetSpeed(0);
+	player->SetDamage(7);
+	player->SetStunDamage(5);
+	player->SetDestruction(0);
+
+	tripordNum = player->ActivatedTripordNumber(CardName::N_sktjsckd, 0);
+	if (tripordNum == 1) {
+		player->SetDamage(player->GetDamage() + 1);
+	}
+	else if (tripordNum == 2) {
+		//player.SetRuncount(100);
+	}
+	else if (tripordNum == 3) {
+		//PlusUltimate();
+	}
+
+	tripordNum = player->ActivatedTripordNumber(CardName::N_sktjsckd, 1);
+	if (tripordNum == 1) {
+		m_bOnemore = true;
+	}
+	else if (tripordNum == 2) {
+		player->SetNamedDamage(player->GetNamedDamage() + 2);
+	}
+	else if (tripordNum == 3) {
+		player->DrawCard(false);
+	}
+
+	tripordNum = player->ActivatedTripordNumber(CardName::N_sktjsckd, 2);
+	if (tripordNum == 1) {
+		//사거리증가
+	}
+
+
+	break;
 
 
 
@@ -383,6 +499,7 @@ void PSkill::Enter(Player* player)
 void PSkill::Execute(Player* player, float elapsed)
 {
 	CardName test = TEST_CARDNAME;
+	int tripordNum = 0;
 	if (test == CardName::N_dmsgkdbtjdxks) {
 		if (player->GetFrameIndex() < 4) {
 			player->SetLocation(POINT{ (int)player->GetLocation().x, (int)(player->GetLocation().y + -300 * elapsed) });
@@ -391,6 +508,36 @@ void PSkill::Execute(Player* player, float elapsed)
 			player->SetLocation(POINT{ (int)player->GetLocation().x, (int)(player->GetLocation().y + 430 * elapsed) });
 		}
 	}
+
+	tripordNum = player->ActivatedTripordNumber(CardName::N_dbtjdrkdcjs, 2);
+	if (test == CardName::N_dbtjdrkdcjs && tripordNum != 2) {
+		if (player->GetDir() == Left) {
+			if (player->GetFrameIndex() < 3) {
+				POINT temp = { player->GetLocation().x, player->GetLocation().y - 600 * elapsed };
+				player->SetLocation(temp);
+			}
+			else if (player->GetFrameIndex() < 8 && player->GetLocation().y < GROUNDYPOINT - 100) {
+				POINT temp = { player->GetLocation().x - 600 * elapsed, player->GetLocation().y + 400 * elapsed };
+				player->SetLocation(temp);
+			}
+		}
+		else {
+			if (player->GetFrameIndex() < 3) {
+				POINT temp = { player->GetLocation().x, player->GetLocation().y - 600 * elapsed };
+				player->SetLocation(temp);
+			}
+			else if (player->GetFrameIndex() < 8 && player->GetLocation().y < GROUNDYPOINT - 100) {
+				POINT temp = { player->GetLocation().x + 600 * elapsed, player->GetLocation().y + 450 * elapsed };
+				player->SetLocation(temp);
+			}
+		}
+
+		if (player->GetLocation().y > GROUNDYPOINT - 100) {
+			player->SetLocation(POINT{ (int)player->GetLocation().x, GROUNDYPOINT - 100 });
+		}
+
+	}
+
 }
 
 void PSkill::Exit(Player* player)
@@ -446,6 +593,35 @@ void PSkill::Exit(Player* player)
 		break;
 	case CardName::N_wjrfydvh: // 적룡포
 		player->AddSkillObject(SkillObject{ Red_Spear, player });
+		break;
+	case CardName::N_dbtjdrkdcjs: // 유성강천
+		tripordNum = player->ActivatedTripordNumber(CardName::N_dbtjdrkdcjs, 1);
+		if (tripordNum == 1) {
+			player->AddSkillObject(SkillObject{ Earthquake, player });
+		}
+		else if (tripordNum == 2) {
+			player->AddSkillObject(SkillObject{ Flame_Zone, player });
+		}
+		else if (tripordNum == 3) {
+			player->AddSkillObject(SkillObject{ Wall, player });
+		}
+
+		tripordNum = player->ActivatedTripordNumber(CardName::N_dbtjdrkdcjs, 2);
+		if (tripordNum == 1) {
+			player->AddSkillObject(SkillObject{ Drop_Red_Spear1, player });
+		}
+		else if (tripordNum == 2) {
+			player->AddSkillObject(SkillObject{ Drop_Red_Spear2, player });
+
+		}
+
+		player->SetLocation(POINT{(int)player->GetLocation().x, GROUNDYPOINT - 100});
+		break;
+	case CardName::N_rhlddufvk: // 굉열파
+		player->AddSkillObject(SkillObject{ Yellow_Spear, player });
+		break;
+	case CardName::N_sktjsckd: // 나선창
+		player->AddSkillObject(SkillObject{ Purple_Spear, player });
 		break;
 	default:
 		break;

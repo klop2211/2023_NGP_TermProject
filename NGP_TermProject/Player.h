@@ -12,6 +12,7 @@ typedef int(*PPint)[4];
 enum Direction : BYTE { Left, Right };
 
 class Card;
+class MemoryWriteStream;
 
 class Player :    
 	public Object
@@ -40,6 +41,7 @@ public:
 	void AddSkillObject(const SkillObject& skillObject);
 	bool IsSkillMsg() { return m_bSkillCheck; }
 	UseCardStateMsg* CreateUseCardStateMsg(int clientNum);
+	void CreateSOLMsg(int clientNum, MemoryWriteStream* mws);
 
 	void MinusMoney(int money) { m_iMoney -= money; }
 	void AddMoney(int money) { m_iMoney += money; }
@@ -59,7 +61,6 @@ public:
 	PStateName GetStateName() const { return m_pStateMachine->CurrentState()->GetName(); }
 	CardName GetCurrentCardName() const { return m_CurrentCardName; }
 	int GetCardCount() const { return m_iCardCount; }
-
 	int(*GetTripord())[4] {return m_ppTripord; }
 	int GetMoney() { return m_iMoney; }
 	

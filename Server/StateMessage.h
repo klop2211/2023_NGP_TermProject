@@ -3,7 +3,7 @@
 
 enum class MonsterType : BYTE { Wolf, Bat, Papyrus, UBBone, BBone1, BBone2, END };
 enum class CardType : BYTE { N_rhlddufvk, N_sktjsckd, N_dbtjdrkdcjs, N_wjrfydvh, N_aodfyddufvk, N_qksdnjftja, N_dusghkstja, N_cjdfydwls, N_cjdfydcnftn, N_ghltjsckd, N_dmsgkdbtjdxks };
-enum class StateMsgType : BYTE {MonsterLocation, MonsterHp, MonsterState, PlayerLocation, CastleHp, UseCard, GameStart, BossState, BossHp, GameOver, MonsterKill};
+enum class StateMsgType : BYTE {MonsterLocation, MonsterHp, MonsterState, PlayerLocation, CastleHp, UseCard, GameStart, BossState, BossHp, GameOver, MonsterKill, SkillObjectLocation};
 enum class MonsterStateType : BYTE {Move, Attack, Ice, Fire};
 enum class BossStateType : BYTE { Move, UBPattern, BPattern1, BPattern2, Breaking, Stunning, CantMove };
 enum class PStateName : BYTE { Move, Stay, Stun, Skill };
@@ -75,6 +75,15 @@ struct UseCardStateMsg : StateMsgArgu
 	BYTE Type;	
 
 	BYTE Tripord[4];
+};
+
+// 서버에서 충돌체크 하기 위한 정보 클라는 필요X
+struct SkillObjectLocationMsg : StateMsgArgu
+{
+	BYTE PlayerId;
+	BYTE ObjectType;
+	POINT Location;
+	int Size;
 };
 
 // 서버 -> 클라 /

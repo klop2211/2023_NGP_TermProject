@@ -12,10 +12,17 @@ SkillObject::SkillObject(const ObjectType objectType, Player* owner)
 
 	m_bLife = true;
 
+	m_fLiveTime = 0.f;
+
+	m_iFrameSpeed = SKILLOBEJCT_FRAMESPEED;
+
 	m_iDamage = m_pOwner->GetDamage();
 	m_iStunDamage = m_pOwner->GetStunDamage();
 	m_iDestruction = m_pOwner->GetDestruction();
 	m_iNamedDamage = m_pOwner->GetNamedDamage();
+
+	m_pImg = new CImage;
+
 
 	// 생성시 위치 보정 값
 	int dx = 0, dy = 0;
@@ -115,17 +122,61 @@ SkillObject::SkillObject(const ObjectType objectType, Player* owner)
 		}
 		m_iRectSize = 200;
 		dx = 0;
-		dy = 0;
+		dy = 100;
 		break;
 	case Earthquake:
+		SetImg(L"./\\윈플 텀프 이미지\\지진.png");
+		m_Speed = POINT{ 0,0 };
+		m_iRectSize = 300;
+		dy = 200;
 		break;
 	case Flame_Zone:
+		SetImg(L"./\\윈플 텀프 이미지\\화염장판.png");
+		m_Speed = POINT{ 0,0 };
+		m_iRectSize = 200;
+		dy = 100;
 		break;
-	case Drop_Red_Spear:
+	case Drop_Red_Spear1:
+		SetImg(L"./\\윈플 텀프 이미지\\떨어지는 창.png");
+		m_Speed = POINT{ 0, 400 };
+		m_iRectSize = 200;
+		dy = 400;
+		break;
+	case Drop_Red_Spear2:
+		SetImg(L"./\\윈플 텀프 이미지\\떨어지는 창.png");
+		m_Speed = POINT{ 0, 400 };
+		m_iRectSize = 200;
+		dy = 400;
+		if (m_pOwner->GetDir() == Left) {
+			dx = -200;
+		}
+		else {
+			dx = 200;
+		}
 		break;
 	case Yellow_Spear:
+		if (m_pOwner->GetDir() == Left) {
+			SetImg(L"./\\윈플 텀프 이미지\\굉열파막타(left).png");
+			m_Speed = POINT{ -500, 0 };
+		}
+		else {
+			SetImg(L"./\\윈플 텀프 이미지\\굉열파막타.png");
+			m_Speed = POINT{ 500, 0 };
+		}
+		m_iRectSize = 150;
+
 		break;
 	case Purple_Spear:
+		if (m_pOwner->GetDir() == Left) {
+			SetImg(L"./\\윈플 텀프 이미지\\나선창막타(left).png");
+			m_Speed = POINT{ -400, 0 };
+		}
+		else {
+			SetImg(L"./\\윈플 텀프 이미지\\나선창막타.png");
+			m_Speed = POINT{ 400, 0 };
+		}
+		m_iRectSize = 150;
+
 		break;
 	default:
 		break;
@@ -139,6 +190,7 @@ SkillObject::SkillObject(const ObjectType objectType, Player* owner)
 	SetRectByLocation();
 
 }
+
 
 SkillObject::~SkillObject()
 {
@@ -155,8 +207,10 @@ void SkillObject::Update(float elapsed)
 	m_fFrameTime += m_iFrameSpeed * elapsed;
 	m_iFrameIdx = (int)m_fFrameTime;
 
-	m_Location.x += elapsed * m_Speed.x;
-	m_Location.y += elapsed * m_Speed.y;
+	m_fLiveTime += elapsed;
+
+	m_Location.x +=  m_Speed.x * elapsed;
+	m_Location.y +=  m_Speed.y * elapsed;
 
 	switch (m_ObjectType)
 	{
@@ -172,7 +226,7 @@ void SkillObject::Update(float elapsed)
 			m_Location.y -= elapsed * m_Speed.y;
 		}
 		// 객체가 땅에 닿으면 소멸
-		if (m_Location.y < GROUNDYPOINT)
+		if (m_Location.y < GROUNDYPOINT - m_iRectSize)
 			m_bLife = false;
 		break;
 	case Meteor_Spear:
@@ -226,14 +280,32 @@ void SkillObject::Update(float elapsed)
 			m_bLife = false;
 		break;
 	case Earthquake:
+		if (m_fLiveTime > 2.f)
+			m_bLife = false;
 		break;
 	case Flame_Zone:
 		break;
-	case Drop_Red_Spear:
+	case Drop_Red_Spear1:
+		if (m_Location.y > GROUNDYPOINT - m_iRectSize) {
+			m_bLife = false;
+			m_Location.y = GROUNDYPOINT - m_iRectSize;
+		}
+		break;
+	case Drop_Red_Spear2:
+		if (m_Location.y > GROUNDYPOINT - m_iRectSize) {
+			m_bLife = false;
+			m_Location.y = GROUNDYPOINT - m_iRectSize;
+		}
 		break;
 	case Yellow_Spear:
+		if (m_fLiveTime > 1.5f)
+			m_bLife = false;
+
 		break;
 	case Purple_Spear:
+		if (m_fLiveTime > 1.5f)
+			m_bLife = false;
+
 		break;
 	default:
 		break;
@@ -260,5 +332,5 @@ void SkillObject::SetImg(const TCHAR* str)
 	m_pImg->Load(str);
 	m_iFrameMax = m_pImg->GetHeight() / 32;
 	m_iFrameIdx = 0;
-	m_fFrameTime = 0;
+	m_fFrameTime = 0.f;
 }

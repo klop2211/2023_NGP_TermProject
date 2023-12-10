@@ -8,7 +8,7 @@ class Player;
 
 enum ObjectType {
 	Drop_Spear = 100, Meteor_Spear, Explosion, Wall, Hurricane, None, Ice, Fire, Knockdown, SowrdLight,
-	Rotation_Spear, Airborne_Spear1, Airborne_Spear2, Airborne_Spear3, Red_Spear, Earthquake, Flame_Zone, Drop_Red_Spear, Yellow_Spear, Purple_Spear
+	Rotation_Spear, Airborne_Spear1, Airborne_Spear2, Airborne_Spear3, Red_Spear, Earthquake, Flame_Zone, Drop_Red_Spear1, Drop_Red_Spear2, Yellow_Spear, Purple_Spear
 };
 
 
@@ -31,6 +31,9 @@ public:
 	int GetStunDamage() const { return m_iStunDamage; }
 	int GetDestruction() const { return m_iDestruction; }
 	int GetNamedDamage() const { return m_iNamedDamage; }
+	ObjectType GetObjectType() const { return m_ObjectType; }
+	bool GetLife() const { return m_bLife; }
+
 
 	void SetImg(const TCHAR* str);
 	void SetSpeed(const POINT speed) { m_Speed = speed; }
