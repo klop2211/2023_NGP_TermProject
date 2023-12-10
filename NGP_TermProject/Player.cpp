@@ -120,7 +120,6 @@ void Player::Draw(HDC& memDc)
 		obj.Draw(memDc);
 	}
 	
-	UiDraw(memDc);
 }
 
 void Player::ChangeState(State<Player>* cState)

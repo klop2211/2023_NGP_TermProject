@@ -482,12 +482,7 @@ void PSkill::Enter(Player* player)
 	if (tripordNum == 1) {
 		//사거리증가
 	}
-
-
 	break;
-
-
-
 	default:
 		break;
 	}

@@ -257,6 +257,9 @@ void Scene::Draw(HDC& memDc)
 	for (auto object : m_lObjectList) {
 		object->Draw(memDc);
 	}
+
+	m_pPlayer->UiDraw(memDc);
+
 	for (const auto& w : m_WolfMap)
 	{
 		w.second->Draw(memDc);
