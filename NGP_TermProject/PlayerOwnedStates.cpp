@@ -142,7 +142,7 @@ void PSkill::Enter(Player* player)
 		else if (tripordNum == 3) {
 			dx = player->GetDir() == Left ? -100 : 200;
 			dy = 0;
-			player->AddSkillObject(SkillObject{ Wall, player });
+			player->AddSkillObject(Wall);
 		}
 
 		tripordNum = player->ActivatedTripordNumber(CardName::N_cjdfydwls, 2); // 청룡진 3트포 체크
@@ -502,7 +502,7 @@ void PSkill::Execute(Player* player, float elapsed)
 		}
 		if (player->GetFrameIndex() == 7 && m_bUlti) {
 			m_bUlti = false;
-			player->AddSkillObject(SkillObject{ Ulti_Spear, player });
+			player->AddSkillObject(Ulti_Spear);
 		}
 		if (9 <= player->GetFrameIndex()) {
 			player->SetLocation(POINT{ (int)player->GetLocation().x, (int)(player->GetLocation().y + 430 * elapsed) });
@@ -552,16 +552,16 @@ void PSkill::Exit(Player* player)
 	case CardName::N_cjdfydwls:
 		tripordNum = player->ActivatedTripordNumber(CardName::N_cjdfydwls, 1); // 청룡진 2트포 체크
 		if (tripordNum == 1) {
-			player->AddSkillObject(SkillObject{ Drop_Spear, player });
+			player->AddSkillObject(Drop_Spear);
 		}
 		break;
 	case CardName::N_qksdnjftja:
 		tripordNum = player->ActivatedTripordNumber(CardName::N_qksdnjftja, 2);
 		if (tripordNum == 1) {
-			player->AddSkillObject(SkillObject{ Hurricane, player });
+			player->AddSkillObject(Hurricane);
 		}
 		else if (tripordNum == 2) {
-			player->AddSkillObject(SkillObject{ Hurricane, player });
+			player->AddSkillObject(Hurricane);
 		}
 		break;
 	case CardName::N_aodfyddufvk:
@@ -574,62 +574,62 @@ void PSkill::Exit(Player* player)
 	case CardName::N_dusghkstja:
 		tripordNum = player->ActivatedTripordNumber(CardName::N_dusghkstja, 2);
 		if (tripordNum == 2) {
-			player->AddSkillObject(SkillObject{ SowrdLight, player });
+			player->AddSkillObject(SowrdLight);
 		}
 		break;
 	case CardName::N_cjdfydcnftn:
 		tripordNum = player->ActivatedTripordNumber(CardName::N_cjdfydcnftn, 2);
 		if (tripordNum == 1) {
-			player->AddSkillObject(SkillObject{ Rotation_Spear, player });
+			player->AddSkillObject(Rotation_Spear);
 		}
 		else if (tripordNum == 2) {
-			player->AddSkillObject(SkillObject{ Airborne_Spear1, player });
+			player->AddSkillObject(Airborne_Spear1);
 
-			player->AddSkillObject(SkillObject{ Airborne_Spear2, player });
+			player->AddSkillObject(Airborne_Spear2);
 
-			player->AddSkillObject(SkillObject{ Airborne_Spear3, player });
+			player->AddSkillObject(Airborne_Spear3);
 		}
 	case CardName::N_dmsgkdbtjdxks: // 은하유성탄
 		player->SetLocation(POINT{ (int)player->GetLocation().x, GROUNDYPOINT - 100 });
 		break;
 	case CardName::N_wjrfydvh: // 적룡포
-		player->AddSkillObject(SkillObject{ Red_Spear, player });
+		player->AddSkillObject(Red_Spear);
 		break;
 	case CardName::N_dbtjdrkdcjs: // 유성강천
 		tripordNum = player->ActivatedTripordNumber(CardName::N_dbtjdrkdcjs, 1);
 		if (tripordNum == 1) {
-			player->AddSkillObject(SkillObject{ Earthquake, player });
+			player->AddSkillObject(Earthquake);
 		}
 		else if (tripordNum == 2) {
-			player->AddSkillObject(SkillObject{ Flame_Zone, player });
+			player->AddSkillObject(Flame_Zone);
 		}
 		else if (tripordNum == 3) {
-			player->AddSkillObject(SkillObject{ Wall, player });
+			player->AddSkillObject(Wall);
 		}
 
 		tripordNum = player->ActivatedTripordNumber(CardName::N_dbtjdrkdcjs, 2);
 		if (tripordNum == 1) {
-			player->AddSkillObject(SkillObject{ Drop_Red_Spear1, player });
+			player->AddSkillObject(Drop_Red_Spear1);
 		}
 		else if (tripordNum == 2) {
-			player->AddSkillObject(SkillObject{ Drop_Red_Spear2, player });
+			player->AddSkillObject(Drop_Red_Spear2);
 
 		}
 
 		player->SetLocation(POINT{(int)player->GetLocation().x, GROUNDYPOINT - 100});
 		break;
 	case CardName::N_rhlddufvk: // 굉열파
-		player->AddSkillObject(SkillObject{ Yellow_Spear, player });
+		player->AddSkillObject(Yellow_Spear);
 		break;
 	case CardName::N_sktjsckd: // 나선창
-		player->AddSkillObject(SkillObject{ Purple_Spear, player });
+		player->AddSkillObject(Purple_Spear);
 		break;
 	default:
 		break;
 	}
-	//player->SetSpeed(0);
-	//player->SetDamage(0);
-	//player->SetStunDamage(0);
-	//player->SetDestruction(0);
+	player->SetSpeed(0);
+	player->SetDamage(0);
+	player->SetStunDamage(0);
+	player->SetDestruction(0);
 
 }

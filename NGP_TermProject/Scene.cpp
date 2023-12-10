@@ -14,7 +14,7 @@
 
 #include "Shop.h"
 
-//#define MULTI_PLAY
+#define MULTI_PLAY
 
 SOCKET*			Scene::m_pSock;
 HANDLE*			Scene::m_pReadEvent;
@@ -115,7 +115,7 @@ void Scene::Update(float elapsed)
 				if (temp->PlayerId != m_iClientNum && m_pPlayer2 != NULL) {
 					m_pPlayer2->SetLocation(temp->Location);
 					m_pPlayer2->SetDir((Direction)temp->Direction);
-					if (m_pPlayer2->GetStateName() != temp->State)
+					if (m_pPlayer2->GetStateName() != temp->State && m_pPlayer2->GetStateName() != PStateName::Skill)
 						m_pPlayer2->ChangeState(temp->State);
 				}
 			}
@@ -148,6 +148,7 @@ void Scene::Update(float elapsed)
 			}
 			break;
 			default:
+
 				break;
 			}
 
@@ -173,10 +174,7 @@ void Scene::Update(float elapsed)
 				m_WriteStream->Write(*usm);
 				delete usm;
 			}
-			// 플레이어의 스킬 오브젝트 정	보
-			{
-				m_pPlayer->CreateSOLMsg(m_iClientNum, m_WriteStream);
-			}
+			
 		}
 		else {
 			sma.Location.x = 100;
@@ -186,8 +184,13 @@ void Scene::Update(float elapsed)
 			sma.State = PStateName::Move;
 		}
 		smt = StateMsgType::PlayerLocation;
+
 		m_WriteStream->Write(smt);
 		m_WriteStream->Write(sma);
+
+		// 플레이어의 스킬 오브젝트 정	보
+		if(m_pPlayer != NULL)
+			m_pPlayer->CreateSOLMsg(m_iClientNum, m_WriteStream);
 
 		m_WriteStream->Send();
 		SetEvent(*m_pWriteEvent);

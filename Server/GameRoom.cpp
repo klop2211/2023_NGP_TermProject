@@ -540,7 +540,7 @@ void GameRoom::ReadUseCard(StateMsgArgu* SMA)
 		UCSM->Type
 	);
 
-	//WriteUseCard(*UCSM, ClientNum);
+	WriteUseCard(*UCSM, ClientNum);
 }
 
 void GameRoom::CheckMonsterChangeState(CommonMonster* monster, MonsterType MT, int SN)

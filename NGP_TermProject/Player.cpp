@@ -574,9 +574,10 @@ void Player::MakeCard(int randomValue)
 	m_pCard[m_iCardCount++] = temp1;
 }
 
-void Player::AddSkillObject(const SkillObject& skillObject)
+
+void Player::AddSkillObject(const ObjectType& type)
 {
-	m_lSkillObjects.emplace_back(skillObject.GetObjectType(), this);
+	m_lSkillObjects.emplace_back(type, this);
 }
 
 UseCardStateMsg* Player::CreateUseCardStateMsg(int clientNum)

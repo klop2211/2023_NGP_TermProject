@@ -39,7 +39,8 @@ public:
 	void PlusUltimate();
 	void MakeCard(int randomValue);
 	int	ActivatedTripordNumber(CardName cardName, int num) { return m_ppTripord[(int)cardName][num]; }
-	void AddSkillObject(const SkillObject& skillObject);
+	void AddSkillObject(const ObjectType& type);
+
 	bool IsSkillMsg() { return m_bSkillCheck; }
 	UseCardStateMsg* CreateUseCardStateMsg(int clientNum);
 	void CreateSOLMsg(int clientNum, MemoryWriteStream* mws);
