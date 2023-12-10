@@ -34,6 +34,8 @@ Player::Player()
 	m_bOnemore = false;
 	m_iMoney = 0;
 
+	m_bSkillCheck = false;
+
 	m_iExperience = 0;
 	for (int i = 0; i < 10; i++)
 	{

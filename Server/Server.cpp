@@ -2,8 +2,8 @@
 #include "Common.h"
 #include "GameRoom.h"
 #include "StateMessage.h"
-#include "MemoryReadStream.h"
-#include "MemoryWriteStream.h"
+#include "../MemStream/MemoryReadStream.h"
+#include "../MemStream/MemoryWriteStream.h"
 
 // 최대 방 개수만큼 이벤트 생성
 array<Events, MAX_ROOMS> events;

@@ -9,7 +9,7 @@
 #include "Bone.h"
 
 #include "PlayerInfo.h"
-#include "MemoryWriteStream.h"
+#include "../MemStream/MemoryWriteStream.h"
 
 #include <algorithm>
 

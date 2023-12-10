@@ -170,7 +170,8 @@ void Scene::Update(float elapsed)
 				smt = StateMsgType::UseCard;
 				UseCardStateMsg* usm = m_pPlayer->CreateUseCardStateMsg(m_iClientNum);
 				m_WriteStream->Write(smt);
-				m_WriteStream->Write(usm);
+				m_WriteStream->Write(*usm);
+				delete usm;
 			}
 			// 플레이어의 스킬 오브젝트 정	보
 			{
@@ -711,7 +712,7 @@ void Scene::SetWndAndInstance(HWND hWnd, HINSTANCE& Inst)
 DWORD WINAPI Scene::ReceiveThread(LPVOID arg)
 {
 	int retval;
-	char* SERVERIP = (char*)"1.242.205.234";
+	char* SERVERIP = (char*)"127.0.0.1";
 
 
 	// 소켓 생성

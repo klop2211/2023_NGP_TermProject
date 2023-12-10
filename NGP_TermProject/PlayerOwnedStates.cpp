@@ -106,8 +106,8 @@ void PSkill::Enter(Player* player)
 	int tripordNum = 0;
 	int dx, dy;
 	CardName test = TEST_CARDNAME;
-	// switch(player->GetCurrentCardName())
-	switch (test)
+	switch(player->GetCurrentCardName())
+	//switch (test)
 	{
 	case CardName::N_cjdfydwls: // 청룡진
 		if (player->GetDir() == Left)
@@ -498,7 +498,8 @@ void PSkill::Enter(Player* player)
 
 void PSkill::Execute(Player* player, float elapsed)
 {
-	CardName test = TEST_CARDNAME;
+
+	CardName test = player->GetCurrentCardName();
 	int tripordNum = 0;
 	if (test == CardName::N_dmsgkdbtjdxks) {
 		if (player->GetFrameIndex() < 4) {
@@ -546,7 +547,8 @@ void PSkill::Exit(Player* player)
 	int dx, dy;
 	int speed;
 	CardName test = TEST_CARDNAME;
-	switch (test)
+	switch (player->GetCurrentCardName())
+	//switch (test)
 	{
 	case CardName::N_cjdfydwls:
 		tripordNum = player->ActivatedTripordNumber(CardName::N_cjdfydwls, 1); // 청룡진 2트포 체크
