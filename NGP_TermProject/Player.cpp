@@ -248,7 +248,12 @@ void Player::OnProcessingKeyboardMessage(HWND hWnd, UINT message, WPARAM wParam,
 		{
 		case 'e':
 		case 'E':
-			//TODO 각성기 발동
+			if (m_iUltimate >= 100) {
+				m_CurrentCardName = CardName::N_dmsgkdbtjdxks;
+				ChangeState(PSkill::Instance());
+				m_iUltimate = 0;
+			}
+
 			break;
 		case 'd':
 		case 'D':
@@ -270,8 +275,6 @@ void Player::OnProcessingKeyboardMessage(HWND hWnd, UINT message, WPARAM wParam,
 
 		case 't':
 		case 'T':
-
-
 			ChangeState(PSkill::Instance());
 			break;
 		default:

@@ -14,7 +14,7 @@
 
 #include "Shop.h"
 
-//#define MULTI_PLAY
+#define MULTI_PLAY
 
 SOCKET*			Scene::m_pSock;
 HANDLE*			Scene::m_pReadEvent;
@@ -188,11 +188,6 @@ void Scene::Update(float elapsed)
 		smt = StateMsgType::PlayerLocation;
 		m_WriteStream->Write(smt);
 		m_WriteStream->Write(sma);
-
-
-
-
-
 
 		m_WriteStream->Send();
 		SetEvent(*m_pWriteEvent);
@@ -719,7 +714,7 @@ void Scene::SetWndAndInstance(HWND hWnd, HINSTANCE& Inst)
 DWORD WINAPI Scene::ReceiveThread(LPVOID arg)
 {
 	int retval;
-	char* SERVERIP = (char*)"127.0.0.1";
+	char* SERVERIP = (char*)"1.242.205.234";
 
 
 	// 家南 积己

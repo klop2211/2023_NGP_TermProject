@@ -77,7 +77,7 @@ public:
 		m_Location.x = point.x;
 		m_Location.y = point.y;
 	}
-	void SetSkillCheck(const bool b) { m_bIsClick = b; }
+	void SetSkillCheck(const bool b) { m_bSkillCheck = b; }
 	void SetCurrentCardName() { m_CurrentCardName = GetUseCardName(); }
 	void SetCurrentCardName(CardName cn) { m_CurrentCardName = cn; }
 	void SetRectByLocation() {

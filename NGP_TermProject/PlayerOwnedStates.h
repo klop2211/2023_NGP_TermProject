@@ -85,6 +85,7 @@ private:
     PSkill& operator=(const PSkill&);
 
     bool m_bOnemore = false;
+    bool m_bUlti = false;
 
 public:
 

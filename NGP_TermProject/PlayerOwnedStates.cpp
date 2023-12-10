@@ -324,7 +324,7 @@ void PSkill::Enter(Player* player)
 			player->SetImg(L"./\\윈플 텀프 이미지\\창술사_은하유성탄_이펙트(left).png");
 		else
 			player->SetImg(L"./\\윈플 텀프 이미지\\창술사_은하유성탄_이펙트.png");
-
+		m_bUlti = true;
 		player->SetDamage(20);
 		player->SetStunDamage(40);
 		player->SetDestruction(2);
@@ -500,6 +500,10 @@ void PSkill::Execute(Player* player, float elapsed)
 		if (player->GetFrameIndex() < 4) {
 			player->SetLocation(POINT{ (int)player->GetLocation().x, (int)(player->GetLocation().y + -300 * elapsed) });
 		}
+		if (player->GetFrameIndex() == 7 && m_bUlti) {
+			m_bUlti = false;
+			player->AddSkillObject(SkillObject{ Ulti_Spear, player });
+		}
 		if (9 <= player->GetFrameIndex()) {
 			player->SetLocation(POINT{ (int)player->GetLocation().x, (int)(player->GetLocation().y + 430 * elapsed) });
 		}
@@ -585,7 +589,7 @@ void PSkill::Exit(Player* player)
 
 			player->AddSkillObject(SkillObject{ Airborne_Spear3, player });
 		}
-	case CardName::N_dmsgkdbtjdxks:
+	case CardName::N_dmsgkdbtjdxks: // 은하유성탄
 		player->SetLocation(POINT{ (int)player->GetLocation().x, GROUNDYPOINT - 100 });
 		break;
 	case CardName::N_wjrfydvh: // 적룡포

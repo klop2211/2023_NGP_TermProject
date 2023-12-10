@@ -176,6 +176,19 @@ SkillObject::SkillObject(const ObjectType objectType, Player* owner)
 			m_Speed = POINT{ 400, 0 };
 		}
 		m_iRectSize = 150;
+		break;
+	case Ulti_Spear:
+		if (m_pOwner->GetDir() == Left) {
+			SetImg(L"./\\윈플 텀프 이미지\\은하유성탄_낙하하는창(left).png");
+			m_Speed = POINT{ -400, 400 };
+		}
+		else {
+			SetImg(L"./\\윈플 텀프 이미지\\은하유성탄_낙하하는창.png");
+			m_Speed = POINT{ 400, 400 };
+		}
+		m_iRectSize = 150;
+		break;
+	case Ulti_Explosion:
 
 		break;
 	default:
