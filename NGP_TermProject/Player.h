@@ -122,6 +122,8 @@ private:
 	int			m_iLevel;			// 레벨
 	int			m_iMoney;			// 가진돈
 	bool		m_bOnemore;			// 스킬 한번더 사용?
+	float		m_fDrawTimer;		// 카드 뽑는 타이머
+	float		m_fManaTimer;		// 마나 회복 타이머
 
 	int			m_iExperience;			// 경험치
 	int			m_iExperienceBar[10];	// 현 레벨의 경험치 최대량

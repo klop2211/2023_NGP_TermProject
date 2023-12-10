@@ -14,7 +14,7 @@
 
 #include "Shop.h"
 
-#define MULTI_PLAY
+//#define MULTI_PLAY
 
 SOCKET*			Scene::m_pSock;
 HANDLE*			Scene::m_pReadEvent;
@@ -257,6 +257,10 @@ void Scene::Draw(HDC& memDc)
 	for (auto object : m_lObjectList) {
 		object->Draw(memDc);
 	}
+
+	if(m_pPlayer != NULL)
+		m_pPlayer->UiDraw(memDc);
+
 	for (const auto& w : m_WolfMap)
 	{
 		w.second->Draw(memDc);
@@ -585,8 +589,11 @@ void Scene::UpdateMonsterLocation(MonsterType MT, int SN, POINT Location)
 		}
 		else
 		{
-			Bone* bone = new Bone(MT, Location.x, Location.y);
-			m_BoneMap.insert({ SN, bone });
+			if (Location.x != -1 || Location.y != -1)
+			{
+				Bone* bone = new Bone(MT, Location.x, Location.y);
+				m_BoneMap.insert({ SN, bone });
+			}
 		}
 	}
 	break;
