@@ -28,8 +28,10 @@ Player::Player()
 	m_iCardCount = 0;
 	m_iHandCardCount = 0;
 	m_iDeadCardCount = 0;
-	m_iMaxMana = 0;
-	m_iManaCount = 0;
+
+	m_iMaxMana = 10;
+	m_iManaCount = 10;
+
 	m_iLevel = 0;
 	m_bOnemore = false;
 	m_iMoney = 0;
@@ -98,7 +100,16 @@ void Player::Update(float elapsed)
 		}
 	}
 
-
+	m_fDrawTimer += elapsed;
+	if (m_fDrawTimer >= 2.5f)
+	{
+		DrawCard();
+	}
+	m_fManaTimer += elapsed;
+	if (m_fManaTimer >= 1.f)
+	{
+		m_iManaCount = min(++m_iManaCount, m_iMaxMana);
+	}
 }
 
 void Player::Draw(HDC& memDc)
@@ -154,6 +165,17 @@ void Player::OnProcessingMouseMessage(HWND hWnd, UINT message, WPARAM wParam, LP
 		m_bIsClick = true;
 		m_iStartX = mx;
 		m_iStartY = my;
+
+
+		for (int i = 0; i < m_iHandCardCount; i++)
+		{
+			if (mx > m_pHandCard[i]->GetPoint().x && mx < m_pHandCard[i]->GetPoint().x + CARDMINIWIDTH\
+				&& my > m_pHandCard[i]->GetPoint().y && my < m_pHandCard[i]->GetPoint().y + CARDMINIHEIGHT)
+			{
+				m_iClickSelect = i;
+			}
+		}
+
 		break;
 	case WM_MOUSEMOVE:
 		// TODO: 카드를 집었을 때 커서 위치에 그 카드 위치하게
@@ -177,12 +199,12 @@ void Player::OnProcessingMouseMessage(HWND hWnd, UINT message, WPARAM wParam, LP
 				if (mx > m_pHandCard[i]->GetPoint().x && mx < m_pHandCard[i]->GetPoint().x + CARDMINIWIDTH\
 					&& my > m_pHandCard[i]->GetPoint().y && my < m_pHandCard[i]->GetPoint().y + CARDMINIHEIGHT)
 				{
-					if (m_bIsClick) {
-						m_iClickSelect = i;
-						if (m_pPrevCardPoint.x == -1)
-							m_pPrevCardPoint = m_pHandCard[i]->GetPoint();
-					}
-					else
+					//if (m_bIsClick) {
+					//	m_iClickSelect = i;
+					if (m_pPrevCardPoint.x == -1)
+						m_pPrevCardPoint = m_pHandCard[i]->GetPoint();
+					//}
+					//else
 						m_iSelectCard = i;
 					break;
 				}
