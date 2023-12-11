@@ -115,12 +115,15 @@ void Scene::Update(float elapsed)
 				if (temp->PlayerId != m_iClientNum && m_pPlayer2 != NULL) {
 					m_pPlayer2->SetLocation(temp->Location);
 					m_pPlayer2->SetDir((Direction)temp->Direction);
-					if (m_pPlayer2->GetStateName() != temp->State && m_pPlayer2->GetStateName() != PStateName::Skill)
-						m_pPlayer2->ChangeState(temp->State);
+					if (m_pPlayer2->GetStateName() != temp->State && m_pPlayer2->GetStateName() != PStateName::Skill) {
+						if(m_pPlayer2->GetStateTime() > 0.05f)
+							m_pPlayer2->ChangeState(temp->State);
+					}
 				}
 				if (temp->PlayerId == m_iClientNum && temp->State == PStateName::Stun) {
 					if (m_pPlayer->GetStateName() != temp->State)
-						m_pPlayer->ChangeState(temp->State);
+						if (m_pPlayer->GetStateTime() > 0.05f)
+							m_pPlayer->ChangeState(temp->State);
 				}
 			}
 				break;
@@ -529,14 +532,31 @@ void Scene::DrawEnding(HDC& memDc, GameOverMsg gom)
 	logoImg.Draw(memDc, logoRect);
 
 	POINT P1Position = { 400, 300 }, P2Position = { 1000, 300 };
-	CImage NumImg, PImg;
+	CImage NumImg[10], PImg;
+	NumImg[0].Load(L"./윈플 텀프 이미지/0 이미지.png");
+	NumImg[1].Load(L"./윈플 텀프 이미지/1 이미지.png");
+	NumImg[2].Load(L"./윈플 텀프 이미지/2 이미지.png");
+	NumImg[3].Load(L"./윈플 텀프 이미지/3 이미지.png");
+	NumImg[4].Load(L"./윈플 텀프 이미지/4 이미지.png");
+	NumImg[5].Load(L"./윈플 텀프 이미지/5 이미지.png");
+	NumImg[6].Load(L"./윈플 텀프 이미지/6 이미지.png");
+	NumImg[7].Load(L"./윈플 텀프 이미지/7 이미지.png");
+	NumImg[8].Load(L"./윈플 텀프 이미지/8 이미지.png");
+	NumImg[9].Load(L"./윈플 텀프 이미지/9 이미지.png");
+
+
 	PImg.Load(L"./윈플 텀프 이미지/P 이미지.png");
 
-	//PImg.Draw(memDc, RECT{ P1Position, 100, 100 });
+
+	PImg.Draw(memDc, P1Position.x + 100, P1Position.y, 100, 100);
+
+	PImg.Draw(memDc, P2Position.x, P2Position.y, 100, 100);
 
 
 	logoImg.Destroy();
 	PImg.Destroy();
+	for (int i = 0; i < 10; ++i)
+		NumImg[i].Destroy();
 }
 
 //===================Msg 읽어와 상태 적용하는 코드들===========================

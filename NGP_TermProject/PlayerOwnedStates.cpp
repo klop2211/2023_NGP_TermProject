@@ -15,6 +15,8 @@ PMove* PMove::Instance()
 
 void PMove::Enter(Player* player)
 {
+	player->SetStateTime(0.f);
+
 	if (player->GetDir() == Right) {
 		player->SetImg(L"./윈플 텀프 이미지/창술사_move.png");
 	}
@@ -45,6 +47,8 @@ PStay* PStay::Instance()
 
 void PStay::Enter(Player* player)
 {
+	player->SetStateTime(0.f);
+
 	if (player->GetDir() == Right) {
 		player->SetImg(L"./윈플 텀프 이미지/창술사.png");
 	}
@@ -73,6 +77,8 @@ PStun* PStun::Instance()
 
 void PStun::Enter(Player* player)
 {
+	player->SetStateTime(0.f);
+
 	if (player->GetDir() == Right) {
 		player->SetImg(L"./윈플 텀프 이미지/창술사_스턴.png");
 	}
@@ -108,6 +114,8 @@ PSkill* PSkill::Instance()
 
 void PSkill::Enter(Player* player)
 {
+	player->SetStateTime(0.f);
+
 	int tripordNum = 0;
 	int dx, dy;
 	CardName test = TEST_CARDNAME;

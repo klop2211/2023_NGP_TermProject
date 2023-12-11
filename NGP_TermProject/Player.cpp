@@ -17,6 +17,9 @@ Player::Player()
 	m_Location.y = GROUNDYPOINT - PLAYER_SIZE;
 	m_iSpeed = 0;
 	m_fFrameTime = 0.f;
+
+	m_fStateTime = 0.f;
+
 	SetRect(RECT{ 100, 100, 100 + PLAYER_SIZE, 100 + PLAYER_SIZE });
 
 	m_pUltiImg = new CImage;	m_pUltiImg->Load(TEXT("카드관련//스킬초상화//각성기.png"));
@@ -69,6 +72,8 @@ Player::~Player()
 void Player::Update(float elapsed)
 {
 	m_pStateMachine->Update(elapsed);
+
+	m_fStateTime += elapsed;
 
 	// 이동
 	if (m_dDir == Right)

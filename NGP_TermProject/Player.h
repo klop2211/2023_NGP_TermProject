@@ -66,6 +66,7 @@ public:
 	int GetCardCount() const { return m_iCardCount; }
 	int(*GetTripord())[4] {return m_ppTripord; }
 	int GetMoney() { return m_iMoney; }
+	float GetStateTime() { return m_fStateTime; }
 	
 	void SetDir(Direction dir) { m_dDir = dir; }
 	void SetImg(const TCHAR* str);
@@ -89,6 +90,7 @@ public:
 		m_rRect.right = (int)m_Location.x + PLAYER_SIZE;
 		m_rRect.bottom = (int)m_Location.y + PLAYER_SIZE;
 	}
+	void SetStateTime(const float time) { m_fStateTime = time; }
 
 private:
 	Direction	m_dDir;			// 방향
@@ -106,6 +108,8 @@ private:
 	int			m_iFrameMax;	// 스프라이트 이미지의 프레임 수
 	int			m_iFrameIdx;	// 현재 스프라이트 이미지의 프레임 번호
 	float		m_fFrameTime;	// 현재 스프라이트가 사용된 시간
+
+	float		m_fStateTime;	// 현재 상태에 들어오고 지난 시간
 
 	CardName	m_CurrentCardName; // 현재 사용중인 카드 이름
 
