@@ -116,6 +116,7 @@ struct ClientInfo
 	WORD KillPapyrus;
 	int ClientState;
 };
+
 // 서버->클라
 struct GameOverMsg : StateMsgArgu
 {

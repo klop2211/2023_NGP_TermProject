@@ -146,7 +146,13 @@ void Scene::Update(float elapsed)
 				MonsterKillMsg* temp = (MonsterKillMsg*)SMI.pStateMsgArgu;
 				UpdateMonsterKill(temp->PlayerId, temp->type);
 			}
-			break;
+				break;
+			case StateMsgType::GameOver:
+			{
+				GameOverMsg* temp = (GameOverMsg*)SMI.pStateMsgArgu;
+
+			}
+				break;
 			default:
 
 				break;

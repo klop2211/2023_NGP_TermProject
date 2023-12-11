@@ -600,9 +600,12 @@ void Player::CreateSOLMsg(int clientNum, MemoryWriteStream* mws)
 			auto temp = p;
 			++p;
 			m_lSkillObjects.erase(temp);
-			if (p == m_lSkillObjects.end())
-				break;
 			sol.Location = POINT{ 0,0 };
+			if (p == m_lSkillObjects.end()) {
+				mws->Write(smt);
+				mws->Write(sol);
+				break;
+			}
 		}
 		mws->Write(smt);
 		mws->Write(sol);
