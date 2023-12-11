@@ -84,6 +84,10 @@ StateMsgArgu* MemoryReadStream::GetStateMsg(StateMsgType smt, int& size)
 	case StateMsgType::BossHp:
 		size = sizeof(BossHpMsg);
 		return new BossHpMsg();
+
+	case StateMsgType::GameOver:
+		size = sizeof(GameOverMsg);
+		return new GameOverMsg();
 	default:
 		std::cout << "MemoryReadStream::GetStateMsg Err\n";
 		return nullptr;

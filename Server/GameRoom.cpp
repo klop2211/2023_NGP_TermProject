@@ -18,7 +18,7 @@
 GameRoom::GameRoom(array<SOCKET, MAX_CLIENTS>& ClientSocket) :
 	m_iWolfSN(0),
 	m_iBatSN(0),
-	m_iPhase(GameRoom::WolfPhase),
+	m_iPhase(GameRoom::BossPhase),
 	m_Papyrus(nullptr),
 	m_bIsOver(NotYet),
 	m_fPhaseInitTimer(15.f),
