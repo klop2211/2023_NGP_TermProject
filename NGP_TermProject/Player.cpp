@@ -93,13 +93,6 @@ void Player::Update(float elapsed)
 
 	for (auto p = m_lSkillObjects.begin(); p != m_lSkillObjects.end(); ++p) {
 		p->Update(elapsed);
-		if (!p->GetLife()) {
-			auto temp = p;
-			++p;
-			m_lSkillObjects.erase(temp);
-			if (p == m_lSkillObjects.end())
-				break;
-		}
 	}	
 
 	// 카드를 다쓰면 덱 초기화
@@ -598,11 +591,19 @@ void Player::CreateSOLMsg(int clientNum, MemoryWriteStream* mws)
 {
 	StateMsgType smt = StateMsgType::SkillObjectLocation;
 	SkillObjectLocationMsg sol;
-	for (auto& obj : m_lSkillObjects) {
+	for (auto p = m_lSkillObjects.begin(); p != m_lSkillObjects.end(); ++p) {
 		sol.PlayerId = clientNum;
-		sol.ObjectType = obj.GetObjectType();
-		sol.Location = POINT{ (int)obj.GetLocation().x, (int)obj.GetLocation().y };
-		sol.Size = obj.GetRect().right - obj.GetRect().left;
+		sol.ObjectType = p->GetObjectType();
+		sol.Location = POINT{ (int)p->GetLocation().x, (int)p->GetLocation().y };
+		sol.Size = p->GetRect().right - p->GetRect().left;
+		if (!p->GetLife()) {
+			auto temp = p;
+			++p;
+			m_lSkillObjects.erase(temp);
+			if (p == m_lSkillObjects.end())
+				break;
+			sol.Location = POINT{ 0,0 };
+		}
 		mws->Write(smt);
 		mws->Write(sol);
 	}
