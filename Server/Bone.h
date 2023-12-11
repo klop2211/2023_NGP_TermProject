@@ -18,15 +18,11 @@ public:
 
 public:
 	float GetLifeTimer() { return m_fLifeTimer; }
-	float GetCanDie() { return m_bCanDie; }
-
-	void SetCanDie(bool die) { m_bCanDie = die; }
 
 private:
 	BoneType m_BoneType;
 	int m_iRandValue;
 	bool m_bCanDown; 
-	bool m_bCanDie;
 
 	float m_fLifeTimer;
 	float m_fXLocation;

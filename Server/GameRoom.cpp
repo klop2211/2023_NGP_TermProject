@@ -8,6 +8,7 @@
 #include "Castle.h"
 #include "Bone.h"
 #include "../NGP_TermProject/SkillObject.h"
+#include "SkillObject.h"
 
 #include "PlayerInfo.h"
 #include "../MemStream/MemoryWriteStream.h"
@@ -60,10 +61,13 @@ void GameRoom::Update(array<queue<StateMsgInfo>, MAX_CLIENTS>& StateMsg)
 
 	SetElapsedTime();
 	UpdateUseStateMsg(StateMsg);
-	WritePlayerLocation();
 	SpawnEnemy();
 	UpdateEnemy();
 	DoCollisionCheck();
+
+	WritePlayerLocation();
+	
+	DoGarbageCollector();
 
 	m_pStream->Send();
 }
@@ -155,6 +159,28 @@ void GameRoom::UpdateEnemy()
 	}
 }
 
+void GameRoom::DoGarbageCollector()
+{
+	for (auto it = m_WolfMap.begin(); it != m_WolfMap.end();) {
+		if (it->second->GetCanDie())
+		{ // 특정 조건에 따라 요소를 삭제하고자 할 때
+			it = m_WolfMap.erase(it);
+		}
+		else {
+			++it;
+		}
+	}
+	for (auto it = m_BatMap.begin(); it != m_BatMap.end();) {
+		if (it->second->GetCanDie())
+		{ // 특정 조건에 따라 요소를 삭제하고자 할 때
+			it = m_BatMap.erase(it);
+		}
+		else {
+			++it;
+		}
+	}
+}
+
 bool GameRoom::IsCollision(const RECT& a, const RECT& b)
 {
 	if (a.left > b.right) return false;
@@ -203,15 +229,14 @@ void GameRoom::IsCollisionMonsterWithPlayer(PlayerInfo* p)
 				0, 0, 0,
 				p->GetType());
 
+			CollisionList.push_back(SN);
 			WriteMonsterHp(MonsterType::Bat, SN, bat->GetCurrentHp());
 
 			if (IsDead)
 			{
 				p->AddKillCount(MonsterType::Bat);
-				WriteMonsterKill(MonsterType::Bat, p);
-
-				delete bat;
-				m_BatMap.erase(SN);
+				WriteMonsterKill(MonsterType::Bat, SN, p);
+				bat->SetCanDie(true);
 			}
 		}
 	}
@@ -229,15 +254,14 @@ void GameRoom::IsCollisionMonsterWithPlayer(PlayerInfo* p)
 				0, 0, 0,
 				p->GetType());
 
+			CollisionList.push_back(SN);
 			WriteMonsterHp(MonsterType::Wolf, SN, wolf->GetCurrentHp());
 
 			if (IsDead)
 			{
 				p->AddKillCount(MonsterType::Wolf);
-				WriteMonsterKill(MonsterType::Wolf, p);
-
-				delete wolf;
-				m_WolfMap.erase(SN);
+				WriteMonsterKill(MonsterType::Wolf, SN, p);
+				wolf->SetCanDie(true);
 			}
 		}
 	}
@@ -256,6 +280,7 @@ void GameRoom::IsCollisionMonsterWithPlayer(PlayerInfo* p)
 				p->GetNamedDamage(),
 				p->GetType());
 
+			CollisionList.push_back(0);
 			WriteBossHp();
 
 			if (IsDead)
@@ -282,7 +307,7 @@ void GameRoom::IsCollisionBoneWithPlayer(PlayerInfo* player)
 		if (bone[i] && IsCollision(player->GetBB(), bone[i]->GetBoundingBox()))
 		{
 			//TODO: 플레이어 스턴
-
+			player->SetState(PStateName::Stun);
 			bone[i]->SetCanDie(true);
 		}
 	}
@@ -293,12 +318,58 @@ void GameRoom::IsCollisionBoneWithPlayer(PlayerInfo* player)
 		if (bone[i] && IsCollision(player->GetBB(), bone[i]->GetBoundingBox()))
 		{
 			//TODO: 플레이어 스턴
-
+			player->SetState(PStateName::Stun);
 			bone[i]->SetCanDie(true);
 		}
 	}
 
 	WriteBones();
+}
+
+void GameRoom::CollisionSkillObject()
+{
+	for (auto& SkillObject : m_SkillObject )
+	{
+		SkillObjectInfo* SOI = SkillObject.second;
+
+		for (const auto& it : m_WolfMap)
+		{
+			int SN = it.first;
+			Wolf* wolf = it.second;
+			std::vector<int> CollisionList = SOI->GetCollisionList((int)MonsterType::Wolf);
+
+			if (std::find(CollisionList.begin(), CollisionList.end(), SN) == CollisionList.end()
+				&& IsCollision(SOI->GetBoundingBox(), wolf->GetBoundingBox()))
+			{
+				CollisionList.push_back(SN);
+				DamageToMonsterUsingSkillObject(SOI, wolf);
+			}
+		}
+		for (const auto& it : m_BatMap)
+		{
+			int SN = it.first;
+			Bat* bat = it.second;
+			std::vector<int> CollisionList = SOI->GetCollisionList((int)MonsterType::Bat);
+
+			if (std::find(CollisionList.begin(), CollisionList.end(), SN) == CollisionList.end()
+				&& IsCollision(SOI->GetBoundingBox(), bat->GetBoundingBox()))
+			{
+				CollisionList.push_back(SN);
+				DamageToMonsterUsingSkillObject(SOI, bat);
+			}
+		}
+		if (m_Papyrus)
+		{
+			std::vector<int> CollisionList = SOI->GetCollisionList((int)MonsterType::Papyrus);
+
+			if (std::find(CollisionList.begin(), CollisionList.end(), 0) == CollisionList.end()
+				&& IsCollision(SOI->GetBoundingBox(), m_Papyrus->GetBoundingBox()))
+			{
+				CollisionList.push_back(0);
+				DamageToMonsterUsingSkillObject(SOI, m_Papyrus);
+			}
+		}
+	}
 }
 
 void GameRoom::DoCollisionCheck()
@@ -313,51 +384,10 @@ void GameRoom::DoCollisionCheck()
 	IsCollisionMonsterWithCastle();
 }
 
-void GameRoom::CollisionSkillObject()
+void GameRoom::DamageToMonsterUsingSkillObject(SkillObjectInfo* SOI, Monster* monster)
 {
-	for (auto& SkillObject : m_SkillObject )
-	{	
-		for (const auto& it : m_WolfMap)
-		{
-			int SN = it.first;
-			Wolf* wolf = it.second;
-			std::vector<int> CollisionList = SkillObject.GetCollisionList((int)MonsterType::Wolf);
-
-			if (std::find(CollisionList.begin(), CollisionList.end(), SN) == CollisionList.end()
-				&& IsCollision(SkillObject.GetBoundingBox(), wolf->GetBoundingBox()))
-			{
-				DamageToMonsterUsingSkillObject(SkillObject, wolf);
-			}
-		}
-		for (const auto& it : m_BatMap)
-		{
-			int SN = it.first;
-			Bat* bat = it.second;
-			std::vector<int> CollisionList = SkillObject.GetCollisionList((int)MonsterType::Bat);
-
-			if (std::find(CollisionList.begin(), CollisionList.end(), SN) == CollisionList.end()
-				&& IsCollision(SkillObject.GetBoundingBox(), bat->GetBoundingBox()))
-			{
-				DamageToMonsterUsingSkillObject(SkillObject, bat);
-			}
-		}
-		if (m_Papyrus)
-		{
-			std::vector<int> CollisionList = SkillObject.GetCollisionList((int)MonsterType::Papyrus);
-
-			if (std::find(CollisionList.begin(), CollisionList.end(), 0) == CollisionList.end()
-				&& IsCollision(SkillObject.GetBoundingBox(), m_Papyrus->GetBoundingBox()))
-			{
-				DamageToMonsterUsingSkillObject(SkillObject, m_Papyrus);
-			}
-		}
-	}
-}
-
-void GameRoom::DamageToMonsterUsingSkillObject(SkillObjectInfo SOI, Monster* monster)
-{
-	PlayerInfo* OwnedPlayer = m_pPlayerList[SOI.GetOwnedClientNum()];
-	switch (SOI.GetObjectType())
+	PlayerInfo* OwnedPlayer = m_pPlayerList[SOI->GetOwnedClientNum()];
+	switch (SOI->GetObjectType())
 	{
 		// OVERLAP
 	case Drop_Spear:
@@ -608,10 +638,11 @@ void GameRoom::WriteBones()
 	}
 }
 
-void GameRoom::WriteMonsterKill(MonsterType MT, PlayerInfo* player)
+void GameRoom::WriteMonsterKill(MonsterType MT, BYTE Serial, PlayerInfo* player)
 {
 	MonsterKillMsg MKM;
 	MKM.PlayerId = player->GetPlayerNum();
+	MKM.SerialId = Serial;
 	MKM.type = MT;
 
 	m_pStream->Write(StateMsgType::MonsterKill);
@@ -648,7 +679,7 @@ void GameRoom::ReadPlayerLocation(StateMsgArgu* SMA)
 
 	// 충돌처리 off
 	//m_pPlayerList[ClientNum]->SetShouldCollisionCheck(false);
-	m_pPlayerList[ClientNum]->SetAllCardProperty(0, 0, 0, 0, 0);
+	//m_pPlayerList[ClientNum]->SetAllCardProperty(0, 0, 0, 0, 0);
 }
 
 void GameRoom::ReadUseCard(StateMsgArgu* SMA)
@@ -677,8 +708,24 @@ void GameRoom::ReadUseCard(StateMsgArgu* SMA)
 
 void GameRoom::ReadSkillObjectLocation(StateMsgArgu* SMA)
 {
+	// SkillOBject의 일련번호는 Player번호 * 100 + (int)ObjectType으로 할 예정
 	SkillObjectLocationMsg* SOLM = (SkillObjectLocationMsg*)SMA;
-	m_SkillObject.emplace_back(SOLM->PlayerId, (ObjectType)SOLM->ObjectType, SOLM->Location, SOLM->Size);
+	int SerialNum = SOLM->PlayerId * 100 + SOLM->ObjectType;
+
+	if (SOLM->Location.x == 0 && SOLM->Location.y == 0)
+	{
+		delete m_SkillObject[SerialNum];
+		m_SkillObject.erase(SerialNum);
+	}
+	else if(m_SkillObject.find(SerialNum) == m_SkillObject.end())
+	{
+		SkillObjectInfo* SOI = new SkillObjectInfo(SOLM->PlayerId, (ObjectType)SOLM->ObjectType, SOLM->Location, SOLM->Size);
+		m_SkillObject.insert({ SerialNum, SOI });
+	}
+	else
+	{
+		m_SkillObject[SerialNum]->SetLocation(FPOINT(SOLM->Location.x, SOLM->Location.y));
+	}
 }
 
 void GameRoom::CheckMonsterChangeState(CommonMonster* monster, MonsterType MT, int SN)

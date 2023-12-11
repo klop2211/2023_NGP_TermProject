@@ -147,7 +147,7 @@ void Scene::Update(float elapsed)
 			case StateMsgType::MonsterKill:
 			{
 				MonsterKillMsg* temp = (MonsterKillMsg*)SMI.pStateMsgArgu;
-				UpdateMonsterKill(temp->PlayerId, temp->type);
+				UpdateMonsterKill(temp->PlayerId, temp->SerialId, temp->type);
 			}
 				break;
 			case StateMsgType::GameOver:
@@ -664,7 +664,7 @@ void Scene::UpdateBossState(BossStateType BST)
 	m_Papyrus->SetStatus(BST);
 }
 
-void Scene::UpdateMonsterKill(int Id, MonsterType MT)
+void Scene::UpdateMonsterKill(int Id, int MonsterId, MonsterType MT)
 {
 	if (Id == m_iClientNum)
 	{
@@ -675,6 +675,9 @@ void Scene::UpdateMonsterKill(int Id, MonsterType MT)
 			Wolf w;
 			m_pPlayer->AddMoney(w.GetMoney());
 			m_pPlayer->AddExp(w.GetExperi());
+
+			delete m_WolfMap[MonsterId];
+			m_WolfMap.erase(MonsterId);
 		}
 			break;
 		case MonsterType::Bat:
@@ -682,6 +685,9 @@ void Scene::UpdateMonsterKill(int Id, MonsterType MT)
 			Bat b;
 			m_pPlayer->AddMoney(b.GetMoney());
 			m_pPlayer->AddExp(b.GetExperi());
+
+			delete m_BatMap[MonsterId];
+			m_BatMap.erase(MonsterId);
 		}
 			break;
 		default:

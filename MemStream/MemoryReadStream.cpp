@@ -73,6 +73,10 @@ StateMsgArgu* MemoryReadStream::GetStateMsg(StateMsgType smt, int& size)
 		size = sizeof(BossStateMsg);
 		return new BossStateMsg();
 
+	case StateMsgType::MonsterKill:
+		size = sizeof(MonsterKillMsg);
+		return new MonsterKillMsg();
+
 	case StateMsgType::SkillObjectLocation:
 		size = sizeof(SkillObjectLocationMsg);
 		return new SkillObjectLocationMsg();

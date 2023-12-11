@@ -4,11 +4,12 @@
 #include <map>
 #include <list>
 #include "StateMessage.h"
-#include "SkillObject.h"
 
 class PlayerInfo;
 class Papyrus;
 class CommonMonster;
+class SkillObjectInfo;
+class Monster;
 
 class GameRoom
 {
@@ -27,6 +28,7 @@ public:
 	void UpdateEnemy();
 
 	//void ProcessMonsterHpMsg(StateMsgArgu* Arg);
+	void DoGarbageCollector();
 
 	// COllision Fuction
 	bool IsCollision(const RECT& a, const RECT& b);
@@ -35,7 +37,7 @@ public:
 	void IsCollisionBoneWithPlayer(PlayerInfo*);
 	void DoCollisionCheck();
 	void CollisionSkillObject();
-	void DamageToMonsterUsingSkillObject(SkillObjectInfo, Monster*);
+	void DamageToMonsterUsingSkillObject(SkillObjectInfo*, Monster*);
 
 	// 송수신 관련 함수
 	void WriteMonsterLocation(MonsterType, BYTE, POINT location = {0, 0});
@@ -46,7 +48,7 @@ public:
 	void WriteBossHp();
 	void WriteBossState(BossStateType);
 	void WriteBones();
-	void WriteMonsterKill(MonsterType MT, PlayerInfo* player);
+	void WriteMonsterKill(MonsterType MT, BYTE Serial, PlayerInfo* player);
 	void WriteUseCard(UseCardStateMsg UCSM, int ClientNum);
 
 	void ReadPlayerLocation(StateMsgArgu*);
@@ -70,7 +72,8 @@ private:
 	std::map<int, class Bat*> m_BatMap;
 	std::map<int, class Wolf*> m_WolfMap;
 	class Papyrus* m_Papyrus;
-	std::list<SkillObjectInfo> m_SkillObject;
+
+	std::map<int, SkillObjectInfo*> m_SkillObject;
 
 	// 플레이어 리스트
 	std::array<class PlayerInfo* , MAX_CLIENTS> m_pPlayerList;

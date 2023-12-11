@@ -29,6 +29,8 @@ public:
 	POINT GetSize()			{ return m_Size; };
 
 	MonsterType GetMonsterType() { return MonsterType::END; };
+	float GetCanDie() { return m_bCanDie; }
+
 
 	void SetMaxHp(int hp)				{ m_iMaxHp = hp; }
 	void SetCurrentHp(int hp)			{ m_iCurrentHp = hp; }
@@ -41,6 +43,7 @@ public:
 
 	void SetLocation(FPOINT Location)	{ m_Location = Location; }
 	void SetSize(POINT Size)			{ m_Size = Size; }
+	void SetCanDie(bool die) { m_bCanDie = die; }
 
 	void MinusElapsedTime(float time)	{ m_fAttackTimer -= time; }
 	void InitAttackCoolTime()			{ m_fAttackTimer = m_fAttackCoolTime; }
@@ -56,6 +59,7 @@ protected:
 
 	bool	m_bCanAttack;
 	bool	m_bChangedState;
+	bool	m_bCanDie;
 
 	float	m_fAttackTimer;
 	float	m_fAttackCoolTime;

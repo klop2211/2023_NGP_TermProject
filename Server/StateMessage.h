@@ -127,6 +127,7 @@ struct GameOverMsg : StateMsgArgu
 struct MonsterKillMsg : StateMsgArgu
 {
 	BYTE PlayerId;
+	BYTE SerialId;
 	MonsterType type;
 };
 
