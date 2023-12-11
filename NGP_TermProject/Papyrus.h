@@ -29,7 +29,8 @@ public:
 	virtual CImage GetImg() const { return m_cImg; }
 
 	virtual void SetStatus(BossStateType MS);
-
+	void SetBreakCount(int count) { m_iBreakCount = count; };
+	void SetKnockDown(int count) { m_iKnockDown = count;};
 private:
 	CImage m_cImg, m_cBossHpBar;
 	static CImage m_cBoneImg;

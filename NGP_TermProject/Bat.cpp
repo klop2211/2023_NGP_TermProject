@@ -16,7 +16,7 @@ Bat::Bat()
 	// m_Location = { (float)m_rRect.left, (float)m_rRect.top };
 
 	//m_cImg = BatImg;
-	status = MonsterState::Move;
+	m_Status = MonsterState::Move;
 	m_iMaxHp = 10;
 	m_iCurrentHp = 10;
 	m_iDamage = 15, m_iExperi = 15;
@@ -30,17 +30,21 @@ Bat::Bat()
 void Bat::Draw(HDC& memdc)
 {
 	ImgDraw(memdc);
-	HpDraw(memdc);
+
+	if (m_Status != MonsterState::Die && m_Status != MonsterState::Dead)
+	{
+		HpDraw(memdc);
+	}
 }
 
 void Bat::ImgDraw(HDC& memdc)
 {
-	if (status != MonsterState::Die)
+	if (m_Status != MonsterState::Die)
 		m_cImg.Draw(memdc, m_rRect.left, m_rRect.top, m_Size.x, m_Size.y,
-			0 + m_pOffset.x * (m_iCount % m_iFrame), 0 + m_pOffset.y * (int)status, m_pOffset.x - 2, m_pOffset.y - 2);
+			0 + m_pOffset.x * (m_iCount % m_iFrame), 0 + m_pOffset.y * (int)m_Status, m_pOffset.x - 2, m_pOffset.y - 2);
 	else
 		m_cImg.AlphaBlend(memdc, m_rRect.left, m_rRect.top, m_Size.x, m_Size.y,
-			0 + m_pOffset.x * 5, 0 + m_pOffset.y * 1, m_pOffset.x - 2, m_pOffset.y - 2, 255 - m_iCount, AC_SRC_OVER);
+			0 + m_pOffset.x * 5, 0 + m_pOffset.y * 1, m_pOffset.x - 2, m_pOffset.y - 2, 255 - m_iCount * 8, AC_SRC_OVER);
 }
 
 void Bat::HpDraw(HDC& memdc)
@@ -55,12 +59,17 @@ void Bat::HpDraw(HDC& memdc)
 
 void Bat::SetStatus(MonsterState MS)
 {
-	status = MS;
+	m_Status = MS;
 	switch (MS)
 	{
 	case MonsterState::Move:
 		break;
 	case MonsterState::Dead:
+		if (m_iCount > m_iFrame)
+		{
+			SetStatus(MonsterState::Die);
+			m_iCount = 0;
+		}
 		break;
 	case MonsterState::Attack:
 		m_iCount = 0;
@@ -69,6 +78,7 @@ void Bat::SetStatus(MonsterState MS)
 	case MonsterState::Hit:
 		break;
 	case MonsterState::Die:
+		m_iCount = 0;
 		break;
 	default:
 		break;
@@ -83,7 +93,7 @@ void Bat::Update(float elapsed)
 		m_fWait = 0.f;
 		m_iCount++;
 	
-		switch (status)
+		switch (m_Status)
 		{
 		case MonsterState::Move:
 			break;
@@ -100,6 +110,10 @@ void Bat::Update(float elapsed)
 		case MonsterState::Hit:
 			break;
 		case MonsterState::Die:
+			if (m_iCount > 16)
+			{
+				m_bCanDie = true;
+			}
 				break;
 			default:
 				break;
@@ -162,12 +176,12 @@ void Bat::Update(float elapsed)
 
 bool Bat::Hit(int att)
 {
-	status = MonsterState::Hit;
+	m_Status = MonsterState::Hit;
 	m_iCount = 0, m_fWait = 0;
 	m_iCurrentHp -= att;
 	if (m_iCurrentHp <= 0) {
 		m_iCurrentHp = 0;
-		status = MonsterState::Dead;
+		m_Status = MonsterState::Dead;
 		m_iCount = 0, m_fWait = 0;
 		return true;
 	}

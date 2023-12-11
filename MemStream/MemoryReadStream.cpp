@@ -80,6 +80,10 @@ StateMsgArgu* MemoryReadStream::GetStateMsg(StateMsgType smt, int& size)
 	case StateMsgType::SkillObjectLocation:
 		size = sizeof(SkillObjectLocationMsg);
 		return new SkillObjectLocationMsg();
+
+	case StateMsgType::BossHp:
+		size = sizeof(BossHpMsg);
+		return new BossHpMsg();
 	default:
 		std::cout << "MemoryReadStream::GetStateMsg Err\n";
 		return nullptr;

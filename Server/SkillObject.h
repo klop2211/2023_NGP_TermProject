@@ -22,6 +22,7 @@ public:
 	int GetOwnedClientNum() { return m_iOwnerClientNum; }
 
 	std::vector<int>& GetCollisionList(int n) { return m_CollisionList[n]; }
+	void AddCollisionList(MonsterType MT, int n) { m_CollisionList[(int)MT].push_back(n); }
 
 private:
 	int m_iOwnerClientNum;

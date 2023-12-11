@@ -24,6 +24,7 @@ public:
 	void AddSerialNum(MonsterType MT, int SerialNum);
 	void InitCollisionList();
 	std::vector<int>& GetCollisionList(int n) { return m_CollisionList[n]; }
+	void AddCollisionList(MonsterType MT, int n) { m_CollisionList[(int)MT].push_back(n); }
 
 public:
 	FPOINT GetLocation() const				{ return m_PlayerLocation; }
@@ -41,8 +42,8 @@ public:
 	void SetState(PStateName name) { m_PlayerState = name; };
 	void SetDirection(BYTE direction) { m_PlayerDirection = direction; };
 	
-	//bool GetShouldCollisionCheck() const	{ return m_bShouldCollisionCheck; }
-	//void SetShouldCollisionCheck(bool ShouldCheck) { m_bShouldCollisionCheck = ShouldCheck; };
+	bool GetShouldCollisionCheck() const	{ return m_bShouldCollisionCheck; }
+	void SetShouldCollisionCheck(bool ShouldCheck) { m_bShouldCollisionCheck = ShouldCheck; };
 
 	void SetAllCardProperty(int Damage, int StunDamage, int Destuction, int NamedDamage, int Type);
 
@@ -60,7 +61,7 @@ private:
 	BYTE m_iDamage, m_iStunDamage, m_iDestuction, m_iNamedDamage, m_iType;
 
 	//카드를 사용 중이라 몬스터와 충돌처리를 해야하는지
-	// bool m_bShouldCollisionCheck;
+	bool m_bShouldCollisionCheck;
 
 	// 잡은 몬스터 수
 	array<WORD, 3> m_KillCount;

@@ -28,7 +28,7 @@ public:
 	FPOINT GetLocation()	{ return m_Location; }
 	POINT GetSize()			{ return m_Size; };
 
-	MonsterType GetMonsterType() { return MonsterType::END; };
+	virtual MonsterType GetMonsterType() { return MonsterType::END; };
 	float GetCanDie() { return m_bCanDie; }
 
 

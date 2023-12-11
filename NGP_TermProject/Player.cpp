@@ -37,6 +37,7 @@ Player::Player()
 
 	m_iLevel = 0;
 	m_bOnemore = false;
+	m_bLevelUp = false;
 	m_iMoney = 0;
 	m_fDrawTimer = 0.f;
 	m_fManaTimer = 0.f;
@@ -639,6 +640,29 @@ void Player::CreateSOLMsg(int clientNum, MemoryWriteStream* mws)
 CardName Player::GetUseCardName() const
 {
 	return m_pHandCard[m_iClickSelect]->GetCardName();
+}
+
+void Player::AddExp(int exp)
+{
+	if (exp + m_iExperience > m_iExperienceBar[m_iLevel]) {
+		m_iLevel++;
+		if (exp + m_iExperience - m_iExperienceBar[m_iLevel - 1] >= m_iExperienceBar[m_iLevel]) {
+			AddExp(exp + m_iExperience - m_iExperienceBar[m_iLevel - 1]);
+		}
+		else {
+			if (exp > m_iExperience)
+				m_iExperience = exp - m_iExperience;
+			else
+				m_iExperience = m_iExperience - exp;
+		}
+	}
+	else if (exp + m_iExperience == m_iExperienceBar[m_iLevel]) {
+		m_iExperience = 0;
+		m_iLevel++;
+	}
+	else {
+		m_iExperience += exp;
+	}
 }
 
 void Player::SetImg(const TCHAR* str)

@@ -21,9 +21,11 @@ GameRoom::GameRoom(array<SOCKET, MAX_CLIENTS>& ClientSocket) :
 	m_iPhase(GameRoom::WolfPhase),
 	m_Papyrus(nullptr),
 	m_bIsOver(NotYet),
-	m_fPhaseInitTimer(15.f)
+	m_fPhaseInitTimer(15.f),
+	m_fBatSpawnTimer(0.f),
+	m_fWolfSpawnTimer(-10.f)
 {
-	m_fPhaseChangeTimer = m_fPhaseInitTimer;
+	m_fPhaseChangeTimer = 30.f;
 	m_pCastle = new Castle();
 	m_pStream = new MemoryWriteStream(ClientSocket);
 	for (int i = 0; i < m_pPlayerList.size(); i++)
@@ -161,18 +163,20 @@ void GameRoom::UpdateEnemy()
 
 void GameRoom::DoGarbageCollector()
 {
-	for (auto it = m_WolfMap.begin(); it != m_WolfMap.end();) {
-		if (it->second->GetCanDie())
-		{ // 특정 조건에 따라 요소를 삭제하고자 할 때
+	for (auto it = m_WolfMap.begin(); it != m_WolfMap.end();)
+	{
+		if (it->second->GetCurrentHp() <= 0)
+		{
 			it = m_WolfMap.erase(it);
 		}
 		else {
 			++it;
 		}
 	}
-	for (auto it = m_BatMap.begin(); it != m_BatMap.end();) {
-		if (it->second->GetCanDie())
-		{ // 특정 조건에 따라 요소를 삭제하고자 할 때
+	for (auto it = m_BatMap.begin(); it != m_BatMap.end();)
+	{
+		if (it->second->GetCurrentHp() <= 0)
+		{
 			it = m_BatMap.erase(it);
 		}
 		else {
@@ -229,14 +233,17 @@ void GameRoom::IsCollisionMonsterWithPlayer(PlayerInfo* p)
 				0, 0, 0,
 				p->GetType());
 
-			CollisionList.push_back(SN);
-			WriteMonsterHp(MonsterType::Bat, SN, bat->GetCurrentHp());
+			p->AddCollisionList(MonsterType::Bat, SN);
 
 			if (IsDead)
 			{
 				p->AddKillCount(MonsterType::Bat);
 				WriteMonsterKill(MonsterType::Bat, SN, p);
 				bat->SetCanDie(true);
+			}
+			else
+			{
+				WriteMonsterHp(MonsterType::Bat, SN, bat->GetCurrentHp());
 			}
 		}
 	}
@@ -254,14 +261,18 @@ void GameRoom::IsCollisionMonsterWithPlayer(PlayerInfo* p)
 				0, 0, 0,
 				p->GetType());
 
-			CollisionList.push_back(SN);
-			WriteMonsterHp(MonsterType::Wolf, SN, wolf->GetCurrentHp());
+			p->AddCollisionList(MonsterType::Wolf, SN);
 
 			if (IsDead)
 			{
 				p->AddKillCount(MonsterType::Wolf);
 				WriteMonsterKill(MonsterType::Wolf, SN, p);
 				wolf->SetCanDie(true);
+			}
+			else
+			{
+				WriteMonsterHp(MonsterType::Wolf, SN, wolf->GetCurrentHp());
+
 			}
 		}
 	}
@@ -280,7 +291,7 @@ void GameRoom::IsCollisionMonsterWithPlayer(PlayerInfo* p)
 				p->GetNamedDamage(),
 				p->GetType());
 
-			CollisionList.push_back(0);
+			p->AddCollisionList(MonsterType::Papyrus, 0);
 			WriteBossHp();
 
 			if (IsDead)
@@ -322,8 +333,6 @@ void GameRoom::IsCollisionBoneWithPlayer(PlayerInfo* player)
 			bone[i]->SetCanDie(true);
 		}
 	}
-
-	WriteBones();
 }
 
 void GameRoom::CollisionSkillObject()
@@ -341,8 +350,8 @@ void GameRoom::CollisionSkillObject()
 			if (std::find(CollisionList.begin(), CollisionList.end(), SN) == CollisionList.end()
 				&& IsCollision(SOI->GetBoundingBox(), wolf->GetBoundingBox()))
 			{
-				CollisionList.push_back(SN);
-				DamageToMonsterUsingSkillObject(SOI, wolf);
+				SOI->AddCollisionList(MonsterType::Wolf, SN);
+				DamageToMonsterUsingSkillObject(SOI, wolf, SN);
 			}
 		}
 		for (const auto& it : m_BatMap)
@@ -354,8 +363,8 @@ void GameRoom::CollisionSkillObject()
 			if (std::find(CollisionList.begin(), CollisionList.end(), SN) == CollisionList.end()
 				&& IsCollision(SOI->GetBoundingBox(), bat->GetBoundingBox()))
 			{
-				CollisionList.push_back(SN);
-				DamageToMonsterUsingSkillObject(SOI, bat);
+				SOI->AddCollisionList(MonsterType::Bat, SN);
+				DamageToMonsterUsingSkillObject(SOI, bat, SN);
 			}
 		}
 		if (m_Papyrus)
@@ -365,8 +374,8 @@ void GameRoom::CollisionSkillObject()
 			if (std::find(CollisionList.begin(), CollisionList.end(), 0) == CollisionList.end()
 				&& IsCollision(SOI->GetBoundingBox(), m_Papyrus->GetBoundingBox()))
 			{
-				CollisionList.push_back(0);
-				DamageToMonsterUsingSkillObject(SOI, m_Papyrus);
+				SOI->AddCollisionList(MonsterType::Papyrus, 0);
+				DamageToMonsterUsingSkillObject(SOI, m_Papyrus, 0);
 			}
 		}
 	}
@@ -377,14 +386,23 @@ void GameRoom::DoCollisionCheck()
 	// TODO: Collision Group으로 개선 필요
 	for (const auto& p : m_pPlayerList)
 	{
-		IsCollisionMonsterWithPlayer(p);
+		if (p->GetShouldCollisionCheck())
+		{
+			IsCollisionMonsterWithPlayer(p);
+		}
 		IsCollisionBoneWithPlayer(p);
 	}
 	CollisionSkillObject();
 	IsCollisionMonsterWithCastle();
+
+	// TODO: 조금 더 제대로된 위치로 옮기기
+	if (m_Papyrus)
+	{
+		WriteBones();
+	}
 }
 
-void GameRoom::DamageToMonsterUsingSkillObject(SkillObjectInfo* SOI, Monster* monster)
+void GameRoom::DamageToMonsterUsingSkillObject(SkillObjectInfo* SOI, Monster* monster, int SN)
 {
 	PlayerInfo* OwnedPlayer = m_pPlayerList[SOI->GetOwnedClientNum()];
 	switch (SOI->GetObjectType())
@@ -436,6 +454,11 @@ void GameRoom::DamageToMonsterUsingSkillObject(SkillObjectInfo* SOI, Monster* mo
 		if(IsDead)
 		{
 			OwnedPlayer->AddKillCount(monster->GetMonsterType());
+			WriteMonsterKill(monster->GetMonsterType(), SN, OwnedPlayer);
+		}
+		else
+		{
+			WriteMonsterHp(monster->GetMonsterType(), SN, monster->GetCurrentHp());
 		}
 	}
 		break;
@@ -499,7 +522,7 @@ void GameRoom::UpdateUseStateMsg(array<queue<StateMsgInfo>, MAX_CLIENTS>& StateM
 				printf("GameRoom::UpdateEnemy Error!\n");
 				break;
 			}
-
+			delete SMI.pStateMsgArgu;
 		}
 	}
 
@@ -569,6 +592,8 @@ void GameRoom::WriteBossHp()
 	BHM.Hp = m_Papyrus->GetCurrentHp();
 	BHM.BreakCount= m_Papyrus->GetBreakCount();
 	BHM.KnockDown = m_Papyrus->GetKnockDown();
+
+	BHM.Hp = std::clamp(BHM.Hp, (BYTE)0, (BYTE)60);
 
 	m_pStream->Write(StateMsgType::BossHp);
 	m_pStream->Write(BHM);
@@ -678,7 +703,15 @@ void GameRoom::ReadPlayerLocation(StateMsgArgu* SMA)
 	m_pPlayerList[ClientNum]->SetDirection(dirction);
 
 	// 충돌처리 off
-	//m_pPlayerList[ClientNum]->SetShouldCollisionCheck(false);
+	if (PSN != PStateName::Skill)
+	{
+		m_pPlayerList[ClientNum]->SetShouldCollisionCheck(false);
+		m_pPlayerList[ClientNum]->InitCollisionList();
+	}
+	else
+	{
+		m_pPlayerList[ClientNum]->SetShouldCollisionCheck(true);
+	}
 	//m_pPlayerList[ClientNum]->SetAllCardProperty(0, 0, 0, 0, 0);
 }
 
@@ -696,12 +729,6 @@ void GameRoom::ReadUseCard(StateMsgArgu* SMA)
 		UCSM->NamedDamage,
 		UCSM->Type
 	);
-
-	// 스킬사용이 끝날때 0을 보낸다
-	if (UCSM->Damage == 0)
-	{
-		m_pPlayerList[ClientNum]->InitCollisionList();
-	}
 
 	WriteUseCard(*UCSM, ClientNum);
 }

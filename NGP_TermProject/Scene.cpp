@@ -172,6 +172,12 @@ void Scene::Update(float elapsed)
 				*m_pGameoverMsg = *temp;
 			}
 				break;
+			case StateMsgType::BossHp:
+			{
+				BossHpMsg* temp = (BossHpMsg*)SMI.pStateMsgArgu;
+				UpdateBossHp(temp->Hp, temp->BreakCount, temp->KnockDown);
+			}
+			break;
 			default:
 
 				break;
@@ -233,22 +239,6 @@ void Scene::Update(float elapsed)
 	for (auto object : m_lObjectList) {
 		object->Update(elapsed);
 	}
-	for (const auto& w : m_WolfMap)
-	{
-		w.second->Update(elapsed);
-	}
-	for (const auto& b : m_BatMap)
-	{
-		b.second->Update(elapsed);
-	}
-	if (m_Papyrus)
-	{
-		m_Papyrus->Update(elapsed);
-		for (const auto& b : m_BoneMap)
-		{
-			b.second->Update(elapsed);
-		}
-	}
 }
 
 void Scene::Draw(HDC& memDc)
@@ -264,9 +254,21 @@ void Scene::Draw(HDC& memDc)
 		{
 			DrawGameStart(memDc);
 
-			if (m_pPlayer && m_pPlayer->GetCardCount() < 10)
+			for (const auto& w : m_WolfMap)
 			{
-				m_Shop->StartShop(memDc);
+				w.second->Draw(memDc);
+			}
+			for (const auto& b : m_BatMap)
+			{
+				b.second->Draw(memDc);
+			}
+			if (m_Papyrus)
+			{
+				m_Papyrus->Draw(memDc);
+				for (const auto& b : m_BoneMap)
+				{
+					b.second->Draw(memDc);
+				}
 			}
 		}
 	}
@@ -284,24 +286,18 @@ void Scene::Draw(HDC& memDc)
 		object->Draw(memDc);
 	}
 
-	if(m_pPlayer != NULL)
+	if (m_pPlayer != NULL)
+	{
 		m_pPlayer->UiDraw(memDc);
-
-	for (const auto& w : m_WolfMap)
-	{
-		w.second->Draw(memDc);
-	}
-	for (const auto& b : m_BatMap)
-	{
-		b.second->Draw(memDc);
-	}
-	if (m_Papyrus)
-	{
-		m_Papyrus->Draw(memDc);
-		for (const auto& b : m_BoneMap)
+		if (m_pPlayer->GetLevelUp())
 		{
-			b.second->Draw(memDc);
+			m_Shop->StartShop(memDc);
 		}
+	}
+
+	if (m_pPlayer && m_pPlayer->GetCardCount() < 10)
+	{
+		m_Shop->StartShop(memDc);
 	}
 }
 
@@ -492,6 +488,44 @@ void Scene::UpdateGameStart(float elapsed)
 {
 	m_pCastle->Update(elapsed);
 
+	for (const auto& w : m_WolfMap)
+	{
+		w.second->Update(elapsed);
+	}
+	for (const auto& b : m_BatMap)
+	{
+		b.second->Update(elapsed);
+	}
+	if (m_Papyrus)
+	{
+		m_Papyrus->Update(elapsed);
+		for (const auto& b : m_BoneMap)
+		{
+			b.second->Update(elapsed);
+		}
+	}
+
+	// GarbageCollector
+	for (auto it = m_WolfMap.begin(); it != m_WolfMap.end();)
+	{
+		if (it->second->GetCanDie())
+		{
+			it = m_WolfMap.erase(it);
+		}
+		else {
+			++it;
+		}
+	}
+	for (auto it = m_BatMap.begin(); it != m_BatMap.end();)
+	{
+		if (it->second->GetCanDie())
+		{
+			it = m_BatMap.erase(it);
+		}
+		else {
+			++it;
+		}
+	}
 }
 
 void Scene::DrawChangeStart(HDC& memdc) {
@@ -763,21 +797,21 @@ void Scene::UpdateMonsterHp(MonsterType MT, int SN, int Hp)
 	case MonsterType::Wolf:
 	{
 		m_WolfMap[SN]->SetCurrentHp(Hp);
-		if (m_WolfMap[SN]->GetCurrentHp() <= 0)
-		{
-			delete m_WolfMap[SN];
-			m_WolfMap.erase(SN);
-		}
+		//if (m_WolfMap[SN]->GetCurrentHp() <= 0)
+		//{
+		//	delete m_WolfMap[SN];
+		//	m_WolfMap.erase(SN);
+		//}
 	}
 	break;
 	case MonsterType::Bat:
 	{
 		m_BatMap[SN]->SetCurrentHp(Hp);
-		if (m_BatMap[SN]->GetCurrentHp() <= 0)
-		{
-			delete m_BatMap[SN];
-			m_BatMap.erase(SN);
-		}
+		//if (m_BatMap[SN]->GetCurrentHp() <= 0)
+		//{
+		//	delete m_BatMap[SN];
+		//	m_BatMap.erase(SN);
+		//}
 	}
 	break;
 	case MonsterType::Papyrus:
@@ -788,6 +822,13 @@ void Scene::UpdateMonsterHp(MonsterType MT, int SN, int Hp)
 	default:
 		break;
 	}
+}
+
+void Scene::UpdateBossHp(int Hp, int BreakCount, int KnockDown)
+{
+	m_Papyrus->SetCurrentHp(Hp);
+	m_Papyrus->SetBreakCount(BreakCount);
+	m_Papyrus->SetKnockDown(KnockDown);
 }
 
 void Scene::UpdateMonsterState(MonsterType MT, int SN, MonsterStateType SMT)
@@ -840,6 +881,7 @@ void Scene::UpdateMonsterKill(int Id, int MonsterId, MonsterType MT)
 {
 	if (Id == m_iClientNum)
 	{
+		int PrevLevel = m_pPlayer->GetLevel();
 		switch (MT)
 		{
 		case MonsterType::Wolf:
@@ -848,8 +890,10 @@ void Scene::UpdateMonsterKill(int Id, int MonsterId, MonsterType MT)
 			m_pPlayer->AddMoney(w.GetMoney());
 			m_pPlayer->AddExp(w.GetExperi());
 
-			delete m_WolfMap[MonsterId];
-			m_WolfMap.erase(MonsterId);
+			m_WolfMap[MonsterId]->SetStatus(MonsterState::Dead);
+
+			//delete m_WolfMap[MonsterId];
+			//m_WolfMap.erase(MonsterId);
 		}
 			break;
 		case MonsterType::Bat:
@@ -858,9 +902,28 @@ void Scene::UpdateMonsterKill(int Id, int MonsterId, MonsterType MT)
 			m_pPlayer->AddMoney(b.GetMoney());
 			m_pPlayer->AddExp(b.GetExperi());
 
-			delete m_BatMap[MonsterId];
-			m_BatMap.erase(MonsterId);
+			m_BatMap[MonsterId]->SetStatus(MonsterState::Dead);
+			//delete m_BatMap[MonsterId];
+			//m_BatMap.erase(MonsterId);
 		}
+			break;
+		default:
+			break;
+		}
+		if (PrevLevel != m_pPlayer->GetLevel())
+		{
+			m_pPlayer->SetLevelUp(true);
+		}
+	}
+	else
+	{
+		switch (MT)
+		{
+		case MonsterType::Wolf:
+			m_WolfMap[MonsterId]->SetStatus(MonsterState::Dead);
+			break;
+		case MonsterType::Bat:
+			m_BatMap[MonsterId]->SetStatus(MonsterState::Dead);
 			break;
 		default:
 			break;

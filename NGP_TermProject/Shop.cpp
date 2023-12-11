@@ -11,8 +11,17 @@ Shop::Shop(HWND& m_hWnd, HINSTANCE& Inst) :
 	m_cImg.Load(TEXT("상점관련\\상점UI.png"));
 	m_cBuyButtonImg.Load(TEXT("상점관련\\상점버튼.png"));
 
-	m_hFreeButton = (HBITMAP)LoadImage(m_hInst, TEXT("상점관련//상점버튼Free.bmp"), 
+	m_hPriceBitmap[0] = (HBITMAP)LoadImage(m_hInst, TEXT("상점관련//상점버튼Free.bmp"),
 	IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE | LR_CREATEDIBSECTION);
+	m_hPriceBitmap[1] = (HBITMAP)LoadImage(m_hInst, TEXT("상점관련//상점버튼5G.bmp"),
+		IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE | LR_CREATEDIBSECTION);
+	m_hPriceBitmap[2] = (HBITMAP)LoadImage(m_hInst, TEXT("상점관련//상점버튼10G.bmp"),
+		IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE | LR_CREATEDIBSECTION);
+	m_hPriceBitmap[3] = (HBITMAP)LoadImage(m_hInst, TEXT("상점관련//상점버튼20G.bmp"),
+		IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE | LR_CREATEDIBSECTION);
+	m_hPriceBitmap[4] = (HBITMAP)LoadImage(m_hInst, TEXT("상점관련//상점버튼30G.bmp"),
+		IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE | LR_CREATEDIBSECTION);
+
 }
 
 Shop::~Shop()
@@ -48,9 +57,9 @@ void Shop::StartShop(HDC& memdc)
 		DrawText(memdc, m_tStr[i], lstrlen(m_tStr[i]), &textRect, DT_BOTTOM | DT_SINGLELINE | DT_CENTER);
 	}
 
-	SendMessage(m_hButton[0], BM_SETIMAGE, IMAGE_BITMAP, (LPARAM)m_hFreeButton);
-	SendMessage(m_hButton[1], BM_SETIMAGE, IMAGE_BITMAP, (LPARAM)m_hFreeButton);
-	SendMessage(m_hButton[2], BM_SETIMAGE, IMAGE_BITMAP, (LPARAM)m_hFreeButton);
+	SendMessage(m_hButton[0], BM_SETIMAGE, IMAGE_BITMAP, (LPARAM)m_hPriceBitmap[0]);
+	SendMessage(m_hButton[1], BM_SETIMAGE, IMAGE_BITMAP, (LPARAM)m_hPriceBitmap[0]);
+	SendMessage(m_hButton[2], BM_SETIMAGE, IMAGE_BITMAP, (LPARAM)m_hPriceBitmap[0]);
 
 	SelectObject(memdc, oldFont); DeleteObject(hFont);
 
@@ -58,684 +67,623 @@ void Shop::StartShop(HDC& memdc)
 
 void Shop::ShowShop(HDC& memdc, Player* player)
 {
-	CImage buyButton, skill;// , tri;
-	HWND hButton[4];
-	HDC bitDC;
-	HBITMAP hBit[4] = { NULL };// oldBit;
-	static RECT textRect[3] = { {425,450,600,600},
-								{725,450,900,600},
-								{1025,450,1200,600} };
+	//CImage skill;// , tri;
+	//HWND hButton[4];
+	//HDC bitDC;
+	//HBITMAP hBit[4] = { NULL };// oldBit;
+	//static RECT textRect[3] = { {425,450,600,600},
+	//							{725,450,900,600},
+	//							{1025,450,1200,600} };
 
-	m_cImg.Draw(memdc, 0, 0, WINWIDTH, WINHEIGHT,
-		0, 0, WINWIDTH, WINHEIGHT);
-	//buyButton.Load(TEXT("상점관련//상점버튼.png"));
-	hButton[0] = CreateWindow(L"button", L"OK", WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON | BS_BITMAP, 450, 650, 135, 55,
-		m_hWnd, (HMENU)IDC_BUTTON_BUY1, m_hInst, NULL);
-	hButton[1] = CreateWindow(L"button", L"OK", WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON | BS_BITMAP, 750, 650, 135, 55,
-		m_hWnd, (HMENU)IDC_BUTTON_BUY2, m_hInst, NULL);
-	hButton[2] = CreateWindow(L"button", L"OK", WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON | BS_BITMAP, 1050, 650, 135, 55,
-		m_hWnd, (HMENU)IDC_BUTTON_BUY3, m_hInst, NULL);
-	hButton[3] = CreateWindow(L"button", L"OK", WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON | BS_BITMAP, 1090, 130, 135, 55,
-		m_hWnd, (HMENU)IDC_BUTTON_BUY4, m_hInst, NULL);
-	hBit[3] = (HBITMAP)LoadImage(m_hInst, TEXT("상점관련//나가기.bmp"), IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE | LR_CREATEDIBSECTION);
-	SendMessage(hButton[3], BM_SETIMAGE, IMAGE_BITMAP, (LPARAM)hBit[3]);
+	//m_cImg.Draw(memdc, 0, 0, WINWIDTH, WINHEIGHT,
+	//	0, 0, WINWIDTH, WINHEIGHT);
+	////buyButton.Load(TEXT("상점관련//상점버튼.png"));
+	//hButton[0] = CreateWindow(L"button", L"OK", WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON | BS_BITMAP, 450, 650, 135, 55,
+	//	m_hWnd, (HMENU)IDC_BUTTON_BUY1, m_hInst, NULL);
+	//hButton[1] = CreateWindow(L"button", L"OK", WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON | BS_BITMAP, 750, 650, 135, 55,
+	//	m_hWnd, (HMENU)IDC_BUTTON_BUY2, m_hInst, NULL);
+	//hButton[2] = CreateWindow(L"button", L"OK", WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON | BS_BITMAP, 1050, 650, 135, 55,
+	//	m_hWnd, (HMENU)IDC_BUTTON_BUY3, m_hInst, NULL);
+	//hButton[3] = CreateWindow(L"button", L"OK", WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON | BS_BITMAP, 1090, 130, 135, 55,
+	//	m_hWnd, (HMENU)IDC_BUTTON_BUY4, m_hInst, NULL);
+	//hBit[3] = (HBITMAP)LoadImage(m_hInst, TEXT("상점관련//나가기.bmp"), IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE | LR_CREATEDIBSECTION);
+	//SendMessage(hButton[3], BM_SETIMAGE, IMAGE_BITMAP, (LPARAM)hBit[3]);
 
-	//m_iRandValue[0] = RandomGen::GetRand(CARDVARIABLE);
-	for (int i = 0; i < 3; i++)
-	{
-		bool keepIn = true;
-		while (keepIn) {
-			keepIn = false;
-			m_iRandValue[i] = RandomGen::GetRand(CARDVARIABLE);
-			for (int j = 0; j < 3; j++)
-			{
-				if ((i != j && m_iRandValue[i] == m_iRandValue[j]))
-					keepIn = true;
-			}
-		}
-	}
+	//for (int i = 0; i < 3; i++)
+	//{
+	//	switch (m_iRandValue[i])
+	//	{
 
-	for (int i = 0; i < 3; i++)
-	{
-		int rand10 = 99;
-		int triRand;
+	//	}
+	//}
 
-		if (player->GetCardCount() < 30)
-			rand10 = RandomGen::GetRand(100);
+	//for (int i = 0; i < 3; i++)
+	//{
 
-		switch (m_iRandValue[i])
-		{
-		case (int)CardName::N_rhlddufvk:
-			skill.Load(TEXT(".//카드관련//스킬초상화//굉열파.png"));
-			if (rand10 >= CARDSPAWNRAND) {
-				int* tripord = player->GetTripord()[(int)CardName::N_rhlddufvk];
-				Rhlddufvk* temp = new Rhlddufvk(tripord);
-				if (tripord[3] == 0 || tripord[(int)TriIndex::I_Tier3] != 0) {
-					hBit[i] = (HBITMAP)LoadImage(m_hInst, TEXT("상점관련//상점버튼5G.bmp"), IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE | LR_CREATEDIBSECTION);
-					skill.Draw(memdc, 474 + 300 * i, 360, 75, 75,
-						0, 0, 100, 100);
-					m_iCardPrice[i] = 5;
-				}
-				else if (tripord[1] != 0) {
-					m_iTriNum[i] = RandomGen::GetRand(2) + 1;
-					tripord[2] = m_iTriNum[i];
-					temp->setTier3();
-					tripord[2] = 0;
+	//switch (m_iRandValue[i])
+	//{
+	//case (int)CardName::N_rhlddufvk:
+	//	skill.Load(TEXT(".//카드관련//스킬초상화//굉열파.png"));
+	//	int tripord = m_iTriNum[i];
+	//		//int* tripord = player->GetTripord()[(int)CardName::N_rhlddufvk];
+	//		Rhlddufvk* temp = new Rhlddufvk(tripord);
+	//		if (tripord == 0 || tripord != 0) {
+	//			skill.Draw(memdc, 474 + 300 * i, 360, 75, 75,
+	//				0, 0, 100, 100);
+	//			m_iCardPrice[i] = 5;
+	//		}
+	//		else if (tripord[1] != 0) {
+	//			m_iTriNum[i] = RandomGen::GetRand(2) + 1;
+	//			tripord[2] = m_iTriNum[i];
+	//			temp->setTier3();
+	//			tripord[2] = 0;
 
-					hBit[i] = (HBITMAP)LoadImage(m_hInst, TEXT("상점관련//상점버튼30G.bmp"), IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE | LR_CREATEDIBSECTION);
-					skill.Draw(memdc, 474 + 300 * i, 259, 75, 75,
-						0, 0, 100, 100);
-					temp->GetImg()[3].Draw(memdc, 484 + 300 * i, 360, 56, 56,
-						0, 0, 56, 56);
-					DrawText(memdc, temp->GetStr(3), lstrlen(temp->GetStr(3)), &textRect[i], DT_LEFT | DT_WORDBREAK);
-					m_iCardPrice[i] = 30;
-				}
-				else if (tripord[0] != 0) {
-					m_iTriNum[i] = RandomGen::GetRand(3) + 1;
-					tripord[(int)TriIndex::I_Tier2] = m_iTriNum[i];
-					temp->setTier2();
-					tripord[(int)TriIndex::I_Tier2] = 0;
+	//			skill.Draw(memdc, 474 + 300 * i, 259, 75, 75,
+	//				0, 0, 100, 100);
+	//			temp->GetImg()[3].Draw(memdc, 484 + 300 * i, 360, 56, 56,
+	//				0, 0, 56, 56);
+	//			DrawText(memdc, temp->GetStr(3), lstrlen(temp->GetStr(3)), &textRect[i], DT_LEFT | DT_WORDBREAK);
+	//			m_iCardPrice[i] = 30;
+	//		}
+	//		else if (tripord[0] != 0) {
+	//			m_iTriNum[i] = RandomGen::GetRand(3) + 1;
+	//			tripord[(int)TriIndex::I_Tier2] = m_iTriNum[i];
+	//			temp->setTier2();
+	//			tripord[(int)TriIndex::I_Tier2] = 0;
 
-					hBit[i] = (HBITMAP)LoadImage(m_hInst, TEXT("상점관련//상점버튼20G.bmp"), IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE | LR_CREATEDIBSECTION);
-					skill.Draw(memdc, 474 + 300 * i, 259, 75, 75,
-						0, 0, 100, 100);
-					temp->GetImg()[(int)CardRect::R_tier2].Draw(memdc, 484 + 300 * i, 360, 56, 56,
-						0, 0, 56, 56);
-					DrawText(memdc, temp->GetStr((int)CardRect::R_tier2), lstrlen(temp->GetStr((int)CardRect::R_tier2)), &textRect[i], DT_LEFT | DT_WORDBREAK);
-					m_iCardPrice[i] = 20;
-				}
-				else {
-					m_iTriNum[i] = RandomGen::GetRand(3) + 1;
-					tripord[(int)TriIndex::I_Tier1] = m_iTriNum[i];
-					temp->setTier1();
-					tripord[(int)TriIndex::I_Tier1] = 0;
+	//			skill.Draw(memdc, 474 + 300 * i, 259, 75, 75,
+	//				0, 0, 100, 100);
+	//			temp->GetImg()[(int)CardRect::R_tier2].Draw(memdc, 484 + 300 * i, 360, 56, 56,
+	//				0, 0, 56, 56);
+	//			DrawText(memdc, temp->GetStr((int)CardRect::R_tier2), lstrlen(temp->GetStr((int)CardRect::R_tier2)), &textRect[i], DT_LEFT | DT_WORDBREAK);
+	//			m_iCardPrice[i] = 20;
+	//		}
+	//		else {
+	//			m_iTriNum[i] = RandomGen::GetRand(3) + 1;
+	//			tripord[(int)TriIndex::I_Tier1] = m_iTriNum[i];
+	//			temp->setTier1();
+	//			tripord[(int)TriIndex::I_Tier1] = 0;
 
-					hBit[i] = (HBITMAP)LoadImage(m_hInst, TEXT("상점관련//상점버튼10G.bmp"), IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE | LR_CREATEDIBSECTION);
-					skill.Draw(memdc, 474 + 300 * i, 259, 75, 75,
-						0, 0, 100, 100);
-					temp->GetImg()[(int)CardRect::R_tier1].Draw(memdc, 484 + 300 * i, 360, 56, 56,
-						0, 0, 56, 56);
-					DrawText(memdc, temp->GetStr((int)CardRect::R_tier1), lstrlen(temp->GetStr((int)CardRect::R_tier1)), &textRect[i], DT_LEFT | DT_WORDBREAK);
-					m_iCardPrice[i] = 10;
-				}
-				delete temp;
-			}
-			else {
-				hBit[i] = (HBITMAP)LoadImage(m_hInst, TEXT("상점관련//상점버튼5G.bmp"), IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE | LR_CREATEDIBSECTION);
-				skill.Draw(memdc, 474 + 300 * i, 360, 75, 75,
-					0, 0, 100, 100);
-				m_iCardPrice[i] = 5;
-			}
-			break;
-		case (int)CardName::N_sktjsckd:
-			skill.Load(TEXT(".//카드관련//스킬초상화//나선창.png"));
-			if (rand10 >= CARDSPAWNRAND) {
-				int* tripord = player->GetTripord()[(int)CardName::N_sktjsckd];
-				Sktjsckd* temp = new Sktjsckd(tripord);
-				if (tripord[3] == 0 || tripord[(int)TriIndex::I_Tier3] != 0) {
-					hBit[i] = (HBITMAP)LoadImage(m_hInst, TEXT("상점관련//상점버튼5G.bmp"), IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE | LR_CREATEDIBSECTION);
-					skill.Draw(memdc, 474 + 300 * i, 360, 75, 75,
-						0, 0, 100, 100);
-					m_iCardPrice[i] = 5;
-				}
-				else if (tripord[1] != 0) {
-					m_iTriNum[i] = RandomGen::GetRand(2) + 1;
-					tripord[2] = m_iTriNum[i];
-					temp->setTier3();
-					tripord[2] = 0;
+	//			skill.Draw(memdc, 474 + 300 * i, 259, 75, 75,
+	//				0, 0, 100, 100);
+	//			temp->GetImg()[(int)CardRect::R_tier1].Draw(memdc, 484 + 300 * i, 360, 56, 56,
+	//				0, 0, 56, 56);
+	//			DrawText(memdc, temp->GetStr((int)CardRect::R_tier1), lstrlen(temp->GetStr((int)CardRect::R_tier1)), &textRect[i], DT_LEFT | DT_WORDBREAK);
+	//			m_iCardPrice[i] = 10;
+	//		}
+	//		delete temp;
 
-					hBit[i] = (HBITMAP)LoadImage(m_hInst, TEXT("상점관련//상점버튼30G.bmp"), IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE | LR_CREATEDIBSECTION);
-					skill.Draw(memdc, 474 + 300 * i, 259, 75, 75,
-						0, 0, 100, 100);
-					temp->GetImg()[3].Draw(memdc, 484 + 300 * i, 360, 56, 56,
-						0, 0, 56, 56);
-					DrawText(memdc, temp->GetStr(3), lstrlen(temp->GetStr(3)), &textRect[i], DT_LEFT | DT_WORDBREAK);
-					m_iCardPrice[i] = 30;
-				}
-				else if (tripord[0] != 0) {
-					m_iTriNum[i] = RandomGen::GetRand(3) + 1;
-					tripord[(int)TriIndex::I_Tier2] = m_iTriNum[i];
-					temp->setTier2();
-					tripord[(int)TriIndex::I_Tier2] = 0;
+	//		skill.Draw(memdc, 474 + 300 * i, 360, 75, 75,
+	//			0, 0, 100, 100);
+	//		m_iCardPrice[i] = 5;
 
-					hBit[i] = (HBITMAP)LoadImage(m_hInst, TEXT("상점관련//상점버튼20G.bmp"), IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE | LR_CREATEDIBSECTION);
-					skill.Draw(memdc, 474 + 300 * i, 259, 75, 75,
-						0, 0, 100, 100);
-					temp->GetImg()[(int)CardRect::R_tier2].Draw(memdc, 484 + 300 * i, 360, 56, 56,
-						0, 0, 56, 56);
-					DrawText(memdc, temp->GetStr((int)CardRect::R_tier2), lstrlen(temp->GetStr((int)CardRect::R_tier2)), &textRect[i], DT_LEFT | DT_WORDBREAK);
-					m_iCardPrice[i] = 20;
-				}
-				else {
-					m_iTriNum[i] = RandomGen::GetRand(3) + 1;
-					tripord[(int)TriIndex::I_Tier1] = m_iTriNum[i];
-					temp->setTier1();
-					tripord[(int)TriIndex::I_Tier1] = 0;
+	//	break;
+	//case (int)CardName::N_sktjsckd:
+	//	skill.Load(TEXT(".//카드관련//스킬초상화//나선창.png"));
+	//	if (rand10 >= CARDSPAWNRAND) {
+	//		int* tripord = player->GetTripord()[(int)CardName::N_sktjsckd];
+	//		Sktjsckd* temp = new Sktjsckd(tripord);
+	//		if (tripord[3] == 0 || tripord[(int)TriIndex::I_Tier3] != 0) {
+	//			skill.Draw(memdc, 474 + 300 * i, 360, 75, 75,
+	//				0, 0, 100, 100);
+	//			m_iCardPrice[i] = 5;
+	//		}
+	//		else if (tripord[1] != 0) {
+	//			m_iTriNum[i] = RandomGen::GetRand(2) + 1;
+	//			tripord[2] = m_iTriNum[i];
+	//			temp->setTier3();
+	//			tripord[2] = 0;
 
-					hBit[i] = (HBITMAP)LoadImage(m_hInst, TEXT("상점관련//상점버튼10G.bmp"), IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE | LR_CREATEDIBSECTION);
-					skill.Draw(memdc, 474 + 300 * i, 259, 75, 75,
-						0, 0, 100, 100);
-					temp->GetImg()[(int)CardRect::R_tier1].Draw(memdc, 484 + 300 * i, 360, 56, 56,
-						0, 0, 56, 56);
-					DrawText(memdc, temp->GetStr((int)CardRect::R_tier1), lstrlen(temp->GetStr((int)CardRect::R_tier1)), &textRect[i], DT_LEFT | DT_WORDBREAK);
-					m_iCardPrice[i] = 10;
-				}
-				delete temp;
-			}
-			else {
-				hBit[i] = (HBITMAP)LoadImage(m_hInst, TEXT("상점관련//상점버튼5G.bmp"), IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE | LR_CREATEDIBSECTION);
-				skill.Draw(memdc, 474 + 300 * i, 360, 75, 75,
-					0, 0, 100, 100);
-				m_iCardPrice[i] = 5;
-			}
-			break;
-		case (int)CardName::N_dbtjdrkdcjs:
-			skill.Load(TEXT(".//카드관련//스킬초상화//유성강천.png"));
-			if (rand10 >= CARDSPAWNRAND) {
-				int* tripord = player->GetTripord()[(int)CardName::N_dbtjdrkdcjs];
-				Dbtjdrkdcjs* temp = new Dbtjdrkdcjs(tripord);
-				if (tripord[3] == 0 || tripord[(int)TriIndex::I_Tier3] != 0) {
-					hBit[i] = (HBITMAP)LoadImage(m_hInst, TEXT("상점관련//상점버튼5G.bmp"), IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE | LR_CREATEDIBSECTION);
-					skill.Draw(memdc, 474 + 300 * i, 360, 75, 75,
-						0, 0, 100, 100);
-					m_iCardPrice[i] = 5;
-				}
-				else if (tripord[1] != 0) {
-					m_iTriNum[i] = RandomGen::GetRand(2) + 1;
-					tripord[2] = m_iTriNum[i];
-					temp->setTier3();
-					tripord[2] = 0;
+	//			skill.Draw(memdc, 474 + 300 * i, 259, 75, 75,
+	//				0, 0, 100, 100);
+	//			temp->GetImg()[3].Draw(memdc, 484 + 300 * i, 360, 56, 56,
+	//				0, 0, 56, 56);
+	//			DrawText(memdc, temp->GetStr(3), lstrlen(temp->GetStr(3)), &textRect[i], DT_LEFT | DT_WORDBREAK);
+	//			m_iCardPrice[i] = 30;
+	//		}
+	//		else if (tripord[0] != 0) {
+	//			m_iTriNum[i] = RandomGen::GetRand(3) + 1;
+	//			tripord[(int)TriIndex::I_Tier2] = m_iTriNum[i];
+	//			temp->setTier2();
+	//			tripord[(int)TriIndex::I_Tier2] = 0;
 
-					hBit[i] = (HBITMAP)LoadImage(m_hInst, TEXT("상점관련//상점버튼30G.bmp"), IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE | LR_CREATEDIBSECTION);
-					skill.Draw(memdc, 474 + 300 * i, 259, 75, 75,
-						0, 0, 100, 100);
-					temp->GetImg()[3].Draw(memdc, 484 + 300 * i, 360, 56, 56,
-						0, 0, 56, 56);
-					DrawText(memdc, temp->GetStr(3), lstrlen(temp->GetStr(3)), &textRect[i], DT_LEFT | DT_WORDBREAK);
-					m_iCardPrice[i] = 30;
-				}
-				else if (tripord[0] != 0) {
-					m_iTriNum[i] = RandomGen::GetRand(3) + 1;
-					tripord[(int)TriIndex::I_Tier2] = m_iTriNum[i];
-					temp->setTier2();
-					tripord[(int)TriIndex::I_Tier2] = 0;
+	//			skill.Draw(memdc, 474 + 300 * i, 259, 75, 75,
+	//				0, 0, 100, 100);
+	//			temp->GetImg()[(int)CardRect::R_tier2].Draw(memdc, 484 + 300 * i, 360, 56, 56,
+	//				0, 0, 56, 56);
+	//			DrawText(memdc, temp->GetStr((int)CardRect::R_tier2), lstrlen(temp->GetStr((int)CardRect::R_tier2)), &textRect[i], DT_LEFT | DT_WORDBREAK);
+	//			m_iCardPrice[i] = 20;
+	//		}
+	//		else {
+	//			m_iTriNum[i] = RandomGen::GetRand(3) + 1;
+	//			tripord[(int)TriIndex::I_Tier1] = m_iTriNum[i];
+	//			temp->setTier1();
+	//			tripord[(int)TriIndex::I_Tier1] = 0;
 
-					hBit[i] = (HBITMAP)LoadImage(m_hInst, TEXT("상점관련//상점버튼20G.bmp"), IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE | LR_CREATEDIBSECTION);
-					skill.Draw(memdc, 474 + 300 * i, 259, 75, 75,
-						0, 0, 100, 100);
-					temp->GetImg()[(int)CardRect::R_tier2].Draw(memdc, 484 + 300 * i, 360, 56, 56,
-						0, 0, 56, 56);
-					DrawText(memdc, temp->GetStr((int)CardRect::R_tier2), lstrlen(temp->GetStr((int)CardRect::R_tier2)), &textRect[i], DT_LEFT | DT_WORDBREAK);
-					m_iCardPrice[i] = 20;
-				}
-				else {
-					m_iTriNum[i] = RandomGen::GetRand(3) + 1;
-					tripord[(int)TriIndex::I_Tier1] = m_iTriNum[i];
-					temp->setTier1();
-					tripord[(int)TriIndex::I_Tier1] = 0;
+	//			skill.Draw(memdc, 474 + 300 * i, 259, 75, 75,
+	//				0, 0, 100, 100);
+	//			temp->GetImg()[(int)CardRect::R_tier1].Draw(memdc, 484 + 300 * i, 360, 56, 56,
+	//				0, 0, 56, 56);
+	//			DrawText(memdc, temp->GetStr((int)CardRect::R_tier1), lstrlen(temp->GetStr((int)CardRect::R_tier1)), &textRect[i], DT_LEFT | DT_WORDBREAK);
+	//			m_iCardPrice[i] = 10;
+	//		}
+	//		delete temp;
+	//	}
+	//	else {
+	//		skill.Draw(memdc, 474 + 300 * i, 360, 75, 75,
+	//			0, 0, 100, 100);
+	//		m_iCardPrice[i] = 5;
+	//	}
+	//	break;
+	//case (int)CardName::N_dbtjdrkdcjs:
+	//	skill.Load(TEXT(".//카드관련//스킬초상화//유성강천.png"));
+	//	if (rand10 >= CARDSPAWNRAND) {
+	//		int* tripord = player->GetTripord()[(int)CardName::N_dbtjdrkdcjs];
+	//		Dbtjdrkdcjs* temp = new Dbtjdrkdcjs(tripord);
+	//		if (tripord[3] == 0 || tripord[(int)TriIndex::I_Tier3] != 0) {
+	//			skill.Draw(memdc, 474 + 300 * i, 360, 75, 75,
+	//				0, 0, 100, 100);
+	//			m_iCardPrice[i] = 5;
+	//		}
+	//		else if (tripord[1] != 0) {
+	//			m_iTriNum[i] = RandomGen::GetRand(2) + 1;
+	//			tripord[2] = m_iTriNum[i];
+	//			temp->setTier3();
+	//			tripord[2] = 0;
 
-					hBit[i] = (HBITMAP)LoadImage(m_hInst, TEXT("상점관련//상점버튼10G.bmp"), IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE | LR_CREATEDIBSECTION);
-					skill.Draw(memdc, 474 + 300 * i, 259, 75, 75,
-						0, 0, 100, 100);
-					temp->GetImg()[(int)CardRect::R_tier1].Draw(memdc, 484 + 300 * i, 360, 56, 56,
-						0, 0, 56, 56);
-					DrawText(memdc, temp->GetStr((int)CardRect::R_tier1), lstrlen(temp->GetStr((int)CardRect::R_tier1)), &textRect[i], DT_LEFT | DT_WORDBREAK);
-					m_iCardPrice[i] = 10;
-				}
-				delete temp;
-			}
-			else {
-				hBit[i] = (HBITMAP)LoadImage(m_hInst, TEXT("상점관련//상점버튼5G.bmp"), IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE | LR_CREATEDIBSECTION);
-				skill.Draw(memdc, 474 + 300 * i, 360, 75, 75,
-					0, 0, 100, 100);
-				m_iCardPrice[i] = 5;
-			}
-			break;
-		case (int)CardName::N_wjrfydvh:
-			skill.Load(TEXT(".//카드관련//스킬초상화//적룡포.png"));
-			if (rand10 >= CARDSPAWNRAND) {
-				int* tripord = player->GetTripord()[(int)CardName::N_wjrfydvh];
-				Wjrfydvh* temp = new Wjrfydvh(tripord);
-				if (tripord[3] == 0 || tripord[(int)TriIndex::I_Tier3] != 0) {
-					hBit[i] = (HBITMAP)LoadImage(m_hInst, TEXT("상점관련//상점버튼5G.bmp"), IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE | LR_CREATEDIBSECTION);
-					skill.Draw(memdc, 474 + 300 * i, 360, 75, 75,
-						0, 0, 100, 100);
-					m_iCardPrice[i] = 5;
-				}
-				else if (tripord[1] != 0) {
-					m_iTriNum[i] = RandomGen::GetRand(2) + 1;
-					tripord[2] = m_iTriNum[i];
-					temp->setTier3();
-					tripord[2] = 0;
+	//			skill.Draw(memdc, 474 + 300 * i, 259, 75, 75,
+	//				0, 0, 100, 100);
+	//			temp->GetImg()[3].Draw(memdc, 484 + 300 * i, 360, 56, 56,
+	//				0, 0, 56, 56);
+	//			DrawText(memdc, temp->GetStr(3), lstrlen(temp->GetStr(3)), &textRect[i], DT_LEFT | DT_WORDBREAK);
+	//			m_iCardPrice[i] = 30;
+	//		}
+	//		else if (tripord[0] != 0) {
+	//			m_iTriNum[i] = RandomGen::GetRand(3) + 1;
+	//			tripord[(int)TriIndex::I_Tier2] = m_iTriNum[i];
+	//			temp->setTier2();
+	//			tripord[(int)TriIndex::I_Tier2] = 0;
 
-					hBit[i] = (HBITMAP)LoadImage(m_hInst, TEXT("상점관련//상점버튼30G.bmp"), IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE | LR_CREATEDIBSECTION);
-					skill.Draw(memdc, 474 + 300 * i, 259, 75, 75,
-						0, 0, 100, 100);
-					temp->GetImg()[3].Draw(memdc, 484 + 300 * i, 360, 56, 56,
-						0, 0, 56, 56);
-					DrawText(memdc, temp->GetStr(3), lstrlen(temp->GetStr(3)), &textRect[i], DT_LEFT | DT_WORDBREAK);
-					m_iCardPrice[i] = 30;
-				}
-				else if (tripord[0] != 0) {
-					m_iTriNum[i] = RandomGen::GetRand(3) + 1;
-					tripord[(int)TriIndex::I_Tier2] = m_iTriNum[i];
-					temp->setTier2();
-					tripord[(int)TriIndex::I_Tier2] = 0;
+	//			skill.Draw(memdc, 474 + 300 * i, 259, 75, 75,
+	//				0, 0, 100, 100);
+	//			temp->GetImg()[(int)CardRect::R_tier2].Draw(memdc, 484 + 300 * i, 360, 56, 56,
+	//				0, 0, 56, 56);
+	//			DrawText(memdc, temp->GetStr((int)CardRect::R_tier2), lstrlen(temp->GetStr((int)CardRect::R_tier2)), &textRect[i], DT_LEFT | DT_WORDBREAK);
+	//			m_iCardPrice[i] = 20;
+	//		}
+	//		else {
+	//			m_iTriNum[i] = RandomGen::GetRand(3) + 1;
+	//			tripord[(int)TriIndex::I_Tier1] = m_iTriNum[i];
+	//			temp->setTier1();
+	//			tripord[(int)TriIndex::I_Tier1] = 0;
 
-					hBit[i] = (HBITMAP)LoadImage(m_hInst, TEXT("상점관련//상점버튼20G.bmp"), IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE | LR_CREATEDIBSECTION);
-					skill.Draw(memdc, 474 + 300 * i, 259, 75, 75,
-						0, 0, 100, 100);
-					temp->GetImg()[(int)CardRect::R_tier2].Draw(memdc, 484 + 300 * i, 360, 56, 56,
-						0, 0, 56, 56);
-					DrawText(memdc, temp->GetStr((int)CardRect::R_tier2), lstrlen(temp->GetStr((int)CardRect::R_tier2)), &textRect[i], DT_LEFT | DT_WORDBREAK);
-					m_iCardPrice[i] = 20;
-				}
-				else {
-					m_iTriNum[i] = RandomGen::GetRand(3) + 1;
-					tripord[(int)TriIndex::I_Tier1] = m_iTriNum[i];
-					temp->setTier1();
-					tripord[(int)TriIndex::I_Tier1] = 0;
+	//			skill.Draw(memdc, 474 + 300 * i, 259, 75, 75,
+	//				0, 0, 100, 100);
+	//			temp->GetImg()[(int)CardRect::R_tier1].Draw(memdc, 484 + 300 * i, 360, 56, 56,
+	//				0, 0, 56, 56);
+	//			DrawText(memdc, temp->GetStr((int)CardRect::R_tier1), lstrlen(temp->GetStr((int)CardRect::R_tier1)), &textRect[i], DT_LEFT | DT_WORDBREAK);
+	//			m_iCardPrice[i] = 10;
+	//		}
+	//		delete temp;
+	//	}
+	//	else {
+	//		skill.Draw(memdc, 474 + 300 * i, 360, 75, 75,
+	//			0, 0, 100, 100);
+	//		m_iCardPrice[i] = 5;
+	//	}
+	//	break;
+	//case (int)CardName::N_wjrfydvh:
+	//	skill.Load(TEXT(".//카드관련//스킬초상화//적룡포.png"));
+	//	if (rand10 >= CARDSPAWNRAND) {
+	//		int* tripord = player->GetTripord()[(int)CardName::N_wjrfydvh];
+	//		Wjrfydvh* temp = new Wjrfydvh(tripord);
+	//		if (tripord[3] == 0 || tripord[(int)TriIndex::I_Tier3] != 0) {
+	//			skill.Draw(memdc, 474 + 300 * i, 360, 75, 75,
+	//				0, 0, 100, 100);
+	//			m_iCardPrice[i] = 5;
+	//		}
+	//		else if (tripord[1] != 0) {
+	//			m_iTriNum[i] = RandomGen::GetRand(2) + 1;
+	//			tripord[2] = m_iTriNum[i];
+	//			temp->setTier3();
+	//			tripord[2] = 0;
 
-					hBit[i] = (HBITMAP)LoadImage(m_hInst, TEXT("상점관련//상점버튼10G.bmp"), IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE | LR_CREATEDIBSECTION);
-					skill.Draw(memdc, 474 + 300 * i, 259, 75, 75,
-						0, 0, 100, 100);
-					temp->GetImg()[(int)CardRect::R_tier1].Draw(memdc, 484 + 300 * i, 360, 56, 56,
-						0, 0, 56, 56);
-					DrawText(memdc, temp->GetStr((int)CardRect::R_tier1), lstrlen(temp->GetStr((int)CardRect::R_tier1)), &textRect[i], DT_LEFT | DT_WORDBREAK);
-					m_iCardPrice[i] = 10;
-				}
-				delete temp;
-			}
-			else {
-				hBit[i] = (HBITMAP)LoadImage(m_hInst, TEXT("상점관련//상점버튼5G.bmp"), IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE | LR_CREATEDIBSECTION);
-				skill.Draw(memdc, 474 + 300 * i, 360, 75, 75,
-					0, 0, 100, 100);
-				m_iCardPrice[i] = 5;
-			}
-			break;
-		case (int)CardName::N_aodfyddufvk:
-			skill.Load(TEXT(".//카드관련//스킬초상화//맹룡열파.png"));
-			if (rand10 >= CARDSPAWNRAND) {
-				int* tripord = player->GetTripord()[(int)CardName::N_aodfyddufvk];
-				Aodfyddufvk* temp = new Aodfyddufvk(tripord);
-				if (tripord[3] == 0 || tripord[(int)TriIndex::I_Tier3] != 0) {
-					hBit[i] = (HBITMAP)LoadImage(m_hInst, TEXT("상점관련//상점버튼5G.bmp"), IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE | LR_CREATEDIBSECTION);
-					skill.Draw(memdc, 474 + 300 * i, 360, 75, 75,
-						0, 0, 100, 100);
-					m_iCardPrice[i] = 5;
-				}
-				else if (tripord[1] != 0) {
-					m_iTriNum[i] = RandomGen::GetRand(2) + 1;
-					tripord[2] = m_iTriNum[i];
-					temp->setTier3();
-					tripord[2] = 0;
+	//			skill.Draw(memdc, 474 + 300 * i, 259, 75, 75,
+	//				0, 0, 100, 100);
+	//			temp->GetImg()[3].Draw(memdc, 484 + 300 * i, 360, 56, 56,
+	//				0, 0, 56, 56);
+	//			DrawText(memdc, temp->GetStr(3), lstrlen(temp->GetStr(3)), &textRect[i], DT_LEFT | DT_WORDBREAK);
+	//			m_iCardPrice[i] = 30;
+	//		}
+	//		else if (tripord[0] != 0) {
+	//			m_iTriNum[i] = RandomGen::GetRand(3) + 1;
+	//			tripord[(int)TriIndex::I_Tier2] = m_iTriNum[i];
+	//			temp->setTier2();
+	//			tripord[(int)TriIndex::I_Tier2] = 0;
 
-					hBit[i] = (HBITMAP)LoadImage(m_hInst, TEXT("상점관련//상점버튼30G.bmp"), IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE | LR_CREATEDIBSECTION);
-					skill.Draw(memdc, 474 + 300 * i, 259, 75, 75,
-						0, 0, 100, 100);
-					temp->GetImg()[3].Draw(memdc, 484 + 300 * i, 360, 56, 56,
-						0, 0, 56, 56);
-					DrawText(memdc, temp->GetStr(3), lstrlen(temp->GetStr(3)), &textRect[i], DT_LEFT | DT_WORDBREAK);
-					m_iCardPrice[i] = 30;
-				}
-				else if (tripord[0] != 0) {
-					m_iTriNum[i] = RandomGen::GetRand(3) + 1;
-					tripord[(int)TriIndex::I_Tier2] = m_iTriNum[i];
-					temp->setTier2();
-					tripord[(int)TriIndex::I_Tier2] = 0;
+	//			skill.Draw(memdc, 474 + 300 * i, 259, 75, 75,
+	//				0, 0, 100, 100);
+	//			temp->GetImg()[(int)CardRect::R_tier2].Draw(memdc, 484 + 300 * i, 360, 56, 56,
+	//				0, 0, 56, 56);
+	//			DrawText(memdc, temp->GetStr((int)CardRect::R_tier2), lstrlen(temp->GetStr((int)CardRect::R_tier2)), &textRect[i], DT_LEFT | DT_WORDBREAK);
+	//			m_iCardPrice[i] = 20;
+	//		}
+	//		else {
+	//			m_iTriNum[i] = RandomGen::GetRand(3) + 1;
+	//			tripord[(int)TriIndex::I_Tier1] = m_iTriNum[i];
+	//			temp->setTier1();
+	//			tripord[(int)TriIndex::I_Tier1] = 0;
 
-					hBit[i] = (HBITMAP)LoadImage(m_hInst, TEXT("상점관련//상점버튼20G.bmp"), IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE | LR_CREATEDIBSECTION);
-					skill.Draw(memdc, 474 + 300 * i, 259, 75, 75,
-						0, 0, 100, 100);
-					temp->GetImg()[(int)CardRect::R_tier2].Draw(memdc, 484 + 300 * i, 360, 56, 56,
-						0, 0, 56, 56);
-					DrawText(memdc, temp->GetStr((int)CardRect::R_tier2), lstrlen(temp->GetStr((int)CardRect::R_tier2)), &textRect[i], DT_LEFT | DT_WORDBREAK);
-					m_iCardPrice[i] = 20;
-				}
-				else {
-					m_iTriNum[i] = RandomGen::GetRand(3) + 1;
-					tripord[(int)TriIndex::I_Tier1] = m_iTriNum[i];
-					temp->setTier1();
-					tripord[(int)TriIndex::I_Tier1] = 0;
+	//			skill.Draw(memdc, 474 + 300 * i, 259, 75, 75,
+	//				0, 0, 100, 100);
+	//			temp->GetImg()[(int)CardRect::R_tier1].Draw(memdc, 484 + 300 * i, 360, 56, 56,
+	//				0, 0, 56, 56);
+	//			DrawText(memdc, temp->GetStr((int)CardRect::R_tier1), lstrlen(temp->GetStr((int)CardRect::R_tier1)), &textRect[i], DT_LEFT | DT_WORDBREAK);
+	//			m_iCardPrice[i] = 10;
+	//		}
+	//		delete temp;
+	//	}
+	//	else {
+	//		skill.Draw(memdc, 474 + 300 * i, 360, 75, 75,
+	//			0, 0, 100, 100);
+	//		m_iCardPrice[i] = 5;
+	//	}
+	//	break;
+	//case (int)CardName::N_aodfyddufvk:
+	//	skill.Load(TEXT(".//카드관련//스킬초상화//맹룡열파.png"));
+	//	if (rand10 >= CARDSPAWNRAND) {
+	//		int* tripord = player->GetTripord()[(int)CardName::N_aodfyddufvk];
+	//		Aodfyddufvk* temp = new Aodfyddufvk(tripord);
+	//		if (tripord[3] == 0 || tripord[(int)TriIndex::I_Tier3] != 0) {
+	//			skill.Draw(memdc, 474 + 300 * i, 360, 75, 75,
+	//				0, 0, 100, 100);
+	//			m_iCardPrice[i] = 5;
+	//		}
+	//		else if (tripord[1] != 0) {
+	//			m_iTriNum[i] = RandomGen::GetRand(2) + 1;
+	//			tripord[2] = m_iTriNum[i];
+	//			temp->setTier3();
+	//			tripord[2] = 0;
 
-					hBit[i] = (HBITMAP)LoadImage(m_hInst, TEXT("상점관련//상점버튼10G.bmp"), IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE | LR_CREATEDIBSECTION);
-					skill.Draw(memdc, 474 + 300 * i, 259, 75, 75,
-						0, 0, 100, 100);
-					temp->GetImg()[(int)CardRect::R_tier1].Draw(memdc, 484 + 300 * i, 360, 56, 56,
-						0, 0, 56, 56);
-					DrawText(memdc, temp->GetStr((int)CardRect::R_tier1), lstrlen(temp->GetStr((int)CardRect::R_tier1)), &textRect[i], DT_LEFT | DT_WORDBREAK);
-					m_iCardPrice[i] = 10;
-				}
-				delete temp;
-			}
-			else {
-				hBit[i] = (HBITMAP)LoadImage(m_hInst, TEXT("상점관련//상점버튼5G.bmp"), IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE | LR_CREATEDIBSECTION);
-				skill.Draw(memdc, 474 + 300 * i, 360, 75, 75,
-					0, 0, 100, 100);
-				m_iCardPrice[i] = 5;
-			}
-			break;
-		case (int)CardName::N_qksdnjftja:
-			skill.Load(TEXT(".//카드관련//스킬초상화//반월섬.png"));
-			if (rand10 >= CARDSPAWNRAND) {
-				int* tripord = player->GetTripord()[(int)CardName::N_qksdnjftja];
-				Qksdnjftja* temp = new Qksdnjftja(tripord);
-				if (tripord[3] == 0 || tripord[(int)TriIndex::I_Tier3] != 0) {
-					hBit[i] = (HBITMAP)LoadImage(m_hInst, TEXT("상점관련//상점버튼5G.bmp"), IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE | LR_CREATEDIBSECTION);
-					skill.Draw(memdc, 474 + 300 * i, 360, 75, 75,
-						0, 0, 100, 100);
-					m_iCardPrice[i] = 5;
-				}
-				else if (tripord[1] != 0) {
-					m_iTriNum[i] = RandomGen::GetRand(2) + 1;
-					tripord[2] = m_iTriNum[i];
-					temp->setTier3();
-					tripord[2] = 0;
+	//			skill.Draw(memdc, 474 + 300 * i, 259, 75, 75,
+	//				0, 0, 100, 100);
+	//			temp->GetImg()[3].Draw(memdc, 484 + 300 * i, 360, 56, 56,
+	//				0, 0, 56, 56);
+	//			DrawText(memdc, temp->GetStr(3), lstrlen(temp->GetStr(3)), &textRect[i], DT_LEFT | DT_WORDBREAK);
+	//			m_iCardPrice[i] = 30;
+	//		}
+	//		else if (tripord[0] != 0) {
+	//			m_iTriNum[i] = RandomGen::GetRand(3) + 1;
+	//			tripord[(int)TriIndex::I_Tier2] = m_iTriNum[i];
+	//			temp->setTier2();
+	//			tripord[(int)TriIndex::I_Tier2] = 0;
 
-					hBit[i] = (HBITMAP)LoadImage(m_hInst, TEXT("상점관련//상점버튼30G.bmp"), IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE | LR_CREATEDIBSECTION);
-					skill.Draw(memdc, 474 + 300 * i, 259, 75, 75,
-						0, 0, 100, 100);
-					temp->GetImg()[3].Draw(memdc, 484 + 300 * i, 360, 56, 56,
-						0, 0, 56, 56);
-					DrawText(memdc, temp->GetStr(3), lstrlen(temp->GetStr(3)), &textRect[i], DT_LEFT | DT_WORDBREAK);
-					m_iCardPrice[i] = 30;
-				}
-				else if (tripord[0] != 0) {
-					m_iTriNum[i] = RandomGen::GetRand(3) + 1;
-					tripord[(int)TriIndex::I_Tier2] = m_iTriNum[i];
-					temp->setTier2();
-					tripord[(int)TriIndex::I_Tier2] = 0;
+	//			skill.Draw(memdc, 474 + 300 * i, 259, 75, 75,
+	//				0, 0, 100, 100);
+	//			temp->GetImg()[(int)CardRect::R_tier2].Draw(memdc, 484 + 300 * i, 360, 56, 56,
+	//				0, 0, 56, 56);
+	//			DrawText(memdc, temp->GetStr((int)CardRect::R_tier2), lstrlen(temp->GetStr((int)CardRect::R_tier2)), &textRect[i], DT_LEFT | DT_WORDBREAK);
+	//			m_iCardPrice[i] = 20;
+	//		}
+	//		else {
+	//			m_iTriNum[i] = RandomGen::GetRand(3) + 1;
+	//			tripord[(int)TriIndex::I_Tier1] = m_iTriNum[i];
+	//			temp->setTier1();
+	//			tripord[(int)TriIndex::I_Tier1] = 0;
 
-					hBit[i] = (HBITMAP)LoadImage(m_hInst, TEXT("상점관련//상점버튼20G.bmp"), IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE | LR_CREATEDIBSECTION);
-					skill.Draw(memdc, 474 + 300 * i, 259, 75, 75,
-						0, 0, 100, 100);
-					temp->GetImg()[(int)CardRect::R_tier2].Draw(memdc, 484 + 300 * i, 360, 56, 56,
-						0, 0, 56, 56);
-					DrawText(memdc, temp->GetStr((int)CardRect::R_tier2), lstrlen(temp->GetStr((int)CardRect::R_tier2)), &textRect[i], DT_LEFT | DT_WORDBREAK);
-					m_iCardPrice[i] = 20;
-				}
-				else {
-					m_iTriNum[i] = RandomGen::GetRand(3) + 1;
-					tripord[(int)TriIndex::I_Tier1] = m_iTriNum[i];
-					temp->setTier1();
-					tripord[(int)TriIndex::I_Tier1] = 0;
+	//			skill.Draw(memdc, 474 + 300 * i, 259, 75, 75,
+	//				0, 0, 100, 100);
+	//			temp->GetImg()[(int)CardRect::R_tier1].Draw(memdc, 484 + 300 * i, 360, 56, 56,
+	//				0, 0, 56, 56);
+	//			DrawText(memdc, temp->GetStr((int)CardRect::R_tier1), lstrlen(temp->GetStr((int)CardRect::R_tier1)), &textRect[i], DT_LEFT | DT_WORDBREAK);
+	//			m_iCardPrice[i] = 10;
+	//		}
+	//		delete temp;
+	//	}
+	//	else {
+	//		skill.Draw(memdc, 474 + 300 * i, 360, 75, 75,
+	//			0, 0, 100, 100);
+	//		m_iCardPrice[i] = 5;
+	//	}
+	//	break;
+	//case (int)CardName::N_qksdnjftja:
+	//	skill.Load(TEXT(".//카드관련//스킬초상화//반월섬.png"));
+	//	if (rand10 >= CARDSPAWNRAND) {
+	//		int* tripord = player->GetTripord()[(int)CardName::N_qksdnjftja];
+	//		Qksdnjftja* temp = new Qksdnjftja(tripord);
+	//		if (tripord[3] == 0 || tripord[(int)TriIndex::I_Tier3] != 0) {
+	//			skill.Draw(memdc, 474 + 300 * i, 360, 75, 75,
+	//				0, 0, 100, 100);
+	//			m_iCardPrice[i] = 5;
+	//		}
+	//		else if (tripord[1] != 0) {
+	//			m_iTriNum[i] = RandomGen::GetRand(2) + 1;
+	//			tripord[2] = m_iTriNum[i];
+	//			temp->setTier3();
+	//			tripord[2] = 0;
 
-					hBit[i] = (HBITMAP)LoadImage(m_hInst, TEXT("상점관련//상점버튼10G.bmp"), IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE | LR_CREATEDIBSECTION);
-					skill.Draw(memdc, 474 + 300 * i, 259, 75, 75,
-						0, 0, 100, 100);
-					temp->GetImg()[(int)CardRect::R_tier1].Draw(memdc, 484 + 300 * i, 360, 56, 56,
-						0, 0, 56, 56);
-					DrawText(memdc, temp->GetStr((int)CardRect::R_tier1), lstrlen(temp->GetStr((int)CardRect::R_tier1)), &textRect[i], DT_LEFT | DT_WORDBREAK);
-					m_iCardPrice[i] = 10;
-				}
-				delete temp;
-			}
-			else {
-				hBit[i] = (HBITMAP)LoadImage(m_hInst, TEXT("상점관련//상점버튼5G.bmp"), IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE | LR_CREATEDIBSECTION);
-				skill.Draw(memdc, 474 + 300 * i, 360, 75, 75,
-					0, 0, 100, 100);
-				m_iCardPrice[i] = 5;
-			}
-			break;
-		case (int)CardName::N_dusghkstja:
-			skill.Load(TEXT(".//카드관련//스킬초상화//연환섬.png"));
-			if (rand10 >= CARDSPAWNRAND) {
-				int* tripord = player->GetTripord()[(int)CardName::N_dusghkstja];
-				Dusghkstja* temp = new Dusghkstja(tripord);
-				if (tripord[3] == 0 || tripord[(int)TriIndex::I_Tier3] != 0) {
-					hBit[i] = (HBITMAP)LoadImage(m_hInst, TEXT("상점관련//상점버튼5G.bmp"), IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE | LR_CREATEDIBSECTION);
-					skill.Draw(memdc, 474 + 300 * i, 360, 75, 75,
-						0, 0, 100, 100);
-					m_iCardPrice[i] = 5;
-				}
-				else if (tripord[1] != 0) {
-					m_iTriNum[i] = RandomGen::GetRand(2) + 1;
-					tripord[2] = m_iTriNum[i];
-					temp->setTier3();
-					tripord[2] = 0;
+	//			skill.Draw(memdc, 474 + 300 * i, 259, 75, 75,
+	//				0, 0, 100, 100);
+	//			temp->GetImg()[3].Draw(memdc, 484 + 300 * i, 360, 56, 56,
+	//				0, 0, 56, 56);
+	//			DrawText(memdc, temp->GetStr(3), lstrlen(temp->GetStr(3)), &textRect[i], DT_LEFT | DT_WORDBREAK);
+	//			m_iCardPrice[i] = 30;
+	//		}
+	//		else if (tripord[0] != 0) {
+	//			m_iTriNum[i] = RandomGen::GetRand(3) + 1;
+	//			tripord[(int)TriIndex::I_Tier2] = m_iTriNum[i];
+	//			temp->setTier2();
+	//			tripord[(int)TriIndex::I_Tier2] = 0;
 
-					hBit[i] = (HBITMAP)LoadImage(m_hInst, TEXT("상점관련//상점버튼30G.bmp"), IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE | LR_CREATEDIBSECTION);
-					skill.Draw(memdc, 474 + 300 * i, 259, 75, 75,
-						0, 0, 100, 100);
-					temp->GetImg()[3].Draw(memdc, 484 + 300 * i, 360, 56, 56,
-						0, 0, 56, 56);
-					DrawText(memdc, temp->GetStr(3), lstrlen(temp->GetStr(3)), &textRect[i], DT_LEFT | DT_WORDBREAK);
-					m_iCardPrice[i] = 30;
-				}
-				else if (tripord[0] != 0) {
-					m_iTriNum[i] = RandomGen::GetRand(3) + 1;
-					tripord[(int)TriIndex::I_Tier2] = m_iTriNum[i];
-					temp->setTier2();
-					tripord[(int)TriIndex::I_Tier2] = 0;
+	//			skill.Draw(memdc, 474 + 300 * i, 259, 75, 75,
+	//				0, 0, 100, 100);
+	//			temp->GetImg()[(int)CardRect::R_tier2].Draw(memdc, 484 + 300 * i, 360, 56, 56,
+	//				0, 0, 56, 56);
+	//			DrawText(memdc, temp->GetStr((int)CardRect::R_tier2), lstrlen(temp->GetStr((int)CardRect::R_tier2)), &textRect[i], DT_LEFT | DT_WORDBREAK);
+	//			m_iCardPrice[i] = 20;
+	//		}
+	//		else {
+	//			m_iTriNum[i] = RandomGen::GetRand(3) + 1;
+	//			tripord[(int)TriIndex::I_Tier1] = m_iTriNum[i];
+	//			temp->setTier1();
+	//			tripord[(int)TriIndex::I_Tier1] = 0;
 
-					hBit[i] = (HBITMAP)LoadImage(m_hInst, TEXT("상점관련//상점버튼20G.bmp"), IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE | LR_CREATEDIBSECTION);
-					skill.Draw(memdc, 474 + 300 * i, 259, 75, 75,
-						0, 0, 100, 100);
-					temp->GetImg()[(int)CardRect::R_tier2].Draw(memdc, 484 + 300 * i, 360, 56, 56,
-						0, 0, 56, 56);
-					DrawText(memdc, temp->GetStr((int)CardRect::R_tier2), lstrlen(temp->GetStr((int)CardRect::R_tier2)), &textRect[i], DT_LEFT | DT_WORDBREAK);
-					m_iCardPrice[i] = 20;
-				}
-				else {
-					m_iTriNum[i] = RandomGen::GetRand(3) + 1;
-					tripord[(int)TriIndex::I_Tier1] = m_iTriNum[i];
-					temp->setTier1();
-					tripord[(int)TriIndex::I_Tier1] = 0;
+	//			skill.Draw(memdc, 474 + 300 * i, 259, 75, 75,
+	//				0, 0, 100, 100);
+	//			temp->GetImg()[(int)CardRect::R_tier1].Draw(memdc, 484 + 300 * i, 360, 56, 56,
+	//				0, 0, 56, 56);
+	//			DrawText(memdc, temp->GetStr((int)CardRect::R_tier1), lstrlen(temp->GetStr((int)CardRect::R_tier1)), &textRect[i], DT_LEFT | DT_WORDBREAK);
+	//			m_iCardPrice[i] = 10;
+	//		}
+	//		delete temp;
+	//	}
+	//	else {
+	//		skill.Draw(memdc, 474 + 300 * i, 360, 75, 75,
+	//			0, 0, 100, 100);
+	//		m_iCardPrice[i] = 5;
+	//	}
+	//	break;
+	//case (int)CardName::N_dusghkstja:
+	//	skill.Load(TEXT(".//카드관련//스킬초상화//연환섬.png"));
+	//	if (rand10 >= CARDSPAWNRAND) {
+	//		int* tripord = player->GetTripord()[(int)CardName::N_dusghkstja];
+	//		Dusghkstja* temp = new Dusghkstja(tripord);
+	//		if (tripord[3] == 0 || tripord[(int)TriIndex::I_Tier3] != 0) {
+	//			skill.Draw(memdc, 474 + 300 * i, 360, 75, 75,
+	//				0, 0, 100, 100);
+	//			m_iCardPrice[i] = 5;
+	//		}
+	//		else if (tripord[1] != 0) {
+	//			m_iTriNum[i] = RandomGen::GetRand(2) + 1;
+	//			tripord[2] = m_iTriNum[i];
+	//			temp->setTier3();
+	//			tripord[2] = 0;
 
-					hBit[i] = (HBITMAP)LoadImage(m_hInst, TEXT("상점관련//상점버튼10G.bmp"), IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE | LR_CREATEDIBSECTION);
-					skill.Draw(memdc, 474 + 300 * i, 259, 75, 75,
-						0, 0, 100, 100);
-					temp->GetImg()[(int)CardRect::R_tier1].Draw(memdc, 484 + 300 * i, 360, 56, 56,
-						0, 0, 56, 56);
-					DrawText(memdc, temp->GetStr((int)CardRect::R_tier1), lstrlen(temp->GetStr((int)CardRect::R_tier1)), &textRect[i], DT_LEFT | DT_WORDBREAK);
-					m_iCardPrice[i] = 10;
-				}
-				delete temp;
-			}
-			else {
-				hBit[i] = (HBITMAP)LoadImage(m_hInst, TEXT("상점관련//상점버튼5G.bmp"), IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE | LR_CREATEDIBSECTION);
-				skill.Draw(memdc, 474 + 300 * i, 360, 75, 75,
-					0, 0, 100, 100);
-				m_iCardPrice[i] = 5;
-			}
-			break;
-		case (int)CardName::N_cjdfydwls:
-			skill.Load(TEXT(".//카드관련//스킬초상화//청룡진.png"));
-			if (rand10 >= CARDSPAWNRAND) {
-				int* tripord = player->GetTripord()[(int)CardName::N_cjdfydwls];
-				Cjdfydwls* temp = new Cjdfydwls(tripord);
-				if (tripord[3] == 0 || tripord[(int)TriIndex::I_Tier3] != 0) {
-					hBit[i] = (HBITMAP)LoadImage(m_hInst, TEXT("상점관련//상점버튼5G.bmp"), IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE | LR_CREATEDIBSECTION);
-					skill.Draw(memdc, 474 + 300 * i, 360, 75, 75,
-						0, 0, 100, 100);
-					m_iCardPrice[i] = 5;
-				}
-				else if (tripord[1] != 0) {
-					m_iTriNum[i] = RandomGen::GetRand(2) + 1;
-					tripord[2] = m_iTriNum[i];
-					temp->setTier3();
-					tripord[2] = 0;
+	//			skill.Draw(memdc, 474 + 300 * i, 259, 75, 75,
+	//				0, 0, 100, 100);
+	//			temp->GetImg()[3].Draw(memdc, 484 + 300 * i, 360, 56, 56,
+	//				0, 0, 56, 56);
+	//			DrawText(memdc, temp->GetStr(3), lstrlen(temp->GetStr(3)), &textRect[i], DT_LEFT | DT_WORDBREAK);
+	//			m_iCardPrice[i] = 30;
+	//		}
+	//		else if (tripord[0] != 0) {
+	//			m_iTriNum[i] = RandomGen::GetRand(3) + 1;
+	//			tripord[(int)TriIndex::I_Tier2] = m_iTriNum[i];
+	//			temp->setTier2();
+	//			tripord[(int)TriIndex::I_Tier2] = 0;
 
-					hBit[i] = (HBITMAP)LoadImage(m_hInst, TEXT("상점관련//상점버튼30G.bmp"), IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE | LR_CREATEDIBSECTION);
-					skill.Draw(memdc, 474 + 300 * i, 259, 75, 75,
-						0, 0, 100, 100);
-					temp->GetImg()[3].Draw(memdc, 484 + 300 * i, 360, 56, 56,
-						0, 0, 56, 56);
-					DrawText(memdc, temp->GetStr(3), lstrlen(temp->GetStr(3)), &textRect[i], DT_LEFT | DT_WORDBREAK);
-					m_iCardPrice[i] = 30;
-				}
-				else if (tripord[0] != 0) {
-					m_iTriNum[i] = RandomGen::GetRand(3) + 1;
-					tripord[(int)TriIndex::I_Tier2] = m_iTriNum[i];
-					temp->setTier2();
-					tripord[(int)TriIndex::I_Tier2] = 0;
+	//			skill.Draw(memdc, 474 + 300 * i, 259, 75, 75,
+	//				0, 0, 100, 100);
+	//			temp->GetImg()[(int)CardRect::R_tier2].Draw(memdc, 484 + 300 * i, 360, 56, 56,
+	//				0, 0, 56, 56);
+	//			DrawText(memdc, temp->GetStr((int)CardRect::R_tier2), lstrlen(temp->GetStr((int)CardRect::R_tier2)), &textRect[i], DT_LEFT | DT_WORDBREAK);
+	//			m_iCardPrice[i] = 20;
+	//		}
+	//		else {
+	//			m_iTriNum[i] = RandomGen::GetRand(3) + 1;
+	//			tripord[(int)TriIndex::I_Tier1] = m_iTriNum[i];
+	//			temp->setTier1();
+	//			tripord[(int)TriIndex::I_Tier1] = 0;
 
-					hBit[i] = (HBITMAP)LoadImage(m_hInst, TEXT("상점관련//상점버튼20G.bmp"), IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE | LR_CREATEDIBSECTION);
-					skill.Draw(memdc, 474 + 300 * i, 259, 75, 75,
-						0, 0, 100, 100);
-					temp->GetImg()[(int)CardRect::R_tier2].Draw(memdc, 484 + 300 * i, 360, 56, 56,
-						0, 0, 56, 56);
-					DrawText(memdc, temp->GetStr((int)CardRect::R_tier2), lstrlen(temp->GetStr((int)CardRect::R_tier2)), &textRect[i], DT_LEFT | DT_WORDBREAK);
-					m_iCardPrice[i] = 20;
-				}
-				else {
-					m_iTriNum[i] = RandomGen::GetRand(3) + 1;
-					tripord[(int)TriIndex::I_Tier1] = m_iTriNum[i];
-					temp->setTier1();
-					tripord[(int)TriIndex::I_Tier1] = 0;
+	//			skill.Draw(memdc, 474 + 300 * i, 259, 75, 75,
+	//				0, 0, 100, 100);
+	//			temp->GetImg()[(int)CardRect::R_tier1].Draw(memdc, 484 + 300 * i, 360, 56, 56,
+	//				0, 0, 56, 56);
+	//			DrawText(memdc, temp->GetStr((int)CardRect::R_tier1), lstrlen(temp->GetStr((int)CardRect::R_tier1)), &textRect[i], DT_LEFT | DT_WORDBREAK);
+	//			m_iCardPrice[i] = 10;
+	//		}
+	//		delete temp;
+	//	}
+	//	else {
+	//		skill.Draw(memdc, 474 + 300 * i, 360, 75, 75,
+	//			0, 0, 100, 100);
+	//		m_iCardPrice[i] = 5;
+	//	}
+	//	break;
+	//case (int)CardName::N_cjdfydwls:
+	//	skill.Load(TEXT(".//카드관련//스킬초상화//청룡진.png"));
+	//	if (rand10 >= CARDSPAWNRAND) {
+	//		int* tripord = player->GetTripord()[(int)CardName::N_cjdfydwls];
+	//		Cjdfydwls* temp = new Cjdfydwls(tripord);
+	//		if (tripord[3] == 0 || tripord[(int)TriIndex::I_Tier3] != 0) {
+	//			skill.Draw(memdc, 474 + 300 * i, 360, 75, 75,
+	//				0, 0, 100, 100);
+	//			m_iCardPrice[i] = 5;
+	//		}
+	//		else if (tripord[1] != 0) {
+	//			m_iTriNum[i] = RandomGen::GetRand(2) + 1;
+	//			tripord[2] = m_iTriNum[i];
+	//			temp->setTier3();
+	//			tripord[2] = 0;
 
-					hBit[i] = (HBITMAP)LoadImage(m_hInst, TEXT("상점관련//상점버튼10G.bmp"), IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE | LR_CREATEDIBSECTION);
-					skill.Draw(memdc, 474 + 300 * i, 259, 75, 75,
-						0, 0, 100, 100);
-					temp->GetImg()[(int)CardRect::R_tier1].Draw(memdc, 484 + 300 * i, 360, 56, 56,
-						0, 0, 56, 56);
-					DrawText(memdc, temp->GetStr((int)CardRect::R_tier1), lstrlen(temp->GetStr((int)CardRect::R_tier1)), &textRect[i], DT_LEFT | DT_WORDBREAK);
-					m_iCardPrice[i] = 10;
-				}
-				delete temp;
-			}
-			else {
-				hBit[i] = (HBITMAP)LoadImage(m_hInst, TEXT("상점관련//상점버튼5G.bmp"), IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE | LR_CREATEDIBSECTION);
-				skill.Draw(memdc, 474 + 300 * i, 360, 75, 75,
-					0, 0, 100, 100);
-				m_iCardPrice[i] = 5;
-			}
-			break;
-		case (int)CardName::N_cjdfydcnftn:
-			skill.Load(TEXT(".//카드관련//스킬초상화//청룡출수.png"));
-			if (rand10 >= CARDSPAWNRAND) {
-				int* tripord = player->GetTripord()[(int)CardName::N_cjdfydcnftn];
-				Cjdfydcnftn* temp = new Cjdfydcnftn(tripord);
-				if (tripord[3] == 0 || tripord[(int)TriIndex::I_Tier3] != 0) {
-					hBit[i] = (HBITMAP)LoadImage(m_hInst, TEXT("상점관련//상점버튼5G.bmp"), IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE | LR_CREATEDIBSECTION);
-					skill.Draw(memdc, 474 + 300 * i, 360, 75, 75,
-						0, 0, 100, 100);
-					m_iCardPrice[i] = 5;
-				}
-				else if (tripord[1] != 0) {
-					m_iTriNum[i] = RandomGen::GetRand(2) + 1;
-					tripord[2] = m_iTriNum[i];
-					temp->setTier3();
-					tripord[2] = 0;
+	//			skill.Draw(memdc, 474 + 300 * i, 259, 75, 75,
+	//				0, 0, 100, 100);
+	//			temp->GetImg()[3].Draw(memdc, 484 + 300 * i, 360, 56, 56,
+	//				0, 0, 56, 56);
+	//			DrawText(memdc, temp->GetStr(3), lstrlen(temp->GetStr(3)), &textRect[i], DT_LEFT | DT_WORDBREAK);
+	//			m_iCardPrice[i] = 30;
+	//		}
+	//		else if (tripord[0] != 0) {
+	//			m_iTriNum[i] = RandomGen::GetRand(3) + 1;
+	//			tripord[(int)TriIndex::I_Tier2] = m_iTriNum[i];
+	//			temp->setTier2();
+	//			tripord[(int)TriIndex::I_Tier2] = 0;
 
-					hBit[i] = (HBITMAP)LoadImage(m_hInst, TEXT("상점관련//상점버튼30G.bmp"), IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE | LR_CREATEDIBSECTION);
-					skill.Draw(memdc, 474 + 300 * i, 259, 75, 75,
-						0, 0, 100, 100);
-					temp->GetImg()[3].Draw(memdc, 484 + 300 * i, 360, 56, 56,
-						0, 0, 56, 56);
-					DrawText(memdc, temp->GetStr(3), lstrlen(temp->GetStr(3)), &textRect[i], DT_LEFT | DT_WORDBREAK);
-					m_iCardPrice[i] = 30;
-				}
-				else if (tripord[0] != 0) {
-					m_iTriNum[i] = RandomGen::GetRand(3) + 1;
-					tripord[(int)TriIndex::I_Tier2] = m_iTriNum[i];
-					temp->setTier2();
-					tripord[(int)TriIndex::I_Tier2] = 0;
+	//			skill.Draw(memdc, 474 + 300 * i, 259, 75, 75,
+	//				0, 0, 100, 100);
+	//			temp->GetImg()[(int)CardRect::R_tier2].Draw(memdc, 484 + 300 * i, 360, 56, 56,
+	//				0, 0, 56, 56);
+	//			DrawText(memdc, temp->GetStr((int)CardRect::R_tier2), lstrlen(temp->GetStr((int)CardRect::R_tier2)), &textRect[i], DT_LEFT | DT_WORDBREAK);
+	//			m_iCardPrice[i] = 20;
+	//		}
+	//		else {
+	//			m_iTriNum[i] = RandomGen::GetRand(3) + 1;
+	//			tripord[(int)TriIndex::I_Tier1] = m_iTriNum[i];
+	//			temp->setTier1();
+	//			tripord[(int)TriIndex::I_Tier1] = 0;
 
-					hBit[i] = (HBITMAP)LoadImage(m_hInst, TEXT("상점관련//상점버튼20G.bmp"), IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE | LR_CREATEDIBSECTION);
-					skill.Draw(memdc, 474 + 300 * i, 259, 75, 75,
-						0, 0, 100, 100);
-					temp->GetImg()[(int)CardRect::R_tier2].Draw(memdc, 484 + 300 * i, 360, 56, 56,
-						0, 0, 56, 56);
-					DrawText(memdc, temp->GetStr((int)CardRect::R_tier2), lstrlen(temp->GetStr((int)CardRect::R_tier2)), &textRect[i], DT_LEFT | DT_WORDBREAK);
-					m_iCardPrice[i] = 20;
-				}
-				else {
-					m_iTriNum[i] = RandomGen::GetRand(3) + 1;
-					tripord[(int)TriIndex::I_Tier1] = m_iTriNum[i];
-					temp->setTier1();
-					tripord[(int)TriIndex::I_Tier1] = 0;
+	//			skill.Draw(memdc, 474 + 300 * i, 259, 75, 75,
+	//				0, 0, 100, 100);
+	//			temp->GetImg()[(int)CardRect::R_tier1].Draw(memdc, 484 + 300 * i, 360, 56, 56,
+	//				0, 0, 56, 56);
+	//			DrawText(memdc, temp->GetStr((int)CardRect::R_tier1), lstrlen(temp->GetStr((int)CardRect::R_tier1)), &textRect[i], DT_LEFT | DT_WORDBREAK);
+	//			m_iCardPrice[i] = 10;
+	//		}
+	//		delete temp;
+	//	}
+	//	else {
+	//		skill.Draw(memdc, 474 + 300 * i, 360, 75, 75,
+	//			0, 0, 100, 100);
+	//		m_iCardPrice[i] = 5;
+	//	}
+	//	break;
+	//case (int)CardName::N_cjdfydcnftn:
+	//	skill.Load(TEXT(".//카드관련//스킬초상화//청룡출수.png"));
+	//	if (rand10 >= CARDSPAWNRAND) {
+	//		int* tripord = player->GetTripord()[(int)CardName::N_cjdfydcnftn];
+	//		Cjdfydcnftn* temp = new Cjdfydcnftn(tripord);
+	//		if (tripord[3] == 0 || tripord[(int)TriIndex::I_Tier3] != 0) {
+	//			skill.Draw(memdc, 474 + 300 * i, 360, 75, 75,
+	//				0, 0, 100, 100);
+	//			m_iCardPrice[i] = 5;
+	//		}
+	//		else if (tripord[1] != 0) {
+	//			m_iTriNum[i] = RandomGen::GetRand(2) + 1;
+	//			tripord[2] = m_iTriNum[i];
+	//			temp->setTier3();
+	//			tripord[2] = 0;
 
-					hBit[i] = (HBITMAP)LoadImage(m_hInst, TEXT("상점관련//상점버튼10G.bmp"), IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE | LR_CREATEDIBSECTION);
-					skill.Draw(memdc, 474 + 300 * i, 259, 75, 75,
-						0, 0, 100, 100);
-					temp->GetImg()[(int)CardRect::R_tier1].Draw(memdc, 484 + 300 * i, 360, 56, 56,
-						0, 0, 56, 56);
-					DrawText(memdc, temp->GetStr((int)CardRect::R_tier1), lstrlen(temp->GetStr((int)CardRect::R_tier1)), &textRect[i], DT_LEFT | DT_WORDBREAK);
-					m_iCardPrice[i] = 10;
-				}
-				delete temp;
-			}
-			else {
-				hBit[i] = (HBITMAP)LoadImage(m_hInst, TEXT("상점관련//상점버튼5G.bmp"), IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE | LR_CREATEDIBSECTION);
-				skill.Draw(memdc, 474 + 300 * i, 360, 75, 75,
-					0, 0, 100, 100);
-				m_iCardPrice[i] = 5;
-			}
-			break;
-		case (int)CardName::N_ghltjsckd:
-			skill.Load(TEXT(".//카드관련//스킬초상화//회선창.png"));
-			if (rand10 >= CARDSPAWNRAND) {
-				int* tripord = player->GetTripord()[(int)CardName::N_ghltjsckd];
-				Ghltjsckd* temp = new Ghltjsckd(tripord);
-				if (tripord[3] == 0 || tripord[(int)TriIndex::I_Tier3] != 0) {
-					hBit[i] = (HBITMAP)LoadImage(m_hInst, TEXT("상점관련//상점버튼5G.bmp"), IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE | LR_CREATEDIBSECTION);
-					skill.Draw(memdc, 474 + 300 * i, 360, 75, 75,
-						0, 0, 100, 100);
-					m_iCardPrice[i] = 5;
-				}
-				else if (tripord[1] != 0) {
-					m_iTriNum[i] = RandomGen::GetRand(2) + 1;
-					tripord[2] = m_iTriNum[i];
-					temp->setTier3();
-					tripord[2] = 0;
+	//			skill.Draw(memdc, 474 + 300 * i, 259, 75, 75,
+	//				0, 0, 100, 100);
+	//			temp->GetImg()[3].Draw(memdc, 484 + 300 * i, 360, 56, 56,
+	//				0, 0, 56, 56);
+	//			DrawText(memdc, temp->GetStr(3), lstrlen(temp->GetStr(3)), &textRect[i], DT_LEFT | DT_WORDBREAK);
+	//			m_iCardPrice[i] = 30;
+	//		}
+	//		else if (tripord[0] != 0) {
+	//			m_iTriNum[i] = RandomGen::GetRand(3) + 1;
+	//			tripord[(int)TriIndex::I_Tier2] = m_iTriNum[i];
+	//			temp->setTier2();
+	//			tripord[(int)TriIndex::I_Tier2] = 0;
 
-					hBit[i] = (HBITMAP)LoadImage(m_hInst, TEXT("상점관련//상점버튼30G.bmp"), IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE | LR_CREATEDIBSECTION);
-					skill.Draw(memdc, 474 + 300 * i, 259, 75, 75,
-						0, 0, 100, 100);
-					temp->GetImg()[3].Draw(memdc, 484 + 300 * i, 360, 56, 56,
-						0, 0, 56, 56);
-					DrawText(memdc, temp->GetStr(3), lstrlen(temp->GetStr(3)), &textRect[i], DT_LEFT | DT_WORDBREAK);
-					m_iCardPrice[i] = 30;
-				}
-				else if (tripord[0] != 0) {
-					m_iTriNum[i] = RandomGen::GetRand(3) + 1;
-					tripord[(int)TriIndex::I_Tier2] = m_iTriNum[i];
-					temp->setTier2();
-					tripord[(int)TriIndex::I_Tier2] = 0;
+	//			skill.Draw(memdc, 474 + 300 * i, 259, 75, 75,
+	//				0, 0, 100, 100);
+	//			temp->GetImg()[(int)CardRect::R_tier2].Draw(memdc, 484 + 300 * i, 360, 56, 56,
+	//				0, 0, 56, 56);
+	//			DrawText(memdc, temp->GetStr((int)CardRect::R_tier2), lstrlen(temp->GetStr((int)CardRect::R_tier2)), &textRect[i], DT_LEFT | DT_WORDBREAK);
+	//			m_iCardPrice[i] = 20;
+	//		}
+	//		else {
+	//			m_iTriNum[i] = RandomGen::GetRand(3) + 1;
+	//			tripord[(int)TriIndex::I_Tier1] = m_iTriNum[i];
+	//			temp->setTier1();
+	//			tripord[(int)TriIndex::I_Tier1] = 0;
 
-					hBit[i] = (HBITMAP)LoadImage(m_hInst, TEXT("상점관련//상점버튼20G.bmp"), IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE | LR_CREATEDIBSECTION);
-					skill.Draw(memdc, 474 + 300 * i, 259, 75, 75,
-						0, 0, 100, 100);
-					temp->GetImg()[(int)CardRect::R_tier2].Draw(memdc, 484 + 300 * i, 360, 56, 56,
-						0, 0, 56, 56);
-					DrawText(memdc, temp->GetStr((int)CardRect::R_tier2), lstrlen(temp->GetStr((int)CardRect::R_tier2)), &textRect[i], DT_LEFT | DT_WORDBREAK);
-					m_iCardPrice[i] = 20;
-				}
-				else {
-					m_iTriNum[i] = RandomGen::GetRand(3) + 1;
-					tripord[(int)TriIndex::I_Tier1] = m_iTriNum[i];
-					temp->setTier1();
-					tripord[(int)TriIndex::I_Tier1] = 0;
+	//			skill.Draw(memdc, 474 + 300 * i, 259, 75, 75,
+	//				0, 0, 100, 100);
+	//			temp->GetImg()[(int)CardRect::R_tier1].Draw(memdc, 484 + 300 * i, 360, 56, 56,
+	//				0, 0, 56, 56);
+	//			DrawText(memdc, temp->GetStr((int)CardRect::R_tier1), lstrlen(temp->GetStr((int)CardRect::R_tier1)), &textRect[i], DT_LEFT | DT_WORDBREAK);
+	//			m_iCardPrice[i] = 10;
+	//		}
+	//		delete temp;
+	//	}
+	//	else {
+	//		skill.Draw(memdc, 474 + 300 * i, 360, 75, 75,
+	//			0, 0, 100, 100);
+	//		m_iCardPrice[i] = 5;
+	//	}
+	//	break;
+	//case (int)CardName::N_ghltjsckd:
+	//	skill.Load(TEXT(".//카드관련//스킬초상화//회선창.png"));
+	//	if (rand10 >= CARDSPAWNRAND) {
+	//		int* tripord = player->GetTripord()[(int)CardName::N_ghltjsckd];
+	//		Ghltjsckd* temp = new Ghltjsckd(tripord);
+	//		if (tripord[3] == 0 || tripord[(int)TriIndex::I_Tier3] != 0) {
+	//			skill.Draw(memdc, 474 + 300 * i, 360, 75, 75,
+	//				0, 0, 100, 100);
+	//			m_iCardPrice[i] = 5;
+	//		}
+	//		else if (tripord[1] != 0) {
+	//			m_iTriNum[i] = RandomGen::GetRand(2) + 1;
+	//			tripord[2] = m_iTriNum[i];
+	//			temp->setTier3();
+	//			tripord[2] = 0;
 
-					hBit[i] = (HBITMAP)LoadImage(m_hInst, TEXT("상점관련//상점버튼10G.bmp"), IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE | LR_CREATEDIBSECTION);
-					skill.Draw(memdc, 474 + 300 * i, 259, 75, 75,
-						0, 0, 100, 100);
-					temp->GetImg()[(int)CardRect::R_tier1].Draw(memdc, 484 + 300 * i, 360, 56, 56,
-						0, 0, 56, 56);
-					DrawText(memdc, temp->GetStr((int)CardRect::R_tier1), lstrlen(temp->GetStr((int)CardRect::R_tier1)), &textRect[i], DT_LEFT | DT_WORDBREAK);
-					m_iCardPrice[i] = 10;
-				}
-				delete temp;
-			}
-			else {
-				hBit[i] = (HBITMAP)LoadImage(m_hInst, TEXT("상점관련//상점버튼5G.bmp"), IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE | LR_CREATEDIBSECTION);
-				skill.Draw(memdc, 474 + 300 * i, 360, 75, 75,
-					0, 0, 100, 100);
-				m_iCardPrice[i] = 5;
-			}
-			break;
-			//case (int)CardName::N_dmsgkdbtjdxks:
-			//	skill.Load(TEXT(".//카드관련//스킬초상화//은하유성탄.png"));
-			//	skill.Draw(memdc, 474 + 300 * i, 360, 75, 75,
-			//		0, 0, 100, 100);
-			//	break;
-		default:
-			break;
-		}
-		skill.Destroy();
-		SendMessage(hButton[i], BM_SETIMAGE, IMAGE_BITMAP, (LPARAM)hBit[i]);
-	}
+	//			skill.Draw(memdc, 474 + 300 * i, 259, 75, 75,
+	//				0, 0, 100, 100);
+	//			temp->GetImg()[3].Draw(memdc, 484 + 300 * i, 360, 56, 56,
+	//				0, 0, 56, 56);
+	//			DrawText(memdc, temp->GetStr(3), lstrlen(temp->GetStr(3)), &textRect[i], DT_LEFT | DT_WORDBREAK);
+	//			m_iCardPrice[i] = 30;
+	//		}
+	//		else if (tripord[0] != 0) {
+	//			m_iTriNum[i] = RandomGen::GetRand(3) + 1;
+	//			tripord[(int)TriIndex::I_Tier2] = m_iTriNum[i];
+	//			temp->setTier2();
+	//			tripord[(int)TriIndex::I_Tier2] = 0;
+
+	//			skill.Draw(memdc, 474 + 300 * i, 259, 75, 75,
+	//				0, 0, 100, 100);
+	//			temp->GetImg()[(int)CardRect::R_tier2].Draw(memdc, 484 + 300 * i, 360, 56, 56,
+	//				0, 0, 56, 56);
+	//			DrawText(memdc, temp->GetStr((int)CardRect::R_tier2), lstrlen(temp->GetStr((int)CardRect::R_tier2)), &textRect[i], DT_LEFT | DT_WORDBREAK);
+	//			m_iCardPrice[i] = 20;
+	//		}
+	//		else {
+	//			m_iTriNum[i] = RandomGen::GetRand(3) + 1;
+	//			tripord[(int)TriIndex::I_Tier1] = m_iTriNum[i];
+	//			temp->setTier1();
+	//			tripord[(int)TriIndex::I_Tier1] = 0;
+
+	//			skill.Draw(memdc, 474 + 300 * i, 259, 75, 75,
+	//				0, 0, 100, 100);
+	//			temp->GetImg()[(int)CardRect::R_tier1].Draw(memdc, 484 + 300 * i, 360, 56, 56,
+	//				0, 0, 56, 56);
+	//			DrawText(memdc, temp->GetStr((int)CardRect::R_tier1), lstrlen(temp->GetStr((int)CardRect::R_tier1)), &textRect[i], DT_LEFT | DT_WORDBREAK);
+	//			m_iCardPrice[i] = 10;
+	//		}
+	//		delete temp;
+	//	}
+	//	else {
+	//		skill.Draw(memdc, 474 + 300 * i, 360, 75, 75,
+	//			0, 0, 100, 100);
+	//		m_iCardPrice[i] = 5;
+	//	}
+	//	break;
+	//	//case (int)CardName::N_dmsgkdbtjdxks:
+	//	//	skill.Load(TEXT(".//카드관련//스킬초상화//은하유성탄.png"));
+	//	//	skill.Draw(memdc, 474 + 300 * i, 360, 75, 75,
+	//	//		0, 0, 100, 100);
+	//	//	break;
+	//default:
+	//	break;
+	//}
+	//skill.Destroy();
+	//SendMessage(hButton[i], BM_SETIMAGE, IMAGE_BITMAP, (LPARAM)hBit[i]);
+
+
+	//}
 
 
 	//SendMessage(hButton[0], BM_SETIMAGE, IMAGE_BITMAP, (LPARAM)hBit);
@@ -820,11 +768,14 @@ void Shop::OnProcessingCommandMessage(HWND hWnd, WPARAM wParam, Player* player)
 	default:
 		break;
 	}
-	if (startTimer) {
+	if (startTimer)
+	{
 		DestroyWindow(GetDlgItem(hWnd, IDC_BUTTON_BUY1));
 		DestroyWindow(GetDlgItem(hWnd, IDC_BUTTON_BUY2));
 		DestroyWindow(GetDlgItem(hWnd, IDC_BUTTON_BUY3));
 		DestroyWindow(GetDlgItem(hWnd, IDC_BUTTON_BUY4));
+
+		player->SetLevelUp(false);
 	}
 }
 
@@ -909,4 +860,413 @@ void Shop::SetRandValue()
 		m_hWnd, (HMENU)IDC_BUTTON_BUY2, m_hInst, NULL);
 	m_hButton[2] = CreateWindow(L"button", L"OK", WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON | BS_BITMAP, 1050, 650, 135, 55,
 		m_hWnd, (HMENU)IDC_BUTTON_BUY3, m_hInst, NULL);
+}
+
+void Shop::SetRandValueTripord(Player* player)
+{
+	//for (int i = 0; i < 3; i++)
+	//{
+	//	m_iRandValue[i] = -1;
+	//	m_iCardPrice[i] = 0;
+	//}
+
+	////m_iRandValue[0] = RandomGen::GetRand(CARDVARIABLE);
+	//for (int i = 0; i < 3; i++)
+	//{
+	//	bool keepIn = true;
+	//	while (keepIn) {
+	//		keepIn = false;
+	//		m_iRandValue[i] = RandomGen::GetRand(CARDVARIABLE);
+	//		for (int j = 0; j < 3; j++)
+	//		{
+	//			if ((i != j && m_iRandValue[i] == m_iRandValue[j]))
+	//				keepIn = true;
+	//		}
+	//	}
+	//}
+
+	//for (int i = 0; i < 3; i++)
+	//{
+	//	int rand10 = 99;
+	//	int triRand;
+
+	//	if (player->GetCardCount() < 30)
+	//		rand10 = RandomGen::GetRand(100);
+
+	//	switch (m_iRandValue[i])
+	//	{
+	//	case (int)CardName::N_rhlddufvk:
+	//		if (rand10 >= CARDSPAWNRAND) {
+	//			int* tripord = player->GetTripord()[(int)CardName::N_rhlddufvk];
+	//			Rhlddufvk* temp = new Rhlddufvk(tripord);
+	//			if (tripord[3] == 0 || tripord[(int)TriIndex::I_Tier3] != 0) {
+	//				m_iCardPrice[i] = 5;
+	//			}
+	//			else if (tripord[1] != 0) {
+	//				m_iTriNum[i] = RandomGen::GetRand(2) + 1;
+	//				tripord[2] = m_iTriNum[i];
+	//				temp->setTier3();
+	//				tripord[2] = 0;
+	//				tripord[2] = 0;
+
+	//				m_iCardPrice[i] = 30;
+	//			}
+	//			else if (tripord[0] != 0) {
+	//				m_iTriNum[i] = RandomGen::GetRand(3) + 1;
+	//				tripord[(int)TriIndex::I_Tier2] = m_iTriNum[i];
+	//				temp->setTier2();
+	//				tripord[(int)TriIndex::I_Tier2] = 0;
+
+	//				m_iCardPrice[i] = 20;
+	//			}
+	//			else {
+	//				m_iTriNum[i] = RandomGen::GetRand(3) + 1;
+	//				tripord[(int)TriIndex::I_Tier1] = m_iTriNum[i];
+	//				temp->setTier1();
+	//				tripord[(int)TriIndex::I_Tier1] = 0;
+
+	//				m_iCardPrice[i] = 10;
+	//			}
+	//			delete temp;
+	//		}
+	//		else {
+	//			m_iCardPrice[i] = 5;
+	//		}
+	//		break;
+	//	case (int)CardName::N_sktjsckd:
+	//		if (rand10 >= CARDSPAWNRAND) {
+	//			int* tripord = player->GetTripord()[(int)CardName::N_sktjsckd];
+	//			Sktjsckd* temp = new Sktjsckd(tripord);
+	//			if (tripord[3] == 0 || tripord[(int)TriIndex::I_Tier3] != 0) {
+	//				m_iCardPrice[i] = 5;
+	//			}
+	//			else if (tripord[1] != 0) {
+	//				m_iTriNum[i] = RandomGen::GetRand(2) + 1;
+	//				tripord[2] = m_iTriNum[i];
+	//				temp->setTier3();
+	//				tripord[2] = 0;
+
+	//				m_iCardPrice[i] = 30;
+	//			}
+	//			else if (tripord[0] != 0) {
+	//				m_iTriNum[i] = RandomGen::GetRand(3) + 1;
+	//				tripord[(int)TriIndex::I_Tier2] = m_iTriNum[i];
+	//				temp->setTier2();
+	//				tripord[(int)TriIndex::I_Tier2] = 0;
+
+	//				m_iCardPrice[i] = 20;
+	//			}
+	//			else {
+	//				m_iTriNum[i] = RandomGen::GetRand(3) + 1;
+	//				tripord[(int)TriIndex::I_Tier1] = m_iTriNum[i];
+	//				temp->setTier1();
+	//				tripord[(int)TriIndex::I_Tier1] = 0;
+
+	//				m_iCardPrice[i] = 10;
+	//			}
+	//			delete temp;
+	//		}
+	//		else {
+	//			m_iCardPrice[i] = 5;
+	//		}
+	//		break;
+	//	case (int)CardName::N_dbtjdrkdcjs:
+	//		if (rand10 >= CARDSPAWNRAND) {
+	//			int* tripord = player->GetTripord()[(int)CardName::N_dbtjdrkdcjs];
+	//			Dbtjdrkdcjs* temp = new Dbtjdrkdcjs(tripord);
+	//			if (tripord[3] == 0 || tripord[(int)TriIndex::I_Tier3] != 0) {
+	//				m_iCardPrice[i] = 5;
+	//			}
+	//			else if (tripord[1] != 0) {
+	//				m_iTriNum[i] = RandomGen::GetRand(2) + 1;
+	//				tripord[2] = m_iTriNum[i];
+	//				temp->setTier3();
+	//				tripord[2] = 0;
+
+	//				m_iCardPrice[i] = 30;
+	//			}
+	//			else if (tripord[0] != 0) {
+	//				m_iTriNum[i] = RandomGen::GetRand(3) + 1;
+	//				tripord[(int)TriIndex::I_Tier2] = m_iTriNum[i];
+	//				temp->setTier2();
+	//				tripord[(int)TriIndex::I_Tier2] = 0;
+
+	//				m_iCardPrice[i] = 20;
+	//			}
+	//			else {
+	//				m_iTriNum[i] = RandomGen::GetRand(3) + 1;
+	//				tripord[(int)TriIndex::I_Tier1] = m_iTriNum[i];
+	//				temp->setTier1();
+	//				tripord[(int)TriIndex::I_Tier1] = 0;
+
+	//				m_iCardPrice[i] = 10;
+	//			}
+	//			delete temp;
+	//		}
+	//		else {
+	//			m_iCardPrice[i] = 5;
+	//		}
+	//		break;
+	//	case (int)CardName::N_wjrfydvh:
+	//		if (rand10 >= CARDSPAWNRAND) {
+	//			int* tripord = player->GetTripord()[(int)CardName::N_wjrfydvh];
+	//			Wjrfydvh* temp = new Wjrfydvh(tripord);
+	//			if (tripord[3] == 0 || tripord[(int)TriIndex::I_Tier3] != 0) {
+	//				m_iCardPrice[i] = 5;
+	//			}
+	//			else if (tripord[1] != 0) {
+	//				m_iTriNum[i] = RandomGen::GetRand(2) + 1;
+	//				tripord[2] = m_iTriNum[i];
+	//				temp->setTier3();
+	//				tripord[2] = 0;
+
+	//				m_iCardPrice[i] = 30;
+	//			}
+	//			else if (tripord[0] != 0) {
+	//				m_iTriNum[i] = RandomGen::GetRand(3) + 1;
+	//				tripord[(int)TriIndex::I_Tier2] = m_iTriNum[i];
+	//				temp->setTier2();
+	//				tripord[(int)TriIndex::I_Tier2] = 0;
+
+	//				m_iCardPrice[i] = 20;
+	//			}
+	//			else {
+	//				m_iTriNum[i] = RandomGen::GetRand(3) + 1;
+	//				tripord[(int)TriIndex::I_Tier1] = m_iTriNum[i];
+	//				temp->setTier1();
+	//				tripord[(int)TriIndex::I_Tier1] = 0;
+
+	//				m_iCardPrice[i] = 10;
+	//			}
+	//			delete temp;
+	//		}
+	//		else {
+	//			m_iCardPrice[i] = 5;
+	//		}
+	//		break;
+	//	case (int)CardName::N_aodfyddufvk:
+	//		if (rand10 >= CARDSPAWNRAND) {
+	//			int* tripord = player->GetTripord()[(int)CardName::N_aodfyddufvk];
+	//			Aodfyddufvk* temp = new Aodfyddufvk(tripord);
+	//			if (tripord[3] == 0 || tripord[(int)TriIndex::I_Tier3] != 0) {
+	//				m_iCardPrice[i] = 5;
+	//			}
+	//			else if (tripord[1] != 0) {
+	//				m_iTriNum[i] = RandomGen::GetRand(2) + 1;
+	//				tripord[2] = m_iTriNum[i];
+	//				temp->setTier3();
+	//				tripord[2] = 0;
+
+	//				m_iCardPrice[i] = 30;
+	//			}
+	//			else if (tripord[0] != 0) {
+	//				m_iTriNum[i] = RandomGen::GetRand(3) + 1;
+	//				tripord[(int)TriIndex::I_Tier2] = m_iTriNum[i];
+	//				temp->setTier2();
+	//				tripord[(int)TriIndex::I_Tier2] = 0;
+
+	//				m_iCardPrice[i] = 20;
+	//			}
+	//			else {
+	//				m_iTriNum[i] = RandomGen::GetRand(3) + 1;
+	//				tripord[(int)TriIndex::I_Tier1] = m_iTriNum[i];
+	//				temp->setTier1();
+	//				tripord[(int)TriIndex::I_Tier1] = 0;
+
+	//				m_iCardPrice[i] = 10;
+	//			}
+	//			delete temp;
+	//		}
+	//		else {
+	//			m_iCardPrice[i] = 5;
+	//		}
+	//		break;
+	//	case (int)CardName::N_qksdnjftja:
+	//		if (rand10 >= CARDSPAWNRAND) {
+	//			int* tripord = player->GetTripord()[(int)CardName::N_qksdnjftja];
+	//			Qksdnjftja* temp = new Qksdnjftja(tripord);
+	//			if (tripord[3] == 0 || tripord[(int)TriIndex::I_Tier3] != 0) {
+	//				m_iCardPrice[i] = 5;
+	//			}
+	//			else if (tripord[1] != 0) {
+	//				m_iTriNum[i] = RandomGen::GetRand(2) + 1;
+	//				tripord[2] = m_iTriNum[i];
+	//				temp->setTier3();
+	//				tripord[2] = 0;
+
+	//				m_iCardPrice[i] = 30;
+	//			}
+	//			else if (tripord[0] != 0) {
+	//				m_iTriNum[i] = RandomGen::GetRand(3) + 1;
+	//				tripord[(int)TriIndex::I_Tier2] = m_iTriNum[i];
+	//				temp->setTier2();
+	//				tripord[(int)TriIndex::I_Tier2] = 0;
+
+	//				m_iCardPrice[i] = 20;
+	//			}
+	//			else {
+	//				m_iTriNum[i] = RandomGen::GetRand(3) + 1;
+	//				tripord[(int)TriIndex::I_Tier1] = m_iTriNum[i];
+	//				temp->setTier1();
+	//				tripord[(int)TriIndex::I_Tier1] = 0;
+
+	//				m_iCardPrice[i] = 10;
+	//			}
+	//			delete temp;
+	//		}
+	//		else {
+	//			m_iCardPrice[i] = 5;
+	//		}
+	//		break;
+	//	case (int)CardName::N_dusghkstja:
+	//		if (rand10 >= CARDSPAWNRAND) {
+	//			int* tripord = player->GetTripord()[(int)CardName::N_dusghkstja];
+	//			Dusghkstja* temp = new Dusghkstja(tripord);
+	//			if (tripord[3] == 0 || tripord[(int)TriIndex::I_Tier3] != 0) {
+	//				m_iCardPrice[i] = 5;
+	//			}
+	//			else if (tripord[1] != 0) {
+	//				m_iTriNum[i] = RandomGen::GetRand(2) + 1;
+	//				tripord[2] = m_iTriNum[i];
+	//				temp->setTier3();
+	//				tripord[2] = 0;
+
+	//				m_iCardPrice[i] = 30;
+	//			}
+	//			else if (tripord[0] != 0) {
+	//				m_iTriNum[i] = RandomGen::GetRand(3) + 1;
+	//				tripord[(int)TriIndex::I_Tier2] = m_iTriNum[i];
+	//				temp->setTier2();
+	//				tripord[(int)TriIndex::I_Tier2] = 0;
+
+	//				m_iCardPrice[i] = 20;
+	//			}
+	//			else {
+	//				m_iTriNum[i] = RandomGen::GetRand(3) + 1;
+	//				tripord[(int)TriIndex::I_Tier1] = m_iTriNum[i];
+	//				temp->setTier1();
+	//				tripord[(int)TriIndex::I_Tier1] = 0;
+
+	//				m_iCardPrice[i] = 10;
+	//			}
+	//			delete temp;
+	//		}
+	//		else {
+	//			m_iCardPrice[i] = 5;
+	//		}
+	//		break;
+	//	case (int)CardName::N_cjdfydwls:
+	//		if (rand10 >= CARDSPAWNRAND) {
+	//			int* tripord = player->GetTripord()[(int)CardName::N_cjdfydwls];
+	//			Cjdfydwls* temp = new Cjdfydwls(tripord);
+	//			if (tripord[3] == 0 || tripord[(int)TriIndex::I_Tier3] != 0) {
+	//				m_iCardPrice[i] = 5;
+	//			}
+	//			else if (tripord[1] != 0) {
+	//				m_iTriNum[i] = RandomGen::GetRand(2) + 1;
+	//				tripord[2] = m_iTriNum[i];
+	//				temp->setTier3();
+	//				tripord[2] = 0;
+
+	//				m_iCardPrice[i] = 30;
+	//			}
+	//			else if (tripord[0] != 0) {
+	//				m_iTriNum[i] = RandomGen::GetRand(3) + 1;
+	//				tripord[(int)TriIndex::I_Tier2] = m_iTriNum[i];
+	//				temp->setTier2();
+	//				tripord[(int)TriIndex::I_Tier2] = 0;
+
+	//				m_iCardPrice[i] = 20;
+	//			}
+	//			else {
+	//				m_iTriNum[i] = RandomGen::GetRand(3) + 1;
+	//				tripord[(int)TriIndex::I_Tier1] = m_iTriNum[i];
+	//				temp->setTier1();
+	//				tripord[(int)TriIndex::I_Tier1] = 0;
+
+	//				m_iCardPrice[i] = 10;
+	//			}
+	//			delete temp;
+	//		}
+	//		else {
+	//			m_iCardPrice[i] = 5;
+	//		}
+	//		break;
+	//	case (int)CardName::N_cjdfydcnftn:
+	//		if (rand10 >= CARDSPAWNRAND) {
+	//			int* tripord = player->GetTripord()[(int)CardName::N_cjdfydcnftn];
+	//			Cjdfydcnftn* temp = new Cjdfydcnftn(tripord);
+	//			if (tripord[3] == 0 || tripord[(int)TriIndex::I_Tier3] != 0) {
+	//				m_iCardPrice[i] = 5;
+	//			}
+	//			else if (tripord[1] != 0) {
+	//				m_iTriNum[i] = RandomGen::GetRand(2) + 1;
+	//				tripord[2] = m_iTriNum[i];
+	//				temp->setTier3();
+	//				tripord[2] = 0;
+
+	//				m_iCardPrice[i] = 30;
+	//			}
+	//			else if (tripord[0] != 0) {
+	//				m_iTriNum[i] = RandomGen::GetRand(3) + 1;
+	//				tripord[(int)TriIndex::I_Tier2] = m_iTriNum[i];
+	//				temp->setTier2();
+	//				tripord[(int)TriIndex::I_Tier2] = 0;
+
+	//				m_iCardPrice[i] = 20;
+	//			}
+	//			else {
+	//				m_iTriNum[i] = RandomGen::GetRand(3) + 1;
+	//				tripord[(int)TriIndex::I_Tier1] = m_iTriNum[i];
+	//				temp->setTier1();
+	//				tripord[(int)TriIndex::I_Tier1] = 0;
+
+	//				m_iCardPrice[i] = 10;
+	//			}
+	//			delete temp;
+	//		}
+	//		else {
+	//			m_iCardPrice[i] = 5;
+	//		}
+	//		break;
+	//	case (int)CardName::N_ghltjsckd:
+	//		if (rand10 >= CARDSPAWNRAND) {
+	//			int* tripord = player->GetTripord()[(int)CardName::N_ghltjsckd];
+	//			Ghltjsckd* temp = new Ghltjsckd(tripord);
+	//			if (tripord[3] == 0 || tripord[(int)TriIndex::I_Tier3] != 0) {
+	//				m_iCardPrice[i] = 5;
+	//			}
+	//			else if (tripord[1] != 0) {
+	//				m_iTriNum[i] = RandomGen::GetRand(2) + 1;
+	//				tripord[2] = m_iTriNum[i];
+	//				temp->setTier3();
+	//				tripord[2] = 0;
+
+	//				m_iCardPrice[i] = 30;
+	//			}
+	//			else if (tripord[0] != 0) {
+	//				m_iTriNum[i] = RandomGen::GetRand(3) + 1;
+	//				tripord[(int)TriIndex::I_Tier2] = m_iTriNum[i];
+	//				temp->setTier2();
+	//				tripord[(int)TriIndex::I_Tier2] = 0;
+
+	//				m_iCardPrice[i] = 20;
+	//			}
+	//			else {
+	//				m_iTriNum[i] = RandomGen::GetRand(3) + 1;
+	//				tripord[(int)TriIndex::I_Tier1] = m_iTriNum[i];
+	//				temp->setTier1();
+	//				tripord[(int)TriIndex::I_Tier1] = 0;
+
+	//				m_iCardPrice[i] = 10;
+	//			}
+	//			delete temp;
+	//		}
+	//		else {
+	//			m_iCardPrice[i] = 5;
+	//		}
+	//		break;
+	//	default:
+	//		break;
+	//	}
 }

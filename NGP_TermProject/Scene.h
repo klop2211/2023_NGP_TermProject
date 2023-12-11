@@ -41,6 +41,7 @@ public:
 	// Msg 읽어와 상태 적용하는 코드들
 	void UpdateMonsterLocation(MonsterType MT, int SN, POINT Location);
 	void UpdateMonsterHp(MonsterType MT, int SN, int Hp);
+	void UpdateBossHp(int Hp, int BreakCount, int KnockDown);
 	void UpdateMonsterState(MonsterType MT, int SN, MonsterStateType SMT);
 	void UpdateCastleHp(int Hp);
 	void UpdateBossState(BossStateType BST);

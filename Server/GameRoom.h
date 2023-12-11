@@ -37,7 +37,7 @@ public:
 	void IsCollisionBoneWithPlayer(PlayerInfo*);
 	void DoCollisionCheck();
 	void CollisionSkillObject();
-	void DamageToMonsterUsingSkillObject(SkillObjectInfo*, Monster*);
+	void DamageToMonsterUsingSkillObject(SkillObjectInfo*, Monster*, int);
 
 	// 송수신 관련 함수
 	void WriteMonsterLocation(MonsterType, BYTE, POINT location = {0, 0});

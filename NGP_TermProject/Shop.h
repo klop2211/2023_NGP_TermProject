@@ -2,6 +2,8 @@
 class Shop
 {
 public:
+	enum Price {Free, Gold5, Gold10, Gold20, Gold30};
+
 	Shop(HWND& hWnd, HINSTANCE& Inst);
 	~Shop();
 
@@ -13,13 +15,15 @@ public:
 	void OnProcessingCommandMessage(HWND hWnd, WPARAM wParam, Player* player);
 	// 띄울 카드 정하기
 	void SetRandValue();
+	// 띄울 트라이포드 포함 카드 정하기
+	void SetRandValueTripord(Player* player);
 private:
 	CImage m_cImg;
 	CImage m_cBuyButtonImg;
 
 	HWND m_hWnd;
 	HINSTANCE m_hInst;
-	HBITMAP m_hFreeButton;
+	HBITMAP m_hPriceBitmap[5];
 	HWND m_hButton[3];
 
 	// 랜덤한 카드를 생성하기 위함

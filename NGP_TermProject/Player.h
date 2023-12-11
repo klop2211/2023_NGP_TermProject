@@ -47,7 +47,7 @@ public:
 
 	void MinusMoney(int money) { m_iMoney -= money; }
 	void AddMoney(int money) { m_iMoney += money; }
-	void AddExp(int exp) { m_iExperience += exp; }
+	void AddExp(int exp);
 	void SetCardTripod(int cardEnum);
 	void ResetCard();
 
@@ -67,6 +67,8 @@ public:
 	int(*GetTripord())[4] {return m_ppTripord; }
 	int GetMoney() { return m_iMoney; }
 	float GetStateTime() { return m_fStateTime; }
+	int GetLevel() { return m_iLevel; }
+	bool GetLevelUp() { return m_bLevelUp; }
 	
 	void SetDir(Direction dir) { m_dDir = dir; }
 	void SetImg(const TCHAR* str);
@@ -91,6 +93,7 @@ public:
 		m_rRect.bottom = (int)m_Location.y + PLAYER_SIZE;
 	}
 	void SetStateTime(const float time) { m_fStateTime = time; }
+	void SetLevelUp(bool levelup) { m_bLevelUp = levelup; }
 
 private:
 	Direction	m_dDir;			// 방향
@@ -137,6 +140,7 @@ private:
 
 	bool		m_bIsClick;				// 카드를 집고있는지
 	bool		m_bCardDrawing;			// 카드를 뽑아야하는지
+	bool		m_bLevelUp;				// 레벨업했는지
 	int			m_iStartX, m_iStartY;	// 카드를 집은 위치
 	int			m_iClickSelect;			// 잡고있는 카드
 	int			m_iSelectCard;			// 마우스로 인해 커지는 카드
