@@ -1,6 +1,20 @@
 #include "Common.h"
 #include "PlayerInfo.h"
 
+PlayerInfo::PlayerInfo(int num) :
+    m_iPlayerNum(num),
+    m_iDamage(0),
+    m_iStunDamage(0),
+    m_iDestuction(0),
+    m_iNamedDamage(0),
+    m_iType(0)
+{
+    for (auto& k : m_KillCount)
+    {
+        k = 0;
+    }
+}
+
 RECT PlayerInfo::GetBB() const
 {
     RECT ReturnBB {

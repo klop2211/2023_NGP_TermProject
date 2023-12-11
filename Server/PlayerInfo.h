@@ -8,14 +8,7 @@
 class PlayerInfo
 {
 public:
-	PlayerInfo(int num) :
-		m_iPlayerNum(num),
-		m_iDamage(0),
-		m_iStunDamage(0),
-		m_iDestuction(0),
-		m_iNamedDamage(0),
-		m_iType(0)
-	{}
+	PlayerInfo(int num);
 
 	RECT GetBB() const;
 	void AddKillCount(MonsterType MT) { m_KillCount[(int)MT]++; }

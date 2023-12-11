@@ -170,17 +170,25 @@ DWORD WINAPI ProcessRoom(LPVOID arg)
 
 	GameRoom* pGameRoom = new GameRoom(Arg->Clients);
 	// Main Game Room 로직
-	while (!pGameRoom->GetIsOver())
+	while (true/*!pGameRoom->GetIsOver()*/)
 	{
 		retval = WaitForSingleObject(events[RoomNum].hRoomEvent, INFINITE);
 		//printf("server Run\n");
 
+		if (pGameRoom->GetIsOver())
+		{
+			static bool temp = true;
+			if (temp)
+			{
+			GameOver(pGameRoom->GetKillCount(), pGameRoom->GetIsOver());
+			temp = false;
+			}
+		}
 		pGameRoom->Update(SharedBuffer[RoomNum]);
 		
 		SetEvent(events[RoomNum].hClient1Event);
 	}
 	
-	GameOver(pGameRoom->GetKillCount(), pGameRoom->GetIsOver());
 
 	// TODO: 적당한 위치로 옮기기
 	//delete ReadStreamArr[RoomNum];

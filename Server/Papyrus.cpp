@@ -91,7 +91,7 @@ void Papyrus::Update(float ElapsedTime)
 	if (timer > 0.25)
 	{
 		timer = 0.f;
-		GetDamageAndIsDead(1, 5, 1, 0);
+		//GetDamageAndIsDead(1, 5, 1, 0);
 	}
 }
 

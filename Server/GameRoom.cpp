@@ -18,7 +18,7 @@
 GameRoom::GameRoom(array<SOCKET, MAX_CLIENTS>& ClientSocket) :
 	m_iWolfSN(0),
 	m_iBatSN(0),
-	m_iPhase(GameRoom::BossPhase),
+	m_iPhase(GameRoom::WolfPhase),
 	m_Papyrus(nullptr),
 	m_bIsOver(NotYet),
 	m_fPhaseInitTimer(15.f),
@@ -96,7 +96,7 @@ void GameRoom::SpawnEnemy()
 	case BatPhase:
 		m_fBatSpawnTimer += m_fElapsedTime;
 
-		if (m_fBatSpawnTimer >= 5.f)
+		if (m_fBatSpawnTimer >= .5f)
 		{
 			m_BatMap.insert({ m_iBatSN, new Bat(m_iBatSN) });
 			m_iBatSN++;
@@ -106,7 +106,7 @@ void GameRoom::SpawnEnemy()
 	case WolfPhase:
 		m_fWolfSpawnTimer += m_fElapsedTime;
 
-		if (m_fWolfSpawnTimer >= 5.f)
+		if (m_fWolfSpawnTimer >= .5f)
 		{
 			m_WolfMap.insert({ m_iWolfSN, new Wolf(m_iWolfSN)});
 			m_iWolfSN++;
@@ -296,6 +296,8 @@ void GameRoom::IsCollisionMonsterWithPlayer(PlayerInfo* p)
 
 			if (IsDead)
 			{
+				p->AddKillCount(MonsterType::Papyrus);
+				WriteMonsterKill(MonsterType::Papyrus, 0, p);
 				// TODO: 게임종료
 				m_bIsOver = Win;
 			}
