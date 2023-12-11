@@ -96,6 +96,8 @@ void Player::Update(float elapsed)
 		m_iStunDamage = 0;
 		m_iDestruction = 0;
 		m_iNamedDamage = 0;
+		m_bSkillCheck = true;
+
 	}
 	else {
 		for (auto p = m_lSkillObjects.begin(); p != m_lSkillObjects.end(); ++p) {
