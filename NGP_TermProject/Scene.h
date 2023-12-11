@@ -35,6 +35,9 @@ public:
 
 	bool IsGameStart() const { return m_bStart; }
 
+	// 게임 종료 시 그릴 것
+	void DrawEnding(HDC& memDc, GameOverMsg gom);
+
 	// Msg 읽어와 상태 적용하는 코드들
 	void UpdateMonsterLocation(MonsterType MT, int SN, POINT Location);
 	void UpdateMonsterHp(MonsterType MT, int SN, int Hp);

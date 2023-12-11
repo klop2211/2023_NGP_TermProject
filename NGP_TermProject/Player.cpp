@@ -187,6 +187,9 @@ void Player::ChangeState(PStateName ps)
 
 void Player::OnProcessingMouseMessage(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
+	if (m_pStateMachine->isInState(*PStun::Instance()))
+		return;
+	
 	int mx = LOWORD(lParam);
 	int my = HIWORD(lParam);
 
@@ -275,6 +278,8 @@ void Player::OnProcessingMouseMessage(HWND hWnd, UINT message, WPARAM wParam, LP
 
 void Player::OnProcessingKeyboardMessage(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
+	if (m_pStateMachine->isInState(*PStun::Instance()))
+		return;
 	// 키보드 입력처리
 	switch (message)
 	{

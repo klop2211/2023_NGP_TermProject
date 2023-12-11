@@ -119,7 +119,8 @@ void Scene::Update(float elapsed)
 						m_pPlayer2->ChangeState(temp->State);
 				}
 				if (temp->PlayerId == m_iClientNum && temp->State == PStateName::Stun) {
-					m_pPlayer->ChangeState(temp->State);
+					if (m_pPlayer->GetStateName() != temp->State)
+						m_pPlayer->ChangeState(temp->State);
 				}
 			}
 				break;
@@ -260,6 +261,11 @@ void Scene::Draw(HDC& memDc)
 		else
 			DrawGameLoading(memDc);
 	}
+
+	GameOverMsg gom;
+	gom.GameOverFlag = 1;
+
+	//DrawEnding(memDc, gom);
 
 	for (auto object : m_lObjectList) {
 		object->Draw(memDc);
@@ -508,6 +514,29 @@ void Scene::UpdateChangeStart(float elapsed)
 		m_lObjectList.push_back(m_pPlayer2);
 
 	}
+}
+
+
+void Scene::DrawEnding(HDC& memDc, GameOverMsg gom)
+{
+	RECT logoRect = { 600, 100, 1000, 300 };
+	CImage logoImg;
+	if (gom.GameOverFlag == 1)
+		logoImg.Load(L"./윈플 텀프 이미지/승리 이미지.png");
+	else
+		logoImg.Load(L"./윈플 텀프 이미지/패배 이미지.png");
+	
+	logoImg.Draw(memDc, logoRect);
+
+	POINT P1Position = { 400, 300 }, P2Position = { 1000, 300 };
+	CImage NumImg, PImg;
+	PImg.Load(L"./윈플 텀프 이미지/P 이미지.png");
+
+	//PImg.Draw(memDc, RECT{ P1Position, 100, 100 });
+
+
+	logoImg.Destroy();
+	PImg.Destroy();
 }
 
 //===================Msg 읽어와 상태 적용하는 코드들===========================
