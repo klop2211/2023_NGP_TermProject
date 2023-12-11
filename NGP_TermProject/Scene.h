@@ -81,6 +81,14 @@ private:
 	// 화면 바꾸는데 사용
 	float m_fChangeCount;
 
+	// 게임이 종료됨
+	bool m_bGameEnd;
+
+	GameOverMsg* m_pGameoverMsg;
+
+	// 게임 엔딩후 경과한 시간(초)
+	float m_fEndTime;
+
 	// 원 이미지
 	CImage m_cClosing;
 	// 배경화면

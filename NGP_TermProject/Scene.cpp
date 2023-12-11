@@ -37,6 +37,8 @@ Scene::Scene()
 
 
 	m_fChangeCount = 0;
+	m_fEndTime = 0.f;
+
 	m_cClosing.Load(TEXT("윈플 텀프 이미지\\원.png"));
 	m_cBackGround.Load(TEXT("윈플 텀프 이미지\\배경성X.png"));
 	m_cLoadBit.Load(TEXT("윈플 텀프 이미지\\레온하트성.png"));
@@ -44,11 +46,14 @@ Scene::Scene()
 	m_cQuitBit.Load(TEXT("윈플 텀프 이미지\\Quit.png"));
 	m_cArrowImg.Load(L"./윈플 텀프 이미지/화살표.png");
 
+	m_bGameEnd = false;
 	m_bStart = false, m_bChanging = false; 				//원래 시작용
 	//m_bStart = true, changing = false;				//화면바뀌는거 귀찮아서 만든거
 	m_bCardDrawing = true, m_bIsClick = false;
 
 	m_Papyrus = nullptr;
+
+	m_pGameoverMsg = nullptr;
 }
 
 Scene::~Scene()
@@ -62,7 +67,7 @@ Scene::~Scene()
 	delete m_pSock;
 	delete m_pReadEvent;
 	delete m_pWriteEvent;
-
+	delete m_pGameoverMsg;
 }
 
 void Scene::Update(float elapsed)
@@ -75,7 +80,12 @@ void Scene::Update(float elapsed)
 		}
 		else
 		{
-			UpdateGameStart(elapsed);		//메인 게임화면
+			if (m_bGameEnd) {
+				m_fEndTime += elapsed;
+			}
+			else {
+				UpdateGameStart(elapsed);		//메인 게임화면
+			}
 			
 
 			//TODO: 게임종료
@@ -157,7 +167,9 @@ void Scene::Update(float elapsed)
 			case StateMsgType::GameOver:
 			{
 				GameOverMsg* temp = (GameOverMsg*)SMI.pStateMsgArgu;
-
+				m_bGameEnd = true;
+				m_pGameoverMsg = new GameOverMsg;
+				*m_pGameoverMsg = *temp;
 			}
 				break;
 			default:
@@ -265,10 +277,8 @@ void Scene::Draw(HDC& memDc)
 			DrawGameLoading(memDc);
 	}
 
-	GameOverMsg gom;
-	gom.GameOverFlag = 1;
-
-	//DrawEnding(memDc, gom);
+	if(m_bGameEnd)
+		DrawEnding(memDc, *m_pGameoverMsg);
 
 	for (auto object : m_lObjectList) {
 		object->Draw(memDc);
@@ -522,6 +532,11 @@ void Scene::UpdateChangeStart(float elapsed)
 
 void Scene::DrawEnding(HDC& memDc, GameOverMsg gom)
 {
+	RECT BGRect{ 200, 50, 1400, 850 };
+	CImage BGImg;
+	BGImg.Load(L"./윈플 텀프 이미지/엔딩 백그라운드.png");
+	BGImg.Draw(memDc, BGRect);
+
 	RECT logoRect = { 600, 100, 1000, 300 };
 	CImage logoImg;
 	if (gom.GameOverFlag == 1)
@@ -533,6 +548,7 @@ void Scene::DrawEnding(HDC& memDc, GameOverMsg gom)
 
 	POINT P1Position = { 400, 300 }, P2Position = { 1000, 300 };
 	CImage NumImg[10], PImg;
+
 	NumImg[0].Load(L"./윈플 텀프 이미지/0 이미지.png");
 	NumImg[1].Load(L"./윈플 텀프 이미지/1 이미지.png");
 	NumImg[2].Load(L"./윈플 텀프 이미지/2 이미지.png");
@@ -544,15 +560,122 @@ void Scene::DrawEnding(HDC& memDc, GameOverMsg gom)
 	NumImg[8].Load(L"./윈플 텀프 이미지/8 이미지.png");
 	NumImg[9].Load(L"./윈플 텀프 이미지/9 이미지.png");
 
-
 	PImg.Load(L"./윈플 텀프 이미지/P 이미지.png");
 
-
+	NumImg[1].Draw(memDc, P1Position.x, P1Position.y, 100, 100);
 	PImg.Draw(memDc, P1Position.x + 100, P1Position.y, 100, 100);
+	NumImg[2].Draw(memDc, P2Position.x, P2Position.y, 100, 100);
+	PImg.Draw(memDc, P2Position.x + 100, P2Position.y, 100, 100);
 
-	PImg.Draw(memDc, P2Position.x, P2Position.y, 100, 100);
+	POINT EnemyPosition{ 725, 400 };
+	CImage EnemyImg;
+
+	if (m_fEndTime > 1) {
+		EnemyImg.Load(L"./적관련/늑대.png");
+		EnemyImg.Draw(memDc, EnemyPosition.x, EnemyPosition.y, 150, 100, 0, 1, 84, 56);
+		EnemyImg.Destroy();
+	}
+
+	if (m_fEndTime > 2) {
+		EnemyImg.Load(L"./적관련/박쥐.png");
+		EnemyImg.Draw(memDc, EnemyPosition.x, EnemyPosition.y + 100, 150, 100, 0, 1, 65, 47);
+		EnemyImg.Destroy();
+	}
+
+	if (m_fEndTime > 3) {
+		EnemyImg.Load(L"./적관련/파피루스.png");
+		EnemyImg.Draw(memDc, EnemyPosition.x + 25, EnemyPosition.y + 200, 150, 100, 1, 1, 48, 53);
+		EnemyImg.Destroy();
+	}
+
+	POINT ScoreMiddlePosition[2]{ { 450,400 },{ 1050, 400 } };
+	if (gom.Clients[0].ClientNum == m_iClientNum) {
+		// 0번이 1P, 1번이 2P
+		// 점수는 최대 3자리(100의자리 수)
+		int temp = m_fEndTime > 3 ? 3 : m_fEndTime;
+		for (int i = 0; i < temp; ++i) {
+			for (int j = 0; j < 2; ++j) {
+				int num100, num10, num1;
+				if (i == 0) {
+					num100 = (int)gom.Clients[j].KillWolf / 100;
+					num10 = (int)gom.Clients[j].KillWolf / 10 % 10;
+					num1 = (int)gom.Clients[j].KillWolf % 10;
+				}
+				else if (i == 1) {
+					num100 = (int)gom.Clients[j].KillBat / 100;
+					num10 = (int)gom.Clients[j].KillBat / 10 % 10;
+					num1 = (int)gom.Clients[j].KillBat % 10;
+				}
+				else {
+					num100 = (int)gom.Clients[j].KillPapyrus / 100;
+					num10 = (int)gom.Clients[j].KillPapyrus / 10 % 10;
+					num1 = (int)gom.Clients[j].KillPapyrus % 10;
+				}
+				// 자리 수에 따라 위치 조정
+				if (num100 != 0) {
+					NumImg[num100].Draw(memDc, ScoreMiddlePosition[j].x - 100, ScoreMiddlePosition[j].y + i * 100, 100, 100);
+					NumImg[num10].Draw(memDc, ScoreMiddlePosition[j].x, ScoreMiddlePosition[j].y + i * 100, 100, 100);
+					NumImg[num1].Draw(memDc, ScoreMiddlePosition[j].x + 100, ScoreMiddlePosition[j].y + i * 100, 100, 100);
+				}
+				else {
+					if (num10 != 0) {
+						ScoreMiddlePosition[j].x -= 50;
+						NumImg[num10].Draw(memDc, ScoreMiddlePosition[j].x, ScoreMiddlePosition[j].y + i * 100, 100, 100);
+						NumImg[num1].Draw(memDc, ScoreMiddlePosition[j].x + 100, ScoreMiddlePosition[j].y + i * 100, 100, 100);
+						ScoreMiddlePosition[j].x += 50;
+					}
+					else {
+						NumImg[num1].Draw(memDc, ScoreMiddlePosition[j].x, ScoreMiddlePosition[j].y + i * 100, 100, 100);
+					}
+				}
+			}
+		}
+	}
+	else {
+		// 0번이 2P, 1번이 1P
+		int temp = m_fEndTime > 3 ? 3 : m_fEndTime;
+		for (int i = 0; i < temp; ++i) {
+			for (int j = 0; j < 2; ++j) {
+				int num100, num10, num1;
+				int k = j == 0 ? 1 : 0;
+				if (i == 0) {
+					num100 = (int)gom.Clients[k].KillWolf / 100;
+					num10 = (int)gom.Clients[k].KillWolf / 10 % 10;
+					num1 = (int)gom.Clients[k].KillWolf % 10;
+				}
+				else if (i == 1) {
+					num100 = (int)gom.Clients[k].KillBat / 100;
+					num10 = (int)gom.Clients[k].KillBat / 10 % 10;
+					num1 = (int)gom.Clients[k].KillBat % 10;
+				}
+				else {
+					num100 = (int)gom.Clients[k].KillPapyrus / 100;
+					num10 = (int)gom.Clients[k].KillPapyrus / 10 % 10;
+					num1 = (int)gom.Clients[k].KillPapyrus % 10;
+				}
+				// 자리 수에 따라 위치 조정
+				if (num100 != 0) {
+					NumImg[num100].Draw(memDc, ScoreMiddlePosition[j].x - 100, ScoreMiddlePosition[j].y + i * 100, 100, 100);
+					NumImg[num10].Draw(memDc, ScoreMiddlePosition[j].x, ScoreMiddlePosition[j].y + i * 100, 100, 100);
+					NumImg[num1].Draw(memDc, ScoreMiddlePosition[j].x + 100, ScoreMiddlePosition[j].y + i * 100, 100, 100);
+				}
+				else {
+					if (num10 != 0) {
+						ScoreMiddlePosition[j].x -= 50;
+						NumImg[num10].Draw(memDc, ScoreMiddlePosition[j].x, ScoreMiddlePosition[j].y + i * 100, 100, 100);
+						NumImg[num1].Draw(memDc, ScoreMiddlePosition[j].x + 100, ScoreMiddlePosition[j].y + i * 100, 100, 100);
+						ScoreMiddlePosition[j].x += 50;
+					}
+					else {
+						NumImg[num1].Draw(memDc, ScoreMiddlePosition[j].x, ScoreMiddlePosition[j].y + i * 100, 100, 100);
+					}
+				}
+			}
+		}
+	}
 
 
+	BGImg.Destroy();
 	logoImg.Destroy();
 	PImg.Destroy();
 	for (int i = 0; i < 10; ++i)
