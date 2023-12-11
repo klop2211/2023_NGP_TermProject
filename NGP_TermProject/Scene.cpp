@@ -279,8 +279,6 @@ void Scene::Draw(HDC& memDc)
 			DrawGameLoading(memDc);
 	}
 
-	if(m_bGameEnd)
-		DrawEnding(memDc, *m_pGameoverMsg);
 
 	for (auto object : m_lObjectList) {
 		object->Draw(memDc);
@@ -299,6 +297,10 @@ void Scene::Draw(HDC& memDc)
 	{
 		m_Shop->StartShop(memDc);
 	}
+
+	if (m_bGameEnd)
+		DrawEnding(memDc, *m_pGameoverMsg);
+
 }
 
 void Scene::OnProcessingMouseMessage(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
@@ -942,7 +944,7 @@ void Scene::SetWndAndInstance(HWND hWnd, HINSTANCE& Inst)
 DWORD WINAPI Scene::ReceiveThread(LPVOID arg)
 {
 	int retval;
-	char* SERVERIP = (char*)"127.0.0.1";
+	char* SERVERIP = (char*)"1.242.205.234";
 
 
 	// 家南 积己
