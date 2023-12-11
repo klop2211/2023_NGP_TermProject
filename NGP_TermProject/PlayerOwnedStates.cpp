@@ -80,10 +80,15 @@ void PStun::Enter(Player* player)
 		player->SetImg(L"./윈플 텀프 이미지/창술사_스턴(left).png");
 	}
 	player->SetSpeed(0);
+	m_fDurationTime = 0.f;
 }
 
 void PStun::Execute(Player* player, float elapsed)
 {
+	m_fDurationTime += elapsed;
+	if (m_fDurationTime > 2.0f) {
+		player->ChangeState(PStateName::Stay);
+	}
 }
 
 void PStun::Exit(Player* player)
@@ -627,9 +632,9 @@ void PSkill::Exit(Player* player)
 	default:
 		break;
 	}
-	player->SetSpeed(0);
-	player->SetDamage(0);
-	player->SetStunDamage(0);
-	player->SetDestruction(0);
+	//player->SetSpeed(0);
+	//player->SetDamage(0);
+	//player->SetStunDamage(0);
+	//player->SetDestruction(0);
 
 }

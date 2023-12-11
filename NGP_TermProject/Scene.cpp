@@ -118,6 +118,9 @@ void Scene::Update(float elapsed)
 					if (m_pPlayer2->GetStateName() != temp->State && m_pPlayer2->GetStateName() != PStateName::Skill)
 						m_pPlayer2->ChangeState(temp->State);
 				}
+				if (temp->PlayerId == m_iClientNum && temp->State == PStateName::Stun) {
+					m_pPlayer->ChangeState(temp->State);
+				}
 			}
 				break;
 			case StateMsgType::CastleHp:

@@ -60,6 +60,8 @@ private:
     PStun(const PStun&);
     PStun& operator=(const PStun&);
 
+    float m_fDurationTime;
+
 public:
 
     static PStun* Instance();

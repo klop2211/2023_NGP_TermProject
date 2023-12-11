@@ -91,9 +91,18 @@ void Player::Update(float elapsed)
 		m_iFrameIdx = 0;
 	}
 
-	for (auto p = m_lSkillObjects.begin(); p != m_lSkillObjects.end(); ++p) {
-		p->Update(elapsed);
-	}	
+	if (m_lSkillObjects.empty() && !m_pStateMachine->isInState(*PSkill::Instance())) {
+		m_iDamage = 0;
+		m_iStunDamage = 0;
+		m_iDestruction = 0;
+		m_iNamedDamage = 0;
+	}
+	else {
+		for (auto p = m_lSkillObjects.begin(); p != m_lSkillObjects.end(); ++p) {
+			p->Update(elapsed);
+		}
+	}
+
 
 	// 카드를 다쓰면 덱 초기화
 	if (m_iCardCount == m_iDeadCardCount) {
