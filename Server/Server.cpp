@@ -117,13 +117,13 @@ DWORD WINAPI ProcessClient1(LPVOID arg)
 		//printf("hClient1Event Run\n");
 
 		// 클라이언트 처리 로직
-		bool bIsGameOver = false;
-		ReadStreamArr[RoomNum]->Read(client_sock, SharedBuffer[RoomNum][0], bIsGameOver);
-		if (bIsGameOver)
-		{
-			CloseHandle(GetCurrentThread());
-		}
-		else
+		//bool bIsGameOver = false;
+		ReadStreamArr[RoomNum]->Read(client_sock, SharedBuffer[RoomNum][0]);
+		//if (bIsGameOver)
+		//{
+		//	CloseHandle(GetCurrentThread());
+		//}
+		//else
 		{
 			SetEvent(events[RoomNum].hClient2Event);
 		}
@@ -145,14 +145,14 @@ DWORD WINAPI ProcessClient2(LPVOID arg)
 		//printf("hClient2Event Run\n");
 
 		// 클라이언트 처리 로직
-		bool bIsGameOver = false;
-		ReadStreamArr[RoomNum]->Read(client_sock, SharedBuffer[RoomNum][1], bIsGameOver);
+		//bool bIsGameOver = false;
+		ReadStreamArr[RoomNum]->Read(client_sock, SharedBuffer[RoomNum][1]);
 
-		if (bIsGameOver)
-		{
-			CloseHandle(GetCurrentThread());
-		}
-		else
+		//if (bIsGameOver)
+		//{
+		//	CloseHandle(GetCurrentThread());
+		//}
+		//else
 		{
 			SetEvent(events[RoomNum].hRoomEvent);
 		}

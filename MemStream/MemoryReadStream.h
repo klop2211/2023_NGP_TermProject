@@ -13,7 +13,7 @@ public:
 		Init();
 	};
 
-	void Read(const SOCKET& socket, std::queue<StateMsgInfo>& q, bool&);
+	void Read(const SOCKET& socket, std::queue<StateMsgInfo>& q);
 	StateMsgType GetMsgType();
 
 	StateMsgArgu* GetStateMsg(StateMsgType, int&);

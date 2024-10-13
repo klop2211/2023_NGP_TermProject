@@ -4,7 +4,7 @@
 
 
 void MemoryReadStream::Read(const SOCKET& socket, 
-	std::queue<StateMsgInfo>& q, bool& OverCheck)
+	std::queue<StateMsgInfo>& q)
 {
 	int retval;
 	int BufSize;
