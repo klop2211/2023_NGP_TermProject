@@ -3,8 +3,7 @@
 
 
 
-void MemoryReadStream::Read(const SOCKET& socket, 
-	std::queue<StateMsgInfo>& q)
+void MemoryReadStream::Read(const SOCKET& socket, std::queue<StateMsgInfo>& q)
 {
 	int retval;
 	int BufSize;
